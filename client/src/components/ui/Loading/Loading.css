@@ -1,0 +1,84 @@
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #3a3a3a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: overlayFadeOut 0.4s ease-out 1.0s forwards;
+}
+
+.loader-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 320px;
+}
+.pulse-circle {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  
+background: linear-gradient(
+  to bottom,
+  rgb(26, 90, 112) 0%,
+  rgba(29, 138, 122, 0.756) 80%,
+  rgba(46, 184, 163, 0.774) 100%,
+  transparent 100%
+);
+
+  transform: scale(0.1);
+  opacity: 0;
+
+  animation: wavePulse 1.4s ease-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Proper wave spacing (very important) */
+.pulse1 { animation-delay: 0s; }
+.pulse2 { animation-delay: 0.4s; }
+.pulse3 { animation-delay: 1.0s; }
+
+.logo-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 180px;
+}
+
+.logo-wrap svg {
+  width: 100%;
+  height: 100%;
+}
+@keyframes wavePulse {
+  0% {
+    transform: scale(0.1);
+    opacity: 1;
+  }
+
+  20% {
+    opacity: 0.5; 
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  80% {
+    transform: scale(1.5);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0; 
+  }
+}
