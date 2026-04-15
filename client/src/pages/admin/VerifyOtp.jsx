@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const VerifyOtp = () => {
   const [otp, setOtp] = useState('');
@@ -17,18 +18,18 @@ const VerifyOtp = () => {
     try {
       const res = await axios.post('http://localhost:5000/api/admin/verify-otp', { email, otp });
       if (res.data.success) {
-        alert("Verification successful!");
+        toast.success("Verification successful!");
         navigate('/admin/login');
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Verification failed");
+      toast.error(err.response?.data?.message || "Verification failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-800 p-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Verify OTP</h2>
         <p className="text-center text-gray-500 mb-8">

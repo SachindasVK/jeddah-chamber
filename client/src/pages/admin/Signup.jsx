@@ -1,6 +1,8 @@
 import React, { useState, us } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -21,11 +23,11 @@ const Signup = () => {
     try {
         const response = await axios.post('http://localhost:5000/api/admin/signup',formData)
         if(response.data.success){
-            alert("OTP sent! check your email")
+            toast.success("OTP sent! check your email")
             navigate('/admin/verify-otp',{state:{email:formData.email}})
         }
     } catch (error) {
-        alert(error.response?.data?.message||"signup failed!")
+        toast.error(error.response?.data?.message||"signup failed!")
     }
   };
 

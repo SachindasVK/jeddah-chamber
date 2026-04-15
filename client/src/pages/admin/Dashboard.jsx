@@ -1,50 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import {toast} from "react-hot-toast"
+import Sidebar from "../../components/Sidebar";
+
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const adminToken = localStorage.getItem('adminToken');
+  const adminToken = localStorage.getItem("adminToken");
 
   // Form States
   const [docId, setDocId] = useState(null);
-  const [docTitle, setDocTitle] = useState('');
+  const [docTitle, setDocTitle] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [qrPreview, setQrPreview] = useState(null);
+  const [qrLoading, setQrLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
   if (!adminToken) {
-    navigate('/admin/login');
+    navigate("/admin/login");
     return null;
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    navigate('/admin/login');
-  };
-
   // Generate QR
   const handleGenerateQR = async () => {
-    if (!docTitle) return alert("Please enter a document title");
+    if (!docTitle) return toast.error("Please enter a document title");
 
-    setLoading(true);
+    setQrLoading(true);
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/document/generate',
+        "http://localhost:5000/api/document/generate",
         { title: docTitle },
-        { headers: { Authorization: `Bearer ${adminToken}` } }
+        { headers: { Authorization: `Bearer ${adminToken}` } },
       );
 
       setQrPreview(res.data.qrCodeImage);
 
       if (res.data.document && res.data.document._id) {
         setDocId(res.data.document._id);
-        alert("QR Generated Successfully! Step 1 complete.");
+        toast.success("QR Generated Successfully");
       }
     } catch (err) {
-      alert("Error generating QR. Check if server is running.");
+      toast.error("Error generating QR");
     } finally {
-      setLoading(false);
+      setQrLoading(false);
     }
   };
 
@@ -53,13 +53,13 @@ const Dashboard = () => {
     e.preventDefault();
 
     if (!docId) {
-      return alert("Generate QR first before uploading.");
+      return toast.error("Generate QR first before uploading.");
     }
 
-    if (!selectedFile) return alert("Please select a PDF file");
+    if (!selectedFile) return toast.error("Please select a PDF file");
 
     const formData = new FormData();
-    formData.append('pdf', selectedFile);
+    formData.append("pdf", selectedFile);
 
     try {
       setLoading(true);
@@ -69,21 +69,20 @@ const Dashboard = () => {
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,
-            'Content-Type': 'multipart/form-data'
-          }
-        }
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
 
-      alert("PDF Uploaded Successfully!");
+      toast.success("PDF Uploaded Successfully!");
 
-      setDocTitle('');
+      setDocTitle("");
       setSelectedFile(null);
       setQrPreview(null);
       setDocId(null);
-
     } catch (err) {
       console.error(err);
-      alert("Upload failed.");
+      toast.error("Upload failed.");
     } finally {
       setLoading(false);
     }
@@ -91,28 +90,10 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
-
-      {/* Sidebar */}
-      <div className="w-full lg:w-64 bg-gray-900 text-white p-4 lg:p-6 shadow-xl">
-        <h2 className="text-2xl font-bold mb-6 lg:mb-10 text-blue-400">QR Manager</h2>
-
-        <nav className="space-y-3 lg:space-y-4">
-          <div className="p-3 bg-slate-800 rounded-lg cursor-pointer">
-            Dashboard
-          </div>
-
-          <button
-            onClick={handleLogout}
-            className="w-full text-left p-3 hover:bg-red-900/50 text-red-400 rounded-lg mt-6 lg:mt-10 transition-colors"
-          >
-            Logout
-          </button>
-        </nav>
-      </div>
-
+      {/* sidebar  */}
+      <Sidebar />
       {/* Main Content */}
       <div className="flex-1 p-4 sm:p-6 md:p-8 lg:p-10 bg-gray-800">
-
         {/* Header */}
         <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-white">
@@ -122,7 +103,6 @@ const Dashboard = () => {
 
         {/* QR + Upload Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-10">
-
           {/* Generate QR */}
           <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-sm border">
             <h2 className="text-lg sm:text-xl font-bold mb-4 text-gray-700">
@@ -143,7 +123,7 @@ const Dashboard = () => {
                 disabled={loading}
                 className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700"
               >
-                {loading ? "Generating..." : "Generate QR"}
+                {qrLoading ? "Generating..." : "Generate QR"}
               </button>
 
               {qrPreview && (
@@ -197,27 +177,7 @@ const Dashboard = () => {
               </button>
             </form>
           </div>
-
         </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          <div className="bg-white p-6 rounded-xl shadow border-b-4 border-blue-500">
-            <p className="text-gray-500">Total Scans</p>
-            <h3 className="text-3xl sm:text-4xl font-bold">1,284</h3>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow border-b-4 border-purple-500">
-            <p className="text-gray-500">Active QRs</p>
-            <h3 className="text-3xl sm:text-4xl font-bold">42</h3>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow border-b-4 border-orange-500">
-            <p className="text-gray-500">Downloads</p>
-            <h3 className="text-3xl sm:text-4xl font-bold">12</h3>
-          </div>
-        </div>
-
       </div>
     </div>
   );

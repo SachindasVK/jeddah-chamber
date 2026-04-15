@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -21,11 +22,11 @@ const Login = () => {
 
       if (res.data.success) {
         localStorage.setItem("adminToken", res.data.token);
-        alert("Login Successful!");
+        toast.success("Login Successful!");
         navigate("/admin/dashboard");
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      toast.error(err.response?.data?.message || "Login failed");
     }
   };
 

@@ -1,5 +1,5 @@
 import "./Loading.css";
-import jcc from "../../../assets/jcc.svg";
+import jcc from "../../assets/jcc.svg";
 
 const Loading = () => {
   return (
