@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import cloudinary from "../config/ cloudinary.js";
 import Document from "../models/Document.js";
 
-// Configure Cloudinary (Better to put these in your .env file)
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -17,7 +16,7 @@ export const createDocumentAndQR = async (req, res) => {
     const uniqueId = uuidv4();
     // This URL is what the user sees when they scan the QR
     // const qrUrl = `http://localhost:5000/api/document/verify/${uniqueId}`;
-    const qrUrl = `http://192.168.43.89:5173/view/${uniqueId}`;
+    const qrUrl = `http://172.20.10.5:5173/view/${uniqueId}`;
     const qrCodeImage = await QRCode.toDataURL(qrUrl);
 
     const newDoc = new Document({

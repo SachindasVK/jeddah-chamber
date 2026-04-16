@@ -12,8 +12,6 @@ import PdfList from "./pages/admin/PdfList";
 import PdfDetails from "./pages/admin/PdfDetails";
 import NotFound from "./pages/user/NotFound";
 
-const Signup = React.lazy(() => import("./pages/admin/Signup"));
-const VerifyOtp = React.lazy(() => import("./pages/admin/VerifyOtp"));
 const Dashboard = React.lazy(() => import("./pages/admin/Dashboard"));
 const ViewDoc = React.lazy(() => import("./pages/user/ViewDoc"));
 const Login = React.lazy(() => import("./pages/admin/Login"));
@@ -40,11 +38,9 @@ const App = () => {
           <Navbar />
         </header>
         <Routes>
-          <Route path="/admin/signup" element={<Signup />} />
-          <Route path="/admin/verify-otp" element={<VerifyOtp />} />
           <Route path="/admin/login" element={<Login />} />
           <Route
-            path="/admin/dashboard"
+            path="/"
             element={
               <ProtectedRoute>
                 <Dashboard />

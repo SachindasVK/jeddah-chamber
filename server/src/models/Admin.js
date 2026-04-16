@@ -1,12 +1,19 @@
 import { Schema, model } from "mongoose";
 
 const AdminSchema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  otp: { type: String },
-  otpExpires: { type: Date },
-  isVerified: { type: Boolean, default: false },
+  email: { 
+    type: String, 
+    required: true, 
+    unique: true,
+    lowercase: true,
+    trim: true 
+  },
+  password: { 
+    type: String, 
+    required: true 
+  }
+}, { 
+  timestamps: true 
 });
 
 export default model("Admin", AdminSchema);

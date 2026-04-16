@@ -30,7 +30,7 @@ router.get('/view/:id', async (req, res) => {
 });
 
 
-router.get('/public/view/:uniqueId', async (req, res) => {
+router.get('/view/:uniqueId', async (req, res) => {
   try {
     const document = await Document.findOne({ uniqueId: req.params.uniqueId });
     

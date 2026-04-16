@@ -22,7 +22,7 @@ const Sidebar = () => {
 
         <nav className="space-y-3 lg:space-y-4">
           <Link
-            to="/admin/dashboard"
+            to="/"
             className="block flex gap-2 p-3 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700 transition-colors"
           >
             <LineChart />Dashboard

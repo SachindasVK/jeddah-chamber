@@ -1,9 +1,10 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Satellite } from 'lucide-react'; // Using a satellite icon to match your image
+import toast from 'react-hot-toast';
 
 const NotFound = () => {
-  const navigate = useNavigate();
+  const handleClick = () => {
+    toast.error('something went wrong!');
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 font-sans">
@@ -26,7 +27,7 @@ const NotFound = () => {
 
       {/* Custom Gradient Button */}
       <button 
-        onClick={() => navigate('/')}
+        onClick={() => handleClick()}
         className="bg-gradient-to-r from-[#49c5cf] to-[#005c8a] text-white font-bold py-3 px-12 rounded-full shadow-lg hover:opacity-90 transition-all text-lg"
         dir="rtl"
       >
