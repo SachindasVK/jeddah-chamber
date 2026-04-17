@@ -55,7 +55,7 @@ export const uploadPdf = async (req, res) => {
 
     // 2. Upload to Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "auto",
+      resource_type: "raw",
       folder: "jeddam_chamber_pdfs",
     });
 

@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Menu } from "lucide-react";
-import { PanelLeft } from "lucide-react";
-import { MdViewSidebar } from "react-icons/md";
+import { Document, Page, pdfjs } from "react-pdf";
+
+// Essential styles for react-pdf
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import {
   ZoomIn,
@@ -12,25 +15,32 @@ import {
   RotateCcw,
   RotateCw,
   Download,
-  ChevronLeft,
-  ChevronRight,
   Moon,
+  Sun,
   MoveHorizontal,
   Columns
 } from "lucide-react";
 
+// Fix for the Version Mismatch Error
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const ViewDoc = () => {
   const { id } = useParams();
   const [doc, setDoc] = useState(null);
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [theme, setTheme] = useState(localStorage.getItem("docTheme") || "light");
+
+  const finalUrl = doc?.pdfUrl || doc?.pdfPath;
+
+  useEffect(() => {
+    localStorage.setItem("docTheme", theme);
+  }, [theme]);
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        // Dynamic IP - ensures your phone can reach the Lubuntu server
-        const res = await axios.get(
-          `http://172.20.10.5:5000/api/document/view/${id}`,
-        );
+        const res = await axios.get(`http://172.20.10.5:5000/api/document/view/${id}`);
         setDoc(res.data);
       } catch (err) {
         toast.error("Verification failed");
@@ -38,161 +48,79 @@ const ViewDoc = () => {
     };
     fetchDetails();
   }, [id]);
-  if (!doc)
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6 text-center">
-        <div className="bg-white p-8 rounded-xl shadow-md">
-          <h2 className="text-2xl font-bold text-red-600 mb-2">
-            Invalid Document
-          </h2>
-          <p className="text-gray-500">
-            The QR code scanned does not match any record.
-          </p>
-        </div>
-      </div>
-    );
+
+  if (!doc) return <div className="h-screen flex items-center justify-center">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-[#f4f7f9] flex flex-col items-center sm:py-8 sm:px-6">
-      {/* Responsive Header Container */}
-      <div className="w-full max-w-[850px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 sm:p-5 shadow-sm border border-gray-100">
+    <div className={`min-h-screen flex flex-col items-center py-4 sm:py-8 transition-colors duration-300 ${theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"}`}>
+      
+      {/* Header Toolbar - Your exact structure */}
+      <div className={`w-full max-w-full flex flex-col sm:flex-row justify-between items-center gap-4 p-4 shadow-sm border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}>
         <div className="flex items-center gap-3">
-
-          {/* sidebutton  */}
-          <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-sm">
-            <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-sm">
-              <Columns />
-            </div>
+          <div className="bg-gray-100 border border-gray-300 p-2 rounded-sm"><Columns size={20} color="#4b5563" /></div>
+          
+          <div className="flex gap-2 bg-gray-100 border border-gray-300 p-2 rounded-md">
+            <FaChevronLeft color="#4b5563" />
+            <span className="px-6 font-bold text-gray-600">1/1</span>
+            <FaChevronRight color="#4b5563" />
           </div>
 
-          {/* next page  */}
-          <div className="flex gap-2 bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-            <div className="bg-gray-100 border border-gray-300 py-1 pt-2 px-2 rounded-md">
-              <FaChevronLeft />
-            </div>
-            <div className="bg-gray-100 border border-gray-300 py-1 px-8 rounded-md">
-               <span>1/1</span>
-            </div>
-            <div className="bg-gray-100 border border-gray-300 py-1 pt-2 px-2 rounded-md">
-              <FaChevronRight />
-            </div>
-          </div>
-
-          {/* download button  */}
-          <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-            <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-              <Download />
-            </div>
-          </div>
-
+          <a href={finalUrl} download className="bg-gray-100 border border-gray-300 p-2 rounded-md">
+            <Download size={20} color="#4b5563" />
+          </a>
         </div>
+
         <div className="flex gap-3">
-
-          {/* zoom in out  */}
-          <div className="flex gap-2 bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-            <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-              <ZoomOut />
-            </div>
-            <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-              <ZoomIn />
-            </div>
-            
-            <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-              <MoveHorizontal />
-            </div>
+          <div className="flex gap-2 bg-gray-100 border border-gray-300 p-2 rounded-md">
+            <button onClick={() => setZoom(prev => Math.max(prev - 0.2, 0.5))}><ZoomOut size={20} color="#4b5563" /></button>
+            <button onClick={() => setZoom(prev => Math.max(prev + 0.1))}><ZoomIn size={20} color="#4b5563" /></button>
+            <button onClick={() => {setZoom(1); setRotation(0);}}><MoveHorizontal size={20} color="#4b5563" /></button>
           </div>
-          {/* next page  */}
-          <div className="flex gap-2 bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-            <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-              <RotateCcw />
-            </div>
-            <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-              <RotateCw />
-            </div>
+          
+          <div className="flex gap-2 bg-gray-100 border border-gray-300 p-2 rounded-md">
+            <button onClick={() => setRotation(prev => prev - 90)}><RotateCcw size={20} color="#4b5563" /></button>
+            <button onClick={() => setRotation(prev => prev + 90)}><RotateCw size={20} color="#4b5563" /></button>
           </div>
 
-          {/* download button  */}
-          <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-            <div className="bg-gray-100 border border-gray-300 py-1 px-2 rounded-md">
-              <Moon />
+          <div onClick={() => setTheme(theme === "light" ? "dark" : "light")} className="cursor-pointer p-1 rounded-md">
+            <div className={`p-2 rounded-md ${theme === "dark" ? "bg-amber-500" : "bg-gray-100 border border-gray-300"}`}>
+              {theme === "light" ? <Moon size={20} color="#4b5563" /> : <Sun size={20} color="white" />}
             </div>
           </div>
         </div>
-
-
       </div>
 
-      {/* Dynamic A4 Container */}
-      {/* w-[98%]  -> Almost full width on tiny phones 
-          sm:w-[90%] -> A bit of margin on tablets
-          max-w-[850px] -> Stops growing on desktops
-      */}
+      {/* PDF Container - No External Scrollbars, White BG */}
       <div
-        className="w-[98%] sm:w-[92%] max-w-[850px] bg-white shadow-2xl overflow-hidden border border-gray-200 relative"
+        className={`w-full max-w-full mt-1 transition-all overflow-auto flex justify-center ${theme === "dark" ? "bg-gray-900 border-gray-700" : "bg-gray-100 border-gray-200"}`}
         style={{
-          aspectRatio: "1 / 1.414",
-          maxHeight: "80vh",
+          height: "90vh",
+          scrollbarWidth: "none", // Hide scrollbar Firefox
+          msOverflowStyle: "none"  // Hide scrollbar IE/Edge
         }}
       >
-        {doc.pdfUrl ? (
-          <object
-            data={`${doc.pdfUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-            type="application/pdf"
-            className="w-full h-full border-none"
+        <div 
+          className="transition-all duration-300"
+          style={{ 
+            filter: theme === "dark" ? "invert(0.9) hue-rotate(180deg) brightness(1.1)" : "none"
+          }}
+        >
+          <Document
+            file={finalUrl}
+            loading={<div className="p-20 text-gray-400">Loading Document...</div>}
           >
-            <iframe
-              src={`${doc.pdfUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-              title="Document View"
-              className="w-full h-full border-none"
-              loading="lazy"
-            >
-              <div className="flex flex-col items-center justify-center h-full text-gray-500 p-6 text-center">
-                <p className="mb-4 text-sm">
-                  PDF preview not available in this browser.
-                </p>
-                <a
-                  href={doc.pdfUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-blue-600 text-white px-5 py-2 rounded-lg font-bold text-sm"
-                >
-                  View Document
-                </a>
-              </div>
-            </iframe>
-          </object>
-        ) : (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400 p-10">
-            <span className="text-4xl mb-4">⌛</span>
-            <p className="font-medium">Document content is processing...</p>
-          </div>
-        )}
-      </div>
-
-      {/* Responsive Footer Details */}
-      <div className="w-full max-w-[850px] mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 px-2">
-        <div className="text-left">
-          <p className="text-[10px] text-gray-400 uppercase font-bold">
-            Verification ID
-          </p>
-          <p className="text-xs text-gray-600 truncate">{id}</p>
-        </div>
-        <div className="text-left sm:text-right">
-          <p className="text-[10px] text-gray-400 uppercase font-bold">
-            Verification Date
-          </p>
-          <p className="text-xs text-gray-600">
-            {new Date(doc.date).toLocaleString()}
-          </p>
+            <Page 
+              pageNumber={1} 
+              scale={zoom} 
+              rotate={rotation}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+              canvasBackground="white" // Forces internal white background
+            />
+          </Document>
         </div>
       </div>
-
-      <div className="mt-10 mb-6 text-center">
-        <p className="text-gray-400 text-[10px] italic">
-          This is a computer-generated document and does not require a physical
-          signature.
-        </p>
-      </div>
+    
     </div>
   );
 };

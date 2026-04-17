@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import jcc from '../../assets/jcc.svg'
+import jccLogoblue from '../../assets/jccLogoblue.jpeg'
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -34,14 +35,13 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#001f3f] p-4"
-         style={{ backgroundImage: 'linear-gradient(to top, #001f3f, #005c8a)' }}>
+      >
       
-      {/* Container Card */}
       <div className="bg-white p-8 sm:p-12 rounded-2xl shadow-2xl w-full sm:max-w-md relative">
         
         {/* TOP RIGHT LOGO PLACEHOLDER */}
         <div className="absolute top-6 right-8 w-36 h-26 bg-gray-200 rounded-lg flex items-center justify-center border-gray-100 text-[10px] text-gray-400 text-center">
-         <img src={jcc} alt="" />
+         <img src={jccLogoblue} alt="" />
         </div>
 
         {/* Header */}

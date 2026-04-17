@@ -6,55 +6,49 @@ import { createDocumentAndQR, uploadPdf } from '../controllers/documentControlle
 
 const router = express.Router();
 
-// Setup storage
+// Setup storage for local temp files before Cloudinary upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
 const uploads = multer({ storage });
 
+// --- POST ROUTES ---
 router.post('/generate', verifyToken, createDocumentAndQR);
 router.post('/upload/:docId', verifyToken, uploads.single('pdf'), uploadPdf);
+
+// --- GET ROUTES ---
+
+/** * Public Route: Used by the QR Scanner (Phone)
+ * Combined the two duplicates into this single clean route
+ */
 router.get('/view/:id', async (req, res) => {
   try {
     const doc = await Document.findOne({ uniqueId: req.params.id });
 
     if (!doc) {
-      return res.status(404).json({ message: "Document not found" });
+      return res.status(404).json({ success: false, message: "Document not found" });
     }
 
-    res.json(doc);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-
-router.get('/view/:uniqueId', async (req, res) => {
-  try {
-    const document = await Document.findOne({ uniqueId: req.params.uniqueId });
-    
-    if (!document) {
-      return res.status(404).json({ message: "Document not found or invalid QR" });
-    }
-
-    res.status(200).json({
+    // Ensure we return pdfUrl so the frontend iframe works
+    res.json({
       success: true,
-      title: document.title,
-      pdfUrl: document.pdfPath, // This is the Cloudinary URL
-      date: document.createdAt
+      title: doc.title,
+      pdfUrl: doc.pdfPath, 
+      date: doc.createdAt
     });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
-
-
+/**
+ * Protected Route: Get all documents for Admin List (with pagination)
+ */
 router.get('/all', verifyToken, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5; // Show 5 docs per page
+    const limit = parseInt(req.query.limit) || 5; 
     const skip = (page - 1) * limit;
 
     const totalDocs = await Document.countDocuments();
@@ -73,18 +67,9 @@ router.get('/all', verifyToken, async (req, res) => {
   }
 });
 
-
-router.delete('/:id', verifyToken, async (req, res) => {
-  try {
-    await Document.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Document deleted" });
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-
-// Get single document details
+/**
+ * Protected Route: Get single document details by MongoDB _id
+ */
 router.get('/details/:id', verifyToken, async (req, res) => {
   try {
     const doc = await Document.findById(req.params.id);
@@ -94,4 +79,18 @@ router.get('/details/:id', verifyToken, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+// --- DELETE ROUTES ---
+router.delete('/:id', verifyToken, async (req, res) => {
+  try {
+    // Note: It's safer to use findByIdAndDelete to ensure you are using the MongoDB _id
+    const deletedDoc = await Document.findByIdAndDelete(req.params.id);
+    if (!deletedDoc) return res.status(404).json({ message: "Document not found" });
+    
+    res.status(200).json({ message: "Document deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;
