@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { Suspense } from "react";
 import Loading from "./components/Loading/Loading";
 import { useState } from "react";
@@ -8,16 +8,16 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./context/ProtectedRoutes";
 import { Toaster } from "react-hot-toast";
-import PdfList from "./pages/admin/PdfList";
-import PdfDetails from "./pages/admin/PdfDetails";
-import NotFound from "./pages/user/NotFound";
-
 const Dashboard = React.lazy(() => import("./pages/admin/Dashboard"));
 const ViewDoc = React.lazy(() => import("./pages/user/ViewDoc"));
 const Login = React.lazy(() => import("./pages/admin/Login"));
+const PdfList = React.lazy(() => import("./pages/admin/PdfList"));
+const PdfDetails = React.lazy(() => import("./pages/admin/PdfDetails"));
+const NotFound = React.lazy(() => import("./pages/user/NotFound"));
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -52,7 +52,7 @@ const App = () => {
           <Route path="/view/:id" element={<ViewDoc />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {!(<ViewDoc />) && (
+        {!location.pathname.startsWith("/view/") && (
           <footer>
             <Footer />
           </footer>

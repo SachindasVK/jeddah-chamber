@@ -318,9 +318,11 @@ const ViewDoc = () => {
               pageNumber={pageNumber}
               width={containerWidth * zoom}
               rotate={rotation}
-              renderTextLayer={false}
+              devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
+              renderTextLayer={true}
               renderAnnotationLayer={false}
               canvasBackground="white"
+              className="pdf-page-high-quality"
             />
           </Document>
         </div>

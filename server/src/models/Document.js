@@ -6,7 +6,7 @@ const documentSchema = new mongoose.Schema({
   qrUrl: { type: String, required: true }, // e.g., https://yourdomain.com/doc/doc_12345
   pdfPath: { type: String }, // Path to the uploaded file
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now, index: true }
 });
 
 export default mongoose.model('Document', documentSchema);
