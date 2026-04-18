@@ -52,9 +52,11 @@ const App = () => {
           <Route path="/view/:id" element={<ViewDoc />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <footer>
-          <Footer />
-        </footer>
+        {!(<ViewDoc />) && (
+          <footer>
+            <Footer />
+          </footer>
+        )}
       </Suspense>
     </>
   );

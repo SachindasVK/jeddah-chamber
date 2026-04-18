@@ -25,28 +25,42 @@ const Dashboard = () => {
 
   // Generate QR
   const handleGenerateQR = async () => {
-    if (!docTitle) return toast.error("Please enter a document title");
+  if (!docTitle.trim()) return toast.error("Please enter a document title");
 
-    setQrLoading(true);
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/document/generate",
-        { title: docTitle },
-        { headers: { Authorization: `Bearer ${adminToken}` } },
-      );
+  setQrLoading(true);
+  try {
+    const res = await axios.post(
+      "http://localhost:5000/api/document/generate",
+      { title: docTitle.trim() }, 
+      { headers: { Authorization: `Bearer ${adminToken}` } },
+    );
 
-      setQrPreview(res.data.qrCodeImage);
+    setQrPreview(res.data.qrCodeImage);
 
-      if (res.data.document && res.data.document._id) {
-        setDocId(res.data.document._id);
-        toast.success("QR Generated Successfully");
-      }
-    } catch (err) {
-      toast.error("Error generating QR");
-    } finally {
-      setQrLoading(false);
+    if (res.data.document && res.data.document._id) {
+      setDocId(res.data.document._id);
+      toast.success("QR Generated Successfully");
     }
-  };
+  } catch (err) {
+    if (err.response) {
+      if (err.response.status === 400) {
+        toast.error(err.response.data.message || "Document title already exists");
+      } else if (err.response.status === 401) {
+        toast.error("Session expired. Please login again.");
+      } else {
+        toast.error("Server error. Please try again later.");
+      }
+    } else if (err.request) {
+      toast.error("Cannot connect to server. Check your network.");
+    } else {
+      toast.error("An unexpected error occurred.");
+    }
+    
+    console.error("QR Error:", err);
+  } finally {
+    setQrLoading(false);
+  }
+};
 
   // Upload PDF
   const handleUpload = async (e) => {
