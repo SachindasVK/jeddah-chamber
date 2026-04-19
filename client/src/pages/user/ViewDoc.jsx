@@ -37,8 +37,12 @@ const ZOOM_STEP = 0.1;
 const ViewDoc = () => {
   const { id } = useParams();
   const containerRef = useRef(null);
+  const pdfWrapRef = useRef(null);
+
+  // Pinch refs — never cause re-renders
   const lastDistanceRef = useRef(null);
-  const lastZoomRef = useRef(1); // track zoom in ref for pinch handler closure
+  const zoomAtGestureStartRef = useRef(1);
+  const liveScaleRef = useRef(1); // CSS scale applied during pinch
 
   const [doc, setDoc] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(true);
@@ -65,68 +69,78 @@ const ViewDoc = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ── Pinch-to-zoom (fixed) ──────────────────────────────────────────────────
+  // ── Smooth pinch-to-zoom ───────────────────────────────────────────────────
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    const container = containerRef.current;
+    const pdfWrap = pdfWrapRef.current;
+    if (!container || !pdfWrap) return;
 
     const getDistance = (t1, t2) =>
       Math.hypot(t2.pageX - t1.pageX, t2.pageY - t1.pageY);
 
     const onTouchStart = (e) => {
-      if (e.touches.length === 2) {
-        lastDistanceRef.current = getDistance(e.touches[0], e.touches[1]);
-        // seed lastZoomRef so the first move delta is correct
-        lastZoomRef.current = zoom;
-      }
+      if (e.touches.length !== 2) return;
+      lastDistanceRef.current = getDistance(e.touches[0], e.touches[1]);
+      zoomAtGestureStartRef.current = liveScaleRef.current;
+      // Remove transition during gesture for instant response
+      pdfWrap.style.transition = "none";
     };
 
     const onTouchMove = (e) => {
-      if (e.touches.length !== 2) return;
-
-      // prevent page scroll while pinching
-      e.preventDefault();
+      if (e.touches.length !== 2 || lastDistanceRef.current === null) return;
+      e.preventDefault(); // stop page scroll while pinching
 
       const distance = getDistance(e.touches[0], e.touches[1]);
-      if (lastDistanceRef.current === null) {
-        lastDistanceRef.current = distance;
-        return;
-      }
-
       const ratio = distance / lastDistanceRef.current;
 
-      // Only update when change is meaningful to avoid jitter
-      if (Math.abs(ratio - 1) > 0.02) {
-        lastZoomRef.current = Math.min(
-          MAX_ZOOM,
-          Math.max(MIN_ZOOM, lastZoomRef.current * ratio)
-        );
-        setZoom(lastZoomRef.current);
-        lastDistanceRef.current = distance;
-      }
+      const newScale = Math.min(
+        MAX_ZOOM,
+        Math.max(MIN_ZOOM, zoomAtGestureStartRef.current * ratio)
+      );
+
+      // Apply CSS transform instantly — no React re-render, no jank
+      liveScaleRef.current = newScale;
+      pdfWrap.style.transform = `scale(${newScale})`;
+      pdfWrap.style.transformOrigin = "top center";
     };
 
     const onTouchEnd = (e) => {
-      if (e.touches.length < 2) {
+      if (e.touches.length >= 2) return; // still pinching with other fingers
+
+      if (lastDistanceRef.current !== null) {
+        const committed = parseFloat(liveScaleRef.current.toFixed(2));
+
+        // Snap CSS scale back to 1 (PDF will re-render at correct width)
+        pdfWrap.style.transition = "transform 0.15s ease-out";
+        pdfWrap.style.transform = "scale(1)";
+        pdfWrap.style.transformOrigin = "top center";
+
+        // Update state so PDF re-renders at the correct pixel size
+        setZoom(committed);
+
         lastDistanceRef.current = null;
       }
     };
 
-    el.addEventListener("touchstart", onTouchStart, { passive: true });
-    el.addEventListener("touchmove", onTouchMove, { passive: false }); // must be non-passive to preventDefault
-    el.addEventListener("touchend", onTouchEnd, { passive: true });
+    container.addEventListener("touchstart", onTouchStart, { passive: true });
+    container.addEventListener("touchmove", onTouchMove, { passive: false });
+    container.addEventListener("touchend", onTouchEnd, { passive: true });
+    container.addEventListener("touchcancel", onTouchEnd, { passive: true });
 
     return () => {
-      el.removeEventListener("touchstart", onTouchStart);
-      el.removeEventListener("touchmove", onTouchMove);
-      el.removeEventListener("touchend", onTouchEnd);
+      container.removeEventListener("touchstart", onTouchStart);
+      container.removeEventListener("touchmove", onTouchMove);
+      container.removeEventListener("touchend", onTouchEnd);
+      container.removeEventListener("touchcancel", onTouchEnd);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // intentionally empty — uses refs, not state
+  }, []); // empty — uses only refs
 
-  // keep lastZoomRef in sync whenever zoom changes via buttons
+  // Keep liveScaleRef in sync when zoom changes via buttons
   useEffect(() => {
-    lastZoomRef.current = zoom;
+    liveScaleRef.current = zoom;
+    if (pdfWrapRef.current) {
+      pdfWrapRef.current.style.transform = "scale(1)";
+    }
   }, [zoom]);
 
   // ── Persist theme ──────────────────────────────────────────────────────────
@@ -186,7 +200,6 @@ const ViewDoc = () => {
     }
   };
 
-  // ── Shared class helpers ───────────────────────────────────────────────────
   const panelCls = `${
     theme === "dark"
       ? "bg-gray-800 border-gray-600"
@@ -212,14 +225,12 @@ const ViewDoc = () => {
       >
         {/* Row 1 */}
         <div className="flex items-center w-full gap-1.5">
-          {/* Sidebar icon */}
           <div className={`${panelCls} py-0.5 px-1 rounded-sm`}>
-            <div className={`${btnWrap()}`}>
+            <div className={btnWrap()}>
               <MdViewSidebar size={18} color={iconColor} />
             </div>
           </div>
 
-          {/* Page navigation */}
           <div className={`flex items-center gap-1 ${panelCls} p-0.5 rounded-sm`}>
             <div className={btnWrap()}>
               <button
@@ -246,9 +257,7 @@ const ViewDoc = () => {
 
             <div className={btnWrap()}>
               <button
-                onClick={() =>
-                  setPageNumber((p) => Math.min(p + 1, numPages))
-                }
+                onClick={() => setPageNumber((p) => Math.min(p + 1, numPages))}
                 disabled={pageNumber >= numPages}
                 aria-label="Next page"
               >
@@ -260,7 +269,6 @@ const ViewDoc = () => {
             </div>
           </div>
 
-          {/* Download */}
           <div className={`${panelCls} p-0.5 rounded-sm`}>
             <div className={btnWrap()}>
               <button onClick={handleDownload} aria-label="Download PDF">
@@ -274,27 +282,14 @@ const ViewDoc = () => {
         <div className="flex items-center gap-1.5 w-full sm:w-auto flex-wrap">
           {/* Zoom controls */}
           <div className={`flex gap-1 ${panelCls} p-0.5 rounded-sm`}>
-            {/* Zoom out */}
             <div className={btnWrap()}>
-              <button
-                onClick={zoomOut}
-                disabled={zoom <= MIN_ZOOM}
-                aria-label="Zoom out"
-              >
-                <ZoomOut
-                  size={17}
-                  color={zoom <= MIN_ZOOM ? "#64748b" : iconColor}
-                />
+              <button onClick={zoomOut} disabled={zoom <= MIN_ZOOM} aria-label="Zoom out">
+                <ZoomOut size={17} color={zoom <= MIN_ZOOM ? "#64748b" : iconColor} />
               </button>
             </div>
 
-            {/* Zoom percentage display — click to reset zoom only */}
             <div className={`${panelCls} px-2 flex items-center rounded-sm`}>
-              <button
-                onClick={() => setZoom(1)}
-                aria-label="Reset zoom"
-                title="Click to reset zoom"
-              >
+              <button onClick={() => setZoom(1)} aria-label="Reset zoom" title="Click to reset zoom">
                 <span
                   className={`text-xs font-semibold w-10 text-center select-none ${
                     theme === "dark" ? "text-gray-200" : "text-gray-600"
@@ -305,21 +300,12 @@ const ViewDoc = () => {
               </button>
             </div>
 
-            {/* Zoom in */}
             <div className={btnWrap()}>
-              <button
-                onClick={zoomIn}
-                disabled={zoom >= MAX_ZOOM}
-                aria-label="Zoom in"
-              >
-                <ZoomIn
-                  size={17}
-                  color={zoom >= MAX_ZOOM ? "#64748b" : iconColor}
-                />
+              <button onClick={zoomIn} disabled={zoom >= MAX_ZOOM} aria-label="Zoom in">
+                <ZoomIn size={17} color={zoom >= MAX_ZOOM ? "#64748b" : iconColor} />
               </button>
             </div>
 
-            {/* Reset zoom + rotation */}
             <div className={`${panelCls} px-2 flex items-center py-1 rounded-sm`}>
               <button onClick={resetView} aria-label="Reset view">
                 <MoveHorizontal size={17} color={iconColor} />
@@ -336,46 +322,23 @@ const ViewDoc = () => {
             }`}
           >
             <div className={`${panelCls} py-1 px-1 rounded-sm flex items-center`}>
-              <button
-                onClick={() => setRotation((r) => r - 180)}
-                aria-label="Rotate 180° counter-clockwise"
-              >
-                <FaArrowRotateLeft
-                  size={17}
-                  color={iconColor}
-                  className="border p-1 rounded-full"
-                />
+              <button onClick={() => setRotation((r) => r - 180)}>
+                <FaArrowRotateLeft size={17} color={iconColor} className="border p-1 rounded-full" />
               </button>
             </div>
-
             <div className={`${panelCls} px-2 flex py-1 rounded-sm`}>
-              <button
-                onClick={() => setRotation((r) => r - 90)}
-                aria-label="Rotate 90° counter-clockwise"
-              >
+              <button onClick={() => setRotation((r) => r - 90)}>
                 <RotateCcw size={17} color={iconColor} />
               </button>
             </div>
-
             <div className={`${panelCls} px-2 flex items-center py-1 rounded-sm`}>
-              <button
-                onClick={() => setRotation((r) => r + 90)}
-                aria-label="Rotate 90° clockwise"
-              >
+              <button onClick={() => setRotation((r) => r + 90)}>
                 <RotateCw size={17} color={iconColor} />
               </button>
             </div>
-
             <div className={`${panelCls} px-1 flex items-center py-1 rounded-sm`}>
-              <button
-                onClick={() => setRotation((r) => r + 180)}
-                aria-label="Rotate 180° clockwise"
-              >
-                <FaArrowRotateRight
-                  size={17}
-                  color={iconColor}
-                  className="border p-1 rounded-full"
-                />
+              <button onClick={() => setRotation((r) => r + 180)}>
+                <FaArrowRotateRight size={17} color={iconColor} className="border p-1 rounded-full" />
               </button>
             </div>
           </div>
@@ -418,7 +381,6 @@ const ViewDoc = () => {
         }`}
         style={{
           height: "calc(100vh - 140px)",
-          // Allow panning when zoomed in; pinch handler calls preventDefault
           touchAction: "pan-x pan-y",
         }}
       >
@@ -426,18 +388,21 @@ const ViewDoc = () => {
           <Loading />
         ) : finalUrl ? (
           <div
-            className={`w-max mx-auto transition-all duration-200 h-fit ${
+            ref={pdfWrapRef}
+            className={`w-max mx-auto h-fit ${
               theme === "dark"
                 ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                 : "shadow-lg"
             }`}
+            style={{
+              transformOrigin: "top center",
+              willChange: "transform", // GPU-accelerate the CSS scale
+            }}
           >
             <Document
               file={finalUrl}
               onLoadSuccess={onDocumentLoadSuccess}
-              error={
-                <div className="p-20 text-red-500">Failed to load PDF.</div>
-              }
+              error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
               loading={<></>}
             >
               <Page
