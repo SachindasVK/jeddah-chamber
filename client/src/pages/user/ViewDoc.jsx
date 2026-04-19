@@ -110,6 +110,20 @@ const ViewDoc = () => {
     }
   };
 
+  useEffect(() => {
+  const preventPinchZoom = (e) => {
+    if (e.touches && e.touches.length > 1) {
+      e.preventDefault();
+    }
+  };
+
+  document.addEventListener("touchmove", preventPinchZoom, { passive: false });
+
+  return () => {
+    document.removeEventListener("touchmove", preventPinchZoom);
+  };
+}, []);
+
   return (
     <div
       className={`min-h-screen flex flex-col ${theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"}`}
