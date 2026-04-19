@@ -296,7 +296,7 @@ const ViewDoc = () => {
       <div
         ref={containerRef}
         className={`w-full mt-1 overflow-x-auto flex justify-center py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
-        style={{ height: "calc(100vh - 140px)" }}
+        style={{ height: "calc(100vh - 140px)",touchAction:"none" }}
       >
         {loadingDetails ? (
            <Loading />
@@ -308,7 +308,7 @@ const ViewDoc = () => {
               file={finalUrl}
               onLoadSuccess={onDocumentLoadSuccess}
               error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
-              loading={<div></div>}
+              loading={<></>}
             >
               <Page
                 pageNumber={pageNumber}
