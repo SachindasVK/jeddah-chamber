@@ -34,6 +34,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 const ViewDoc = () => {
   const { id } = useParams();
   const containerRef = useRef(null);
+  const lastDistance = useRef(null);
 
   const [doc, setDoc] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(true);
@@ -60,6 +61,53 @@ const ViewDoc = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+
+  useEffect(() => {
+  const el = containerRef.current;
+  if (!el) return;
+
+  const getDistance = (t1, t2) => {
+    return Math.hypot(
+      t2.pageX - t1.pageX,
+      t2.pageY - t1.pageY
+    );
+  };
+
+  const onTouchMove = (e) => {
+    if (e.touches.length !== 2) return;
+
+    const distance = getDistance(e.touches[0], e.touches[1]);
+
+    if (!lastDistance.current) {
+      lastDistance.current = distance;
+      return;
+    }
+
+    const delta = distance - lastDistance.current;
+
+    if (Math.abs(delta) > 10) {
+      setZoom((prev) =>
+        delta > 0
+          ? Math.min(prev + 0.1, 3)
+          : Math.max(prev - 0.1, 0.5)
+      );
+      lastDistance.current = distance;
+    }
+  };
+
+  const onTouchEnd = () => {
+    lastDistance.current = null;
+  };
+
+  el.addEventListener("touchmove", onTouchMove, { passive: false });
+  el.addEventListener("touchend", onTouchEnd);
+
+  return () => {
+    el.removeEventListener("touchmove", onTouchMove);
+    el.removeEventListener("touchend", onTouchEnd);
+  };
+}, []);
 
   useEffect(() => {
     localStorage.setItem("docTheme", theme);
@@ -297,14 +345,14 @@ const ViewDoc = () => {
       {/* PDF Container */}
       <div
         ref={containerRef}
-        className={`w-full mt-1 overflow-auto flex justify-center py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
+        className={`w-full mt-1 overflow-auto py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
         style={{ height: "calc(100vh - 140px)",touchAction:"manipulation" }}
       >
         {loadingDetails ? (
            <Loading />
         ) : finalUrl ? (
           <div
-            className={`transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
+            className={`flex min-w-full justify-start transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
           >
             <Document
               file={finalUrl}
