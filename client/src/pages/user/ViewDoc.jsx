@@ -77,8 +77,6 @@ const ViewDoc = () => {
   const onTouchMove = (e) => {
     if (e.touches.length !== 2) return;
     
-    e.preventDefault();
-
     const distance = getDistance(e.touches[0], e.touches[1]);
 
     if (!lastDistance.current) {
