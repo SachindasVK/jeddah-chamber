@@ -35,6 +35,7 @@ const ViewDoc = () => {
   const containerRef = useRef(null);
 
   const [doc, setDoc] = useState(null);
+  const [loadingDetails, setLoadingDetails] = useState(true);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [zoom, setZoom] = useState(1);
@@ -72,6 +73,8 @@ const ViewDoc = () => {
         setDoc(res.data);
       } catch (err) {
         toast.error("Verification failed");
+      } finally {
+        setLoadingDetails(false);
       }
     };
     fetchDetails();
@@ -294,26 +297,37 @@ const ViewDoc = () => {
         className={`w-full mt-1 overflow-x-auto flex justify-center py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
         style={{ height: "calc(100vh - 140px)" }}
       >
-        <div
-          className={`transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
-        >
-          <Document
-            file={finalUrl}
-            onLoadSuccess={onDocumentLoadSuccess}
-            error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
+        {loadingDetails ? (
+           <div className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+             Loading document details...
+           </div>
+        ) : finalUrl ? (
+          <div
+            className={`transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
           >
-            <Page
-              pageNumber={pageNumber}
-              width={containerWidth * zoom}
-              rotate={rotation}
-              devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
-              renderTextLayer={true}
-              renderAnnotationLayer={false}
-              canvasBackground="white"
-              className="pdf-page-high-quality"
-            />
-          </Document>
-        </div>
+            <Document
+              file={finalUrl}
+              onLoadSuccess={onDocumentLoadSuccess}
+              error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
+              loading={<div className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>Loading PDF completely...</div>}
+            >
+              <Page
+                pageNumber={pageNumber}
+                width={containerWidth * zoom}
+                rotate={rotation}
+                devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
+                renderTextLayer={true}
+                renderAnnotationLayer={false}
+                canvasBackground="white"
+                className="pdf-page-high-quality"
+              />
+            </Document>
+          </div>
+        ) : (
+          <div className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+            No PDF document available.
+          </div>
+        )}
       </div>
     </div>
   );
