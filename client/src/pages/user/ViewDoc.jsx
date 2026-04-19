@@ -38,7 +38,6 @@ const ViewDoc = () => {
   const { id } = useParams();
   const containerRef = useRef(null);
   const lastDistanceRef = useRef(null);
-  const lastZoomRef = useRef(1); // track zoom in ref for pinch handler closure
 
   const [doc, setDoc] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(true);
@@ -64,65 +63,6 @@ const ViewDoc = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // ── Pinch-to-zoom (fixed) ──────────────────────────────────────────────────
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const getDistance = (t1, t2) =>
-      Math.hypot(t2.pageX - t1.pageX, t2.pageY - t1.pageY);
-
-    const onTouchStart = (e) => {
-      if (e.touches.length === 2) {
-        lastDistanceRef.current = getDistance(e.touches[0], e.touches[1]);
-        // seed lastZoomRef so the first move delta is correct
-        lastZoomRef.current = zoom;
-      }
-    };
-
-    const onTouchMove = (e) => {
-      if (e.touches.length !== 2) return;
-
-      // prevent page scroll while pinching
-      e.preventDefault();
-
-      const distance = getDistance(e.touches[0], e.touches[1]);
-      if (lastDistanceRef.current === null) {
-        lastDistanceRef.current = distance;
-        return;
-      }
-
-      const ratio = distance / lastDistanceRef.current;
-
-      // Only update when change is meaningful to avoid jitter
-      if (Math.abs(ratio - 1) > 0.02) {
-        lastZoomRef.current = Math.min(
-          MAX_ZOOM,
-          Math.max(MIN_ZOOM, lastZoomRef.current * ratio)
-        );
-        setZoom(lastZoomRef.current);
-        lastDistanceRef.current = distance;
-      }
-    };
-
-    const onTouchEnd = (e) => {
-      if (e.touches.length < 2) {
-        lastDistanceRef.current = null;
-      }
-    };
-
-    el.addEventListener("touchstart", onTouchStart, { passive: true });
-    el.addEventListener("touchmove", onTouchMove, { passive: false }); // must be non-passive to preventDefault
-    el.addEventListener("touchend", onTouchEnd, { passive: true });
-
-    return () => {
-      el.removeEventListener("touchstart", onTouchStart);
-      el.removeEventListener("touchmove", onTouchMove);
-      el.removeEventListener("touchend", onTouchEnd);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // intentionally empty — uses refs, not state
 
   // keep lastZoomRef in sync whenever zoom changes via buttons
   useEffect(() => {
@@ -166,9 +106,7 @@ const ViewDoc = () => {
     setRotation(0);
   };
 
-  const zoomPercent = Math.round(zoom * 100);
 
-  // ── Download ───────────────────────────────────────────────────────────────
   const handleDownload = async () => {
     try {
       const response = await axios.get(finalUrl, { responseType: "blob" });
@@ -186,7 +124,6 @@ const ViewDoc = () => {
     }
   };
 
-  // ── Shared class helpers ───────────────────────────────────────────────────
   const panelCls = `${
     theme === "dark"
       ? "bg-gray-800 border-gray-600"
