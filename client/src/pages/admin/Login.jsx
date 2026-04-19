@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/admin/login", formData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/login`, formData);
       if (res.data.success) {
         localStorage.setItem("adminToken", res.data.token);
         toast.success("Login Successful!");
@@ -41,7 +41,7 @@ const Login = () => {
         
         {/* TOP RIGHT LOGO PLACEHOLDER */}
         <div className="absolute top-6 right-8 w-36 h-26 bg-gray-200 rounded-lg flex items-center justify-center border-gray-100 text-[10px] text-gray-400 text-center">
-         <img src={jccLogoblue} alt="" />
+         <img src={jccLogoblue} alt="logo" />
         </div>
 
         {/* Header */}

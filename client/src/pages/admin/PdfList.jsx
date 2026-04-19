@@ -4,6 +4,7 @@ import axios from "axios";
 import Sidebar from "../../components/Sidebar";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+const API = import.meta.env.VITE_API_URL;
 
 const PdfList = () => {
   const [documents, setDocuments] = useState([]);
@@ -18,8 +19,7 @@ const PdfList = () => {
   const fetchDocs = async (currentPage) => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/document/all?page=${currentPage}&limit=5`,
+      const res = await axios.get(`${API}/api/document/all?page=${currentPage}&limit=5`,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
         },
@@ -54,7 +54,7 @@ const PdfList = () => {
     if (!result.isConfirmed) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/document/${id}`, {
+      await axios.delete(`${API}/api/document/${id}`, {
         headers: { Authorization: `Bearer ${adminToken}` },
       });
 
