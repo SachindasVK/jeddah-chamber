@@ -11,9 +11,15 @@ import helmet from 'helmet'
 const app = express();
 
 connectDB();
-app.use(helmet());
-app.use(compression());
-app.use(cors());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false
+  })
+);app.use(compression());
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true
+}));
 app.use(express.json())
 
 app.use('/uploads', express.static('uploads'));

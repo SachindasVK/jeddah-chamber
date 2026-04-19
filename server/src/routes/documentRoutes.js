@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { verifyToken } from "../middlewares/auth.js";
-import Document from "../models/Document.js";
+
 import {
   createDocumentAndQR,
   uploadPdf,
@@ -12,12 +12,7 @@ import {
 } from "../controllers/documentController.js";
 
 const router = express.Router();
-
-// Setup storage for local temp files before Cloudinary upload
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
-});
+const storage = multer.memoryStorage();
 const uploads = multer({ storage });
 
 // --- POST ROUTES ---

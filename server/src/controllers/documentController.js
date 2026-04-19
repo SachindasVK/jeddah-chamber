@@ -1,7 +1,6 @@
 import QRCode from "qrcode";
 import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
-import cloudinary from "../config/ cloudinary.js";
+import cloudinary from "../config/cloudinary.js";
 import Document from "../models/Document.js";
 
 cloudinary.config({
@@ -14,22 +13,22 @@ export const createDocumentAndQR = async (req, res) => {
   try {
     const { title } = req.body;
 
-    // 1. Check if a document with this title already exists
     const existingDoc = await Document.findOne({ title: title.trim() });
     if (existingDoc) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "A document with this title already exists. Please use a unique title." 
+      return res.status(400).json({
+        success: false,
+        message:
+          "A document with this title already exists. Please use a unique title.",
       });
     }
 
     const uniqueId = uuidv4();
-    const qrUrl = `http://192.168.43.89:5173/view/${uniqueId}`;
+    const qrUrl = `${process.env.CLIENT_URL}/view/${uniqueId}`;
 
     const qrOptions = {
       errorCorrectionLevel: "H",
       version: 15,
-      margin: 2,
+      margin: 3,
       width: 300,
     };
 
@@ -51,13 +50,13 @@ export const createDocumentAndQR = async (req, res) => {
     });
   } catch (err) {
     if (err.code === 11000) {
-      return res.status(400).json({ message: "Duplicate title or ID detected." });
+      return res
+        .status(400)
+        .json({ message: "Duplicate title or ID detected." });
     }
     res.status(500).json({ message: err.message });
   }
 };
-
-
 
 export const uploadPdf = async (req, res) => {
   try {
@@ -69,35 +68,34 @@ export const uploadPdf = async (req, res) => {
 
     const existingDoc = await Document.findById(docId);
     if (!existingDoc) {
-      if (req.file.path) fs.unlinkSync(req.file.path);
       return res.status(404).json({
-        message: "Document record not found. Please generate QR first.",
+        message: "Document not found",
       });
     }
 
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "raw",
-      folder: "jeddah_chamber_pdfs",
-    });
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: "raw",
+        folder: "jeddah_chamber_pdfs",
+      },
+      async (error, result) => {
+        if (error) {
+          return res.status(500).json({ message: error.message });
+        }
 
-    existingDoc.pdfPath = result.secure_url;
-    await existingDoc.save();
+        existingDoc.pdfPath = result.secure_url;
+        await existingDoc.save();
 
-    fs.unlink(req.file.path, (err) => {
-      if (err) console.error("Failed to delete local file:", err);
-      else console.log("Local file deleted successfully");
-    });
+        return res.status(200).json({
+          success: true,
+          message: "PDF uploaded successfully",
+          pdfUrl: result.secure_url,
+        });
+      },
+    );
 
-    res.status(200).json({
-      success: true,
-      message: "PDF uploaded successfully",
-      pdfUrl: result.secure_url,
-    });
+    uploadStream.end(req.file.buffer);
   } catch (err) {
-    if (req.file && req.file.path) {
-      fs.unlinkSync(req.file.path);
-    }
-    console.error(err);
     res.status(500).json({ message: "Server error during upload" });
   }
 };

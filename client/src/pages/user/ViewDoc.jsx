@@ -106,13 +106,6 @@ const ViewDoc = () => {
     }
   };
 
-  if (!doc)
-    return (
-      <div className="h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
-
   return (
     <div
       className={`min-h-screen flex flex-col ${theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"}`}
@@ -226,53 +219,53 @@ const ViewDoc = () => {
           </div>
 
           {/* Rotation Section */}
-<div
-  className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
->
-  {/* Counter-Clockwise 180 (Double Rotate) */}
-  <div
-    className={`flex items-center ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-1 px-1 rounded-sm`}
-  >
-    <button onClick={() => setRotation((prev) => prev - 180)}>
-      <FaArrowRotateLeft
-        size={17}
-        color={iconColor}
-        className="border p-1 rounded-full"
-      />
-    </button>
-  </div>
+          <div
+            className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
+          >
+            {/* Counter-Clockwise 180 (Double Rotate) */}
+            <div
+              className={`flex items-center ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-1 px-1 rounded-sm`}
+            >
+              <button onClick={() => setRotation((prev) => prev - 180)}>
+                <FaArrowRotateLeft
+                  size={17}
+                  color={iconColor}
+                  className="border p-1 rounded-full"
+                />
+              </button>
+            </div>
 
-  {/* Counter-Clockwise 90 */}
-  <div
-    className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex py-1 rounded-sm`}
-  >
-    <button onClick={() => setRotation((prev) => prev - 90)}>
-      <RotateCcw size={17} color={iconColor} />
-    </button>
-  </div>
+            {/* Counter-Clockwise 90 */}
+            <div
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex py-1 rounded-sm`}
+            >
+              <button onClick={() => setRotation((prev) => prev - 90)}>
+                <RotateCcw size={17} color={iconColor} />
+              </button>
+            </div>
 
-  {/* Clockwise 90 */}
-  <div
-    className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}
-  >
-    <button onClick={() => setRotation((prev) => prev + 90)}>
-      <RotateCw size={17} color={iconColor} />
-    </button>
-  </div>
+            {/* Clockwise 90 */}
+            <div
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}
+            >
+              <button onClick={() => setRotation((prev) => prev + 90)}>
+                <RotateCw size={17} color={iconColor} />
+              </button>
+            </div>
 
-  {/* Clockwise 180 (Double Rotate) */}
-  <div
-    className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center py-1 rounded-sm`}
-  >
-    <button onClick={() => setRotation((prev) => prev + 180)}>
-      <FaArrowRotateRight
-        size={17}
-        color={iconColor}
-        className="border p-1 rounded-full"
-      />
-    </button>
-  </div>
-</div>
+            {/* Clockwise 180 (Double Rotate) */}
+            <div
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center py-1 rounded-sm`}
+            >
+              <button onClick={() => setRotation((prev) => prev + 180)}>
+                <FaArrowRotateRight
+                  size={17}
+                  color={iconColor}
+                  className="border p-1 rounded-full"
+                />
+              </button>
+            </div>
+          </div>
 
           <div
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -307,11 +300,6 @@ const ViewDoc = () => {
           <Document
             file={finalUrl}
             onLoadSuccess={onDocumentLoadSuccess}
-            loading={
-              <div className="h-screen w-screen text-gray-400">
-                Loading Document...
-              </div>
-            }
             error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
           >
             <Page
