@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa6";
 
 import { IoMoonOutline } from "react-icons/io5";
+
 import {
   ZoomIn,
   ZoomOut,
@@ -31,13 +32,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 const MIN_ZOOM = 0.3;
 const MAX_ZOOM = 3;
-const ZOOM_STEP = 0.15; // Slightly larger step for better feel
+const ZOOM_STEP = 0.1;
 
 const ViewDoc = () => {
   const { id } = useParams();
   const containerRef = useRef(null);
-  const startYRef = useRef(0);
-  const startZoomRef = useRef(1);
+  const lastDistanceRef = useRef(null);
+  const lastZoomRef = useRef(1); // track zoom in ref for pinch handler closure
 
   const [doc, setDoc] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(true);
@@ -55,7 +56,7 @@ const ViewDoc = () => {
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
   const finalUrl = doc?.pdfUrl || doc?.pdfPath;
 
-  // Responsive base width
+  // ── Responsive base width ──────────────────────────────────────────────────
   useEffect(() => {
     const handleResize = () => {
       setBaseWidth(window.innerWidth > 640 ? 600 : window.innerWidth - 32);
@@ -64,49 +65,55 @@ const ViewDoc = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Smooth Touch Zoom (Two-finger vertical drag)
+  // ── Pinch-to-zoom (fixed) ──────────────────────────────────────────────────
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    let isPinching = false;
+    const getDistance = (t1, t2) =>
+      Math.hypot(t2.pageX - t1.pageX, t2.pageY - t1.pageY);
 
     const onTouchStart = (e) => {
       if (e.touches.length === 2) {
-        isPinching = true;
-        startYRef.current = (e.touches[0].pageY + e.touches[1].pageY) / 2;
-        startZoomRef.current = zoom;
-        e.preventDefault();
+        lastDistanceRef.current = getDistance(e.touches[0], e.touches[1]);
+        // seed lastZoomRef so the first move delta is correct
+        lastZoomRef.current = zoom;
       }
     };
 
     const onTouchMove = (e) => {
-      if (e.touches.length !== 2 || !isPinching) return;
+      if (e.touches.length !== 2) return;
 
+      // prevent page scroll while pinching
       e.preventDefault();
 
-      const currentY = (e.touches[0].pageY + e.touches[1].pageY) / 2;
-      const deltaY = startYRef.current - currentY; // Positive = zoom out
+      const distance = getDistance(e.touches[0], e.touches[1]);
+      if (lastDistanceRef.current === null) {
+        lastDistanceRef.current = distance;
+        return;
+      }
 
-      // Convert vertical movement to zoom (more natural feel)
-      const zoomFactor = 1 - deltaY * 0.008; // Adjust sensitivity (0.008 works well)
+      const ratio = distance / lastDistanceRef.current;
 
-      const newZoom = Math.min(
-        MAX_ZOOM,
-        Math.max(MIN_ZOOM, startZoomRef.current * zoomFactor)
-      );
-
-      if (Math.abs(newZoom - zoom) > 0.02) {
-        setZoom(newZoom);
+      // Only update when change is meaningful to avoid jitter
+      if (Math.abs(ratio - 1) > 0.02) {
+        lastZoomRef.current = Math.min(
+          MAX_ZOOM,
+          Math.max(MIN_ZOOM, lastZoomRef.current * ratio)
+        );
+        setZoom(lastZoomRef.current);
+        lastDistanceRef.current = distance;
       }
     };
 
-    const onTouchEnd = () => {
-      isPinching = false;
+    const onTouchEnd = (e) => {
+      if (e.touches.length < 2) {
+        lastDistanceRef.current = null;
+      }
     };
 
-    el.addEventListener("touchstart", onTouchStart, { passive: false });
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: false }); // must be non-passive to preventDefault
     el.addEventListener("touchend", onTouchEnd, { passive: true });
 
     return () => {
@@ -114,14 +121,20 @@ const ViewDoc = () => {
       el.removeEventListener("touchmove", onTouchMove);
       el.removeEventListener("touchend", onTouchEnd);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally empty — uses refs, not state
+
+  // keep lastZoomRef in sync whenever zoom changes via buttons
+  useEffect(() => {
+    lastZoomRef.current = zoom;
   }, [zoom]);
 
-  // Persist theme
+  // ── Persist theme ──────────────────────────────────────────────────────────
   useEffect(() => {
     localStorage.setItem("docTheme", theme);
   }, [theme]);
 
-  // Fetch document
+  // ── Fetch document ─────────────────────────────────────────────────────────
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -138,24 +151,24 @@ const ViewDoc = () => {
     fetchDetails();
   }, [id]);
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
+  function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
     setPageNumber(1);
-  };
+  }
 
-  // Zoom helpers
+  // ── Zoom helpers ───────────────────────────────────────────────────────────
   const zoomIn = () =>
     setZoom((prev) => Math.min(+(prev + ZOOM_STEP).toFixed(2), MAX_ZOOM));
-
   const zoomOut = () =>
     setZoom((prev) => Math.max(+(prev - ZOOM_STEP).toFixed(2), MIN_ZOOM));
-
   const resetView = () => {
     setZoom(1);
     setRotation(0);
   };
 
-  // Download
+  const zoomPercent = Math.round(zoom * 100);
+
+  // ── Download ───────────────────────────────────────────────────────────────
   const handleDownload = async () => {
     try {
       const response = await axios.get(finalUrl, { responseType: "blob" });
@@ -173,6 +186,7 @@ const ViewDoc = () => {
     }
   };
 
+  // ── Shared class helpers ───────────────────────────────────────────────────
   const panelCls = `${
     theme === "dark"
       ? "bg-gray-800 border-gray-600"
@@ -188,7 +202,7 @@ const ViewDoc = () => {
         theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"
       }`}
     >
-      {/* Header Toolbar */}
+      {/* ── Header Toolbar ───────────────────────────────────────────────── */}
       <div
         className={`w-full sticky top-0 z-10 flex flex-col gap-2 p-3 shadow-md border ${
           theme === "dark"
@@ -196,20 +210,22 @@ const ViewDoc = () => {
             : "bg-white border-gray-100"
         }`}
       >
-        {/* Row 1 - Navigation & Download */}
+        {/* Row 1 */}
         <div className="flex items-center w-full gap-1.5">
+          {/* Sidebar icon */}
           <div className={`${panelCls} py-0.5 px-1 rounded-sm`}>
-            <div className={btnWrap()}>
+            <div className={`${btnWrap()}`}>
               <MdViewSidebar size={18} color={iconColor} />
             </div>
           </div>
 
-          {/* Page Navigation */}
+          {/* Page navigation */}
           <div className={`flex items-center gap-1 ${panelCls} p-0.5 rounded-sm`}>
             <div className={btnWrap()}>
               <button
                 onClick={() => setPageNumber((p) => Math.max(p - 1, 1))}
                 disabled={pageNumber <= 1}
+                aria-label="Previous page"
               >
                 <FaChevronLeft
                   size={17}
@@ -224,7 +240,7 @@ const ViewDoc = () => {
                   theme === "dark" ? "text-gray-200" : "text-gray-600"
                 }`}
               >
-                {pageNumber} / {numPages || 1}
+                {pageNumber}/{numPages || 1}
               </span>
             </div>
 
@@ -234,6 +250,7 @@ const ViewDoc = () => {
                   setPageNumber((p) => Math.min(p + 1, numPages))
                 }
                 disabled={pageNumber >= numPages}
+                aria-label="Next page"
               >
                 <FaChevronRight
                   size={17}
@@ -243,22 +260,27 @@ const ViewDoc = () => {
             </div>
           </div>
 
-          {/* Download Button */}
+          {/* Download */}
           <div className={`${panelCls} p-0.5 rounded-sm`}>
             <div className={btnWrap()}>
-              <button onClick={handleDownload}>
+              <button onClick={handleDownload} aria-label="Download PDF">
                 <Download size={17} color={iconColor} />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Row 2 - Zoom, Rotation, Theme */}
+        {/* Row 2 */}
         <div className="flex items-center gap-1.5 w-full sm:w-auto flex-wrap">
-          {/* Zoom Controls */}
+          {/* Zoom controls */}
           <div className={`flex gap-1 ${panelCls} p-0.5 rounded-sm`}>
+            {/* Zoom out */}
             <div className={btnWrap()}>
-              <button onClick={zoomOut} disabled={zoom <= MIN_ZOOM}>
+              <button
+                onClick={zoomOut}
+                disabled={zoom <= MIN_ZOOM}
+                aria-label="Zoom out"
+              >
                 <ZoomOut
                   size={17}
                   color={zoom <= MIN_ZOOM ? "#64748b" : iconColor}
@@ -266,18 +288,30 @@ const ViewDoc = () => {
               </button>
             </div>
 
-            <div className={`${panelCls} px-3 py-1 rounded-sm`}>
-              <span
-                className={`text-sm font-semibold select-none ${
-                  theme === "dark" ? "text-gray-200" : "text-gray-600"
-                }`}
+            {/* Zoom percentage display — click to reset zoom only */}
+            <div className={`${panelCls} px-2 flex items-center rounded-sm`}>
+              <button
+                onClick={() => setZoom(1)}
+                aria-label="Reset zoom"
+                title="Click to reset zoom"
               >
-                {Math.round(zoom * 100)}%
-              </span>
+                <span
+                  className={`text-xs font-semibold w-10 text-center select-none ${
+                    theme === "dark" ? "text-gray-200" : "text-gray-600"
+                  }`}
+                >
+                  {zoomPercent}%
+                </span>
+              </button>
             </div>
 
+            {/* Zoom in */}
             <div className={btnWrap()}>
-              <button onClick={zoomIn} disabled={zoom >= MAX_ZOOM}>
+              <button
+                onClick={zoomIn}
+                disabled={zoom >= MAX_ZOOM}
+                aria-label="Zoom in"
+              >
                 <ZoomIn
                   size={17}
                   color={zoom >= MAX_ZOOM ? "#64748b" : iconColor}
@@ -285,14 +319,15 @@ const ViewDoc = () => {
               </button>
             </div>
 
-            <div className={`${panelCls} px-2 py-1 rounded-sm`}>
-              <button onClick={resetView}>
+            {/* Reset zoom + rotation */}
+            <div className={`${panelCls} px-2 flex items-center py-1 rounded-sm`}>
+              <button onClick={resetView} aria-label="Reset view">
                 <MoveHorizontal size={17} color={iconColor} />
               </button>
             </div>
           </div>
 
-          {/* Rotation Controls */}
+          {/* Rotation controls */}
           <div
             className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${
               theme === "dark"
@@ -301,7 +336,10 @@ const ViewDoc = () => {
             }`}
           >
             <div className={`${panelCls} py-1 px-1 rounded-sm flex items-center`}>
-              <button onClick={() => setRotation((r) => r - 180)}>
+              <button
+                onClick={() => setRotation((r) => r - 180)}
+                aria-label="Rotate 180° counter-clockwise"
+              >
                 <FaArrowRotateLeft
                   size={17}
                   color={iconColor}
@@ -311,19 +349,28 @@ const ViewDoc = () => {
             </div>
 
             <div className={`${panelCls} px-2 flex py-1 rounded-sm`}>
-              <button onClick={() => setRotation((r) => r - 90)}>
+              <button
+                onClick={() => setRotation((r) => r - 90)}
+                aria-label="Rotate 90° counter-clockwise"
+              >
                 <RotateCcw size={17} color={iconColor} />
               </button>
             </div>
 
             <div className={`${panelCls} px-2 flex items-center py-1 rounded-sm`}>
-              <button onClick={() => setRotation((r) => r + 90)}>
+              <button
+                onClick={() => setRotation((r) => r + 90)}
+                aria-label="Rotate 90° clockwise"
+              >
                 <RotateCw size={17} color={iconColor} />
               </button>
             </div>
 
             <div className={`${panelCls} px-1 flex items-center py-1 rounded-sm`}>
-              <button onClick={() => setRotation((r) => r + 180)}>
+              <button
+                onClick={() => setRotation((r) => r + 180)}
+                aria-label="Rotate 180° clockwise"
+              >
                 <FaArrowRotateRight
                   size={17}
                   color={iconColor}
@@ -333,7 +380,7 @@ const ViewDoc = () => {
             </div>
           </div>
 
-          {/* Theme Toggle */}
+          {/* Theme toggle */}
           <div
             onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
             className="cursor-pointer"
@@ -346,11 +393,11 @@ const ViewDoc = () => {
               }`}
             >
               <div
-                className={`border p-1 rounded-sm ${
+                className={`${
                   theme === "dark"
                     ? "bg-gray-700 border-gray-400"
                     : "bg-gray-100 border-gray-300"
-                }`}
+                } border p-1 rounded-sm`}
               >
                 {theme === "light" ? (
                   <IoMoonOutline size={17} color="#4b5563" />
@@ -363,22 +410,23 @@ const ViewDoc = () => {
         </div>
       </div>
 
-      {/* PDF Viewer Container */}
+      {/* ── PDF Container ────────────────────────────────────────────────── */}
       <div
         ref={containerRef}
-        className={`w-full mt-1 overflow-auto py-8 ${
+        className={`w-full mt-1 overflow-auto py-4 ${
           theme === "dark" ? "bg-gray-900" : "bg-gray-100"
         }`}
         style={{
           height: "calc(100vh - 140px)",
-          touchAction: "pan-x pan-y pinch-zoom", // Allow native pinch as fallback
+          // Allow panning when zoomed in; pinch handler calls preventDefault
+          touchAction: "pan-x pan-y",
         }}
       >
         {loadingDetails ? (
           <Loading />
         ) : finalUrl ? (
           <div
-            className={`w-max mx-auto transition-all duration-200 ${
+            className={`w-max mx-auto transition-all duration-200 h-fit ${
               theme === "dark"
                 ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                 : "shadow-lg"
@@ -387,7 +435,9 @@ const ViewDoc = () => {
             <Document
               file={finalUrl}
               onLoadSuccess={onDocumentLoadSuccess}
-              error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
+              error={
+                <div className="p-20 text-red-500">Failed to load PDF.</div>
+              }
               loading={<></>}
             >
               <Page
@@ -398,6 +448,7 @@ const ViewDoc = () => {
                 renderTextLayer={true}
                 renderAnnotationLayer={false}
                 canvasBackground="white"
+                className="pdf-page-high-quality"
               />
             </Document>
           </div>
