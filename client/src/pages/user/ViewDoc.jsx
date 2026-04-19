@@ -76,6 +76,8 @@ const ViewDoc = () => {
 
   const onTouchMove = (e) => {
     if (e.touches.length !== 2) return;
+    
+    e.preventDefault();
 
     const distance = getDistance(e.touches[0], e.touches[1]);
 
@@ -346,13 +348,13 @@ const ViewDoc = () => {
       <div
         ref={containerRef}
         className={`w-full mt-1 overflow-auto py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
-        style={{ height: "calc(100vh - 140px)",touchAction:"manipulation" }}
+        style={{ height: "calc(100vh - 140px)", touchAction: "pan-x pan-y" }}
       >
         {loadingDetails ? (
            <Loading />
         ) : finalUrl ? (
           <div
-            className={`flex min-w-full justify-start transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
+            className={`w-max mx-auto transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
           >
             <Document
               file={finalUrl}
