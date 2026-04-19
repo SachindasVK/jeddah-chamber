@@ -111,13 +111,11 @@ export const pdfDetails = async (req, res) => {
     }
 
     res.json({
-  success: true,
-  _id: doc._id,
-  uniqueId: doc.uniqueId,
-  title: doc.title,
-  pdfPath: doc.pdfPath,
-  createdAt: doc.createdAt,
-});
+      success: true,
+      title: doc.title,
+      pdfUrl: doc.pdfPath,
+      date: doc.createdAt,
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

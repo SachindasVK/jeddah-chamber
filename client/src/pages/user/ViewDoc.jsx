@@ -67,7 +67,7 @@ const ViewDoc = () => {
     const fetchDetails = async () => {
       try {
         const res = await axios.get(
-          `http://192.168.43.89:5000/api/document/view/${id}`,
+          `${import.meta.env.VITE_API_URL}/api/document/view/${id}`,
         );
         setDoc(res.data);
       } catch (err) {
