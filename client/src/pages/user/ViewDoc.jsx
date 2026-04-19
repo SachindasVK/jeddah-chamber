@@ -225,22 +225,6 @@ const ViewDoc = () => {
               </button>
             </div>
 
-            {/* Zoom percentage display — click to reset zoom only */}
-            <div className={`${panelCls} px-2 flex items-center rounded-sm`}>
-              <button
-                onClick={() => setZoom(1)}
-                aria-label="Reset zoom"
-                title="Click to reset zoom"
-              >
-                <span
-                  className={`text-xs font-semibold w-10 text-center select-none ${
-                    theme === "dark" ? "text-gray-200" : "text-gray-600"
-                  }`}
-                >
-                  {zoomPercent}%
-                </span>
-              </button>
-            </div>
 
             {/* Zoom in */}
             <div className={btnWrap()}>
