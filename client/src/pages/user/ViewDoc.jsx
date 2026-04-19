@@ -64,10 +64,7 @@ const ViewDoc = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // keep lastZoomRef in sync whenever zoom changes via buttons
-  useEffect(() => {
-    lastZoomRef.current = zoom;
-  }, [zoom]);
+  
 
   // ── Persist theme ──────────────────────────────────────────────────────────
   useEffect(() => {
