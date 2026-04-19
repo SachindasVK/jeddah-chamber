@@ -8,6 +8,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { MdViewSidebar } from "react-icons/md";
+import Loading from '../../components/Loading/Loading'
 
 import {
   FaChevronLeft,
@@ -298,9 +299,7 @@ const ViewDoc = () => {
         style={{ height: "calc(100vh - 140px)" }}
       >
         {loadingDetails ? (
-           <div className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-             Loading document details...
-           </div>
+           <Loading />
         ) : finalUrl ? (
           <div
             className={`transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
@@ -309,7 +308,7 @@ const ViewDoc = () => {
               file={finalUrl}
               onLoadSuccess={onDocumentLoadSuccess}
               error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
-              loading={<div className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>Loading PDF completely...</div>}
+              loading={<div></div>}
             >
               <Page
                 pageNumber={pageNumber}

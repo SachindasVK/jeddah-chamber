@@ -144,27 +144,6 @@ const PdfDetails = () => {
             </div>
           )}
         </div>
-
-        {/* Quick Info Bar: Flex-col on mobile, flex-row on larger screens */}
-        <div className="w-full max-w-4xl bg-gray-700 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4 text-white text-sm">
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 text-center sm:text-left">
-            <span>
-              <strong>ID:</strong>{" "}
-              <span className="break-all">{doc?.uniqueId}</span>
-            </span>
-            <span>
-              <strong>Status:</strong> {doc?.pdfPath ? "Verified" : "Pending"}
-            </span>
-          </div>
-          <a
-            href={doc?.pdfPath}
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-400 underline hover:text-blue-300 transition"
-          >
-            Open in New Tab
-          </a>
-        </div>
       </div>
     </div>
   );
