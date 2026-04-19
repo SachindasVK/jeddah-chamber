@@ -2,29 +2,44 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db.js";
-import cors from 'cors'
-import adminRoutes from './routes/adminAuthRoutes.js'
-import documentRoutes from './routes/documentRoutes.js'
-import compression from 'compression'
-import helmet from 'helmet'
+import cors from "cors";
+import adminRoutes from "./routes/adminAuthRoutes.js";
+import documentRoutes from "./routes/documentRoutes.js";
+import compression from "compression";
+import helmet from "helmet";
 
 const app = express();
 
 connectDB();
 app.use(
   helmet({
-    crossOriginResourcePolicy: false
-  })
-);app.use(compression());
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: true
-}));
-app.use(express.json())
+    crossOriginResourcePolicy: false,
+  }),
+);
+app.use(compression());
+const allowedOrigins = [
+  "https://esjcci.org.in",
+  "https://www.esjcci.org.in",
+  process.env.CLIENT_URL, // keep env fallback
+];
 
-app.use('/uploads', express.static('uploads'));
-app.use('/api/admin', adminRoutes);
-app.use('/api/document',documentRoutes)
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
+app.use(express.json());
+
+app.use("/uploads", express.static("uploads"));
+app.use("/api/admin", adminRoutes);
+app.use("/api/document", documentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
