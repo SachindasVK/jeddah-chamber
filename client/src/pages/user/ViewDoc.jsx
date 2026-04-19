@@ -110,19 +110,7 @@ const ViewDoc = () => {
     }
   };
 
-  useEffect(() => {
-  const preventPinchZoom = (e) => {
-    if (e.touches && e.touches.length > 1) {
-      e.preventDefault();
-    }
-  };
-
-  document.addEventListener("touchmove", preventPinchZoom, { passive: false });
-
-  return () => {
-    document.removeEventListener("touchmove", preventPinchZoom);
-  };
-}, []);
+  
 
   return (
     <div
@@ -309,8 +297,8 @@ const ViewDoc = () => {
       {/* PDF Container */}
       <div
         ref={containerRef}
-        className={`w-full mt-1 overflow-x-auto flex justify-center py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
-        style={{ height: "calc(100vh - 140px)",touchAction:"none" }}
+        className={`w-full mt-1 overflow-auto flex justify-center py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
+        style={{ height: "calc(100vh - 140px)",touchAction:"manipulation" }}
       >
         {loadingDetails ? (
            <Loading />
