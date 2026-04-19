@@ -309,7 +309,7 @@ const ViewDoc = () => {
               file={finalUrl}
               onLoadSuccess={onDocumentLoadSuccess}
               error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
-              loading={<div className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>Loading PDF completely...</div>}
+              
             >
               <Page
                 pageNumber={pageNumber}
