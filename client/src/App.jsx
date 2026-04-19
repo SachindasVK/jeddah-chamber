@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./context/ProtectedRoutes";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/react";
 const Dashboard = React.lazy(() => import("./pages/admin/Dashboard"));
 const ViewDoc = React.lazy(() => import("./pages/user/ViewDoc"));
 const Login = React.lazy(() => import("./pages/admin/Login"));
@@ -33,6 +34,7 @@ const App = () => {
   return (
     <>
       <Toaster position="top-center" reverseOrder={true} />
+      <Analytics />
       <Suspense fallback={<Loading />}>
         <header>
           <Navbar />
