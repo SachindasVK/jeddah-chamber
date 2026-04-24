@@ -34,10 +34,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 const ViewDoc = () => {
   const { id } = useParams();
   
-  // Refs
-  const containerRef = useRef(null);
-  const pdfWrapperRef = useRef(null); // Added this for smooth CSS scaling
-
   // State
   const [doc, setDoc] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(true);
@@ -53,9 +49,10 @@ const ViewDoc = () => {
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
   const finalUrl = doc?.pdfUrl || doc?.pdfPath;
 
-  // Window Resize
+  // Window Resize - Responsive base width
   useEffect(() => {
     const handleResize = () => {
+      // Standardize base width for desktop vs mobile
       const width = window.innerWidth > 640 ? 600 : window.innerWidth - 32;
       setContainerWidth(width);
     };
@@ -66,90 +63,12 @@ const ViewDoc = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Smooth Pinch-to-Zoom Logic
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    // Local state to track gesture without triggering React re-renders during pinch
-    const pinchState = { initialDistance: null, currentScale: 1 };
-
-    const getDistance = (touches) => {
-      return Math.hypot(
-        touches[0].pageX - touches[1].pageX,
-        touches[0].pageY - touches[1].pageY
-      );
-    };
-
-    const onTouchStart = (e) => {
-      if (e.touches.length === 2) {
-        if (e.cancelable) e.preventDefault(); // Prevent default browser zoom behavior
-        pinchState.initialDistance = getDistance(e.touches);
-        pinchState.currentScale = 1;
-
-        // Disable CSS transitions during the pinch for instant 1:1 finger tracking
-        if (pdfWrapperRef.current) {
-          pdfWrapperRef.current.style.transition = "none";
-        }
-      }
-    };
-
-    const onTouchMove = (e) => {
-      if (e.touches.length !== 2 || !pinchState.initialDistance) return;
-      if (e.cancelable) e.preventDefault();
-
-      const currentDistance = getDistance(e.touches);
-      const scale = currentDistance / pinchState.initialDistance;
-      pinchState.currentScale = scale;
-
-      // Apply CSS transform directly to the wrapper (smooth 60fps)
-      if (pdfWrapperRef.current) {
-        pdfWrapperRef.current.style.transform = `scale(${scale})`;
-        pdfWrapperRef.current.style.transformOrigin = "center center";
-      }
-    };
-
-    const onTouchEnd = () => {
-      if (pinchState.initialDistance) {
-        const finalScale = pinchState.currentScale;
-
-        // Apply the final scale to React state to trigger a crisp react-pdf re-render
-        setZoom((prev) => {
-          const newZoom = prev * finalScale;
-          return Math.min(Math.max(newZoom, 0.3), 3); // Clamped limits
-        });
-
-        // Reset the CSS transform so the new React-rendered size takes over
-        if (pdfWrapperRef.current) {
-          pdfWrapperRef.current.style.transform = `scale(1)`;
-          pdfWrapperRef.current.style.transition = "all 0.3s ease";
-        }
-
-        // Reset tracking state
-        pinchState.initialDistance = null;
-        pinchState.currentScale = 1;
-      }
-    };
-
-    el.addEventListener("touchstart", onTouchStart, { passive: false });
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
-    el.addEventListener("touchend", onTouchEnd);
-    el.addEventListener("touchcancel", onTouchEnd);
-
-    return () => {
-      el.removeEventListener("touchstart", onTouchStart);
-      el.removeEventListener("touchmove", onTouchMove);
-      el.removeEventListener("touchend", onTouchEnd);
-      el.removeEventListener("touchcancel", onTouchEnd);
-    };
-  }, []);
-
   // Theme Persistence
   useEffect(() => {
     localStorage.setItem("docTheme", theme);
   }, [theme]);
 
-  // Fetch Details
+  // Fetch Document
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -173,223 +92,127 @@ const ViewDoc = () => {
 
   const handleDownload = async () => {
     try {
-      const response = await axios.get(finalUrl, {
-        responseType: "blob",
-      });
-
+      const response = await axios.get(finalUrl, { responseType: "blob" });
       const blob = new Blob([response.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
-
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", "document.pdf");
       document.body.appendChild(link);
       link.click();
-
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
       toast.error("Download failed");
-      console.error(error);
     }
   };
 
   return (
-    <div
-      className={`min-h-screen flex flex-col ${theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"}`}
-    >
-      {/* Header Toolbar */}
-      <div
-        className={`w-full sticky top-0 z-10 flex flex-col gap-2 p-3 shadow-md border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}
-      >
+    <div className={`min-h-screen flex flex-col ${theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"}`}>
+      
+      {/* Toolbar */}
+      <div className={`w-full sticky top-0 z-10 flex flex-col gap-2 p-3 shadow-md border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}>
         <div className="flex items-center w-full gap-1.5">
-          <div
-            className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-0.5 px-1 rounded-sm`}
-          >
-            <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-1 px-2 rounded-sm`}
-            >
+          <div className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-0.5 px-1 rounded-sm`}>
+            <div className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-1 px-2 rounded-sm`}>
               <MdViewSidebar size={18} color={iconColor} />
             </div>
           </div>
 
-          <div
-            className={`flex items-center gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
-          >
-            <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-2 flex items-center py-1 rounded-sm`}
+          {/* Pagination */}
+          <div className={`flex items-center gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}>
+            <button 
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} px-2 flex items-center py-1 rounded-sm disabled:opacity-50`}
+              onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
+              disabled={pageNumber <= 1}
             >
-              <button
-                onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
-                disabled={pageNumber <= 1}
-              >
-                <FaChevronLeft
-                  size={17}
-                  color={pageNumber <= 1 ? "#64748b" : iconColor}
-                />
-              </button>
-            </div>
-            <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-5 rounded-sm`}
-            >
-              <span
-                className={`px-2 sm:px-4 text-sm sm:text-base font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}
-              >
+              <FaChevronLeft size={17} color={iconColor} />
+            </button>
+            <div className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} px-5 rounded-sm`}>
+              <span className={`px-2 text-sm font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}>
                 {pageNumber}/{numPages || 1}
               </span>
             </div>
-
-            <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center py-1 rounded-sm`}
+            <button 
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} px-1 flex items-center py-1 rounded-sm disabled:opacity-50`}
+              onClick={() => setPageNumber((prev) => Math.min(prev + 1, numPages))}
+              disabled={pageNumber >= numPages}
             >
-              <button
-                onClick={() =>
-                  setPageNumber((prev) => Math.min(prev + 1, numPages))
-                }
-                disabled={pageNumber >= numPages}
-              >
-                <FaChevronRight
-                  size={17}
-                  color={pageNumber >= numPages ? "#64748b" : iconColor}
-                />
-              </button>
-            </div>
+              <FaChevronRight size={17} color={iconColor} />
+            </button>
           </div>
-          <div className="flex">
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
-            >
-              <div
-                className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} items-center px-2 py-1 rounded-sm`}
-              >
-                <button onClick={handleDownload}>
-                  <Download size={17} color={iconColor} />
-                </button>
-              </div>
-            </div>
+
+          {/* Download */}
+          <div className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}>
+            <button onClick={handleDownload} className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} items-center px-2 py-1 rounded-sm`}>
+              <Download size={17} color={iconColor} />
+            </button>
           </div>
         </div>
 
+        {/* Zoom & Rotation Controls */}
         <div className="flex items-center gap-1.5 w-full sm:w-auto">
-          <div
-            className={`flex gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
-          >
-            <div
+          <div className={`flex gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}>
+            <button 
+               onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.5))}
+               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center rounded-sm`}
+            >
+              <ZoomOut size={17} color={iconColor} />
+            </button>
+
+            <button 
+              onClick={() => setZoom((prev) => Math.min(prev + 0.2, 3))}
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center rounded-sm`}
             >
-              <button
-                onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}
-              >
-                <ZoomOut size={17} color={iconColor} />
-              </button>
-            </div>
+              <ZoomIn size={17} color={iconColor} />
+            </button>
 
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center rounded-sm`}
-            >
-              <button onClick={() => setZoom((prev) => prev + 0.2)}>
-                <ZoomIn size={17} color={iconColor} />
-              </button>
-            </div>
-
-            <div
+            <button 
+              onClick={() => { setZoom(1); setRotation(0); }}
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}
             >
-              <button
-                onClick={() => {
-                  setZoom(1);
-                  setRotation(0);
-                }}
-              >
-                <MoveHorizontal size={17} color={iconColor} />
-              </button>
-            </div>
+              <MoveHorizontal size={17} color={iconColor} />
+            </button>
           </div>
 
-          {/* Rotation Section */}
-          <div
-            className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
-          >
-            <div
-              className={`flex items-center ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-1 px-1 rounded-sm`}
-            >
-              <button onClick={() => setRotation((prev) => prev - 180)}>
-                <FaArrowRotateLeft
-                  size={17}
-                  color={iconColor}
-                  className="border p-1 rounded-full"
-                />
-              </button>
-            </div>
-
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex py-1 rounded-sm`}
-            >
-              <button onClick={() => setRotation((prev) => prev - 90)}>
-                <RotateCcw size={17} color={iconColor} />
-              </button>
-            </div>
-
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}
-            >
-              <button onClick={() => setRotation((prev) => prev + 90)}>
-                <RotateCw size={17} color={iconColor} />
-              </button>
-            </div>
-
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center py-1 rounded-sm`}
-            >
-              <button onClick={() => setRotation((prev) => prev + 180)}>
-                <FaArrowRotateRight
-                  size={17}
-                  color={iconColor}
-                  className="border p-1 rounded-full"
-                />
-              </button>
-            </div>
+          {/* Rotation */}
+          <div className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}>
+            <button onClick={() => setRotation((prev) => prev - 90)} className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex py-1 rounded-sm`}>
+              <RotateCcw size={17} color={iconColor} />
+            </button>
+            <button onClick={() => setRotation((prev) => prev + 90)} className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}>
+              <RotateCw size={17} color={iconColor} />
+            </button>
           </div>
 
-          <div
+          {/* Theme Toggle */}
+          <button
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            className="cursor-pointer"
+            className={`p-0.5 rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
           >
-            <div
-              className={`p-0.5 rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
-            >
-              <div
-                className={`${theme === "dark" ? "bg-gray-700 border-gray-400" : "bg-gray-100 border-gray-300"} border p-1 rounded-sm`}
-              >
-                {theme === "light" ? (
-                  <IoMoonOutline size={17} color="#4b5563" />
-                ) : (
-                  <Sun size={17} color="white" />
-                )}
-              </div>
+            <div className={`${theme === "dark" ? "bg-gray-700 border-gray-400" : "bg-gray-100 border-gray-300"} border p-1 rounded-sm`}>
+              {theme === "light" ? <IoMoonOutline size={17} color="#4b5563" /> : <Sun size={17} color="white" />}
             </div>
-          </div>
+          </button>
         </div>
       </div>
 
-      {/* PDF Container */}
+      {/* Main Viewport */}
       <div
-        ref={containerRef}
-        className={`w-full mt-1 overflow-auto py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
-        style={{ height: "calc(100vh - 140px)", touchAction: "none" }} // 'none' helps prevent mobile browsers from hijacking the gesture
+        className={`w-full mt-1 overflow-auto py-4 flex-grow ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
+        style={{ height: "calc(100vh - 140px)" }}
       >
         {loadingDetails ? (
            <Loading />
         ) : finalUrl ? (
           <div
-            ref={pdfWrapperRef} // ATTACHED THE NEW REF HERE
-            className={`w-max mx-auto transition-transform duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
+            className={`w-max mx-auto transition-all duration-300 ease-in-out ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
           >
             <Document
               file={finalUrl}
               onLoadSuccess={onDocumentLoadSuccess}
               error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
-              loading={<></>}
+              loading={<div className="p-20"><Loading /></div>}
             >
               <Page
                 pageNumber={pageNumber}
@@ -399,12 +222,11 @@ const ViewDoc = () => {
                 renderTextLayer={true}
                 renderAnnotationLayer={false}
                 canvasBackground="white"
-                className="pdf-page-high-quality"
               />
             </Document>
           </div>
         ) : (
-          <div className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+          <div className={`p-20 text-center text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
             No PDF document available.
           </div>
         )}
