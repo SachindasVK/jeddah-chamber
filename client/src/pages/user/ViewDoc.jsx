@@ -8,7 +8,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { MdViewSidebar } from "react-icons/md";
-import Loading from '../../components/Loading/Loading'
+import Loading from "../../components/Loading/Loading";
 
 import {
   FaChevronLeft,
@@ -33,9 +33,12 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 const ViewDoc = () => {
   const { id } = useParams();
+  
+  // Refs
   const containerRef = useRef(null);
-  const lastDistance = useRef(null);
+  const pdfWrapperRef = useRef(null); // Added this for smooth CSS scaling
 
+  // State
   const [doc, setDoc] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(true);
   const [numPages, setNumPages] = useState(null);
@@ -44,12 +47,13 @@ const ViewDoc = () => {
   const [containerWidth, setContainerWidth] = useState(window.innerWidth);
   const [rotation, setRotation] = useState(0);
   const [theme, setTheme] = useState(
-    localStorage.getItem("docTheme") || "light",
+    localStorage.getItem("docTheme") || "light"
   );
 
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
   const finalUrl = doc?.pdfUrl || doc?.pdfPath;
 
+  // Window Resize
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth > 640 ? 600 : window.innerWidth - 32;
@@ -62,62 +66,95 @@ const ViewDoc = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
+  // Smooth Pinch-to-Zoom Logic
   useEffect(() => {
-  const el = containerRef.current;
-  if (!el) return;
+    const el = containerRef.current;
+    if (!el) return;
 
-  const getDistance = (t1, t2) => {
-    return Math.hypot(
-      t2.pageX - t1.pageX,
-      t2.pageY - t1.pageY
-    );
-  };
+    // Local state to track gesture without triggering React re-renders during pinch
+    const pinchState = { initialDistance: null, currentScale: 1 };
 
-  const onTouchMove = (e) => {
-    if (e.touches.length !== 2) return;
-    
-    const distance = getDistance(e.touches[0], e.touches[1]);
-
-    if (!lastDistance.current) {
-      lastDistance.current = distance;
-      return;
-    }
-
-    const delta = distance - lastDistance.current;
-
-    if (Math.abs(delta) > 10) {
-      setZoom((prev) =>
-        delta > 0
-          ? Math.min(prev + 0.1, 3)
-          : Math.max(prev - 0.1, 0.5)
+    const getDistance = (touches) => {
+      return Math.hypot(
+        touches[0].pageX - touches[1].pageX,
+        touches[0].pageY - touches[1].pageY
       );
-      lastDistance.current = distance;
-    }
-  };
+    };
 
-  const onTouchEnd = () => {
-    lastDistance.current = null;
-  };
+    const onTouchStart = (e) => {
+      if (e.touches.length === 2) {
+        if (e.cancelable) e.preventDefault(); // Prevent default browser zoom behavior
+        pinchState.initialDistance = getDistance(e.touches);
+        pinchState.currentScale = 1;
 
-  el.addEventListener("touchmove", onTouchMove, { passive: false });
-  el.addEventListener("touchend", onTouchEnd);
+        // Disable CSS transitions during the pinch for instant 1:1 finger tracking
+        if (pdfWrapperRef.current) {
+          pdfWrapperRef.current.style.transition = "none";
+        }
+      }
+    };
 
-  return () => {
-    el.removeEventListener("touchmove", onTouchMove);
-    el.removeEventListener("touchend", onTouchEnd);
-  };
-}, []);
+    const onTouchMove = (e) => {
+      if (e.touches.length !== 2 || !pinchState.initialDistance) return;
+      if (e.cancelable) e.preventDefault();
 
+      const currentDistance = getDistance(e.touches);
+      const scale = currentDistance / pinchState.initialDistance;
+      pinchState.currentScale = scale;
+
+      // Apply CSS transform directly to the wrapper (smooth 60fps)
+      if (pdfWrapperRef.current) {
+        pdfWrapperRef.current.style.transform = `scale(${scale})`;
+        pdfWrapperRef.current.style.transformOrigin = "center center";
+      }
+    };
+
+    const onTouchEnd = () => {
+      if (pinchState.initialDistance) {
+        const finalScale = pinchState.currentScale;
+
+        // Apply the final scale to React state to trigger a crisp react-pdf re-render
+        setZoom((prev) => {
+          const newZoom = prev * finalScale;
+          return Math.min(Math.max(newZoom, 0.3), 3); // Clamped limits
+        });
+
+        // Reset the CSS transform so the new React-rendered size takes over
+        if (pdfWrapperRef.current) {
+          pdfWrapperRef.current.style.transform = `scale(1)`;
+          pdfWrapperRef.current.style.transition = "all 0.3s ease";
+        }
+
+        // Reset tracking state
+        pinchState.initialDistance = null;
+        pinchState.currentScale = 1;
+      }
+    };
+
+    el.addEventListener("touchstart", onTouchStart, { passive: false });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd);
+    el.addEventListener("touchcancel", onTouchEnd);
+
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchcancel", onTouchEnd);
+    };
+  }, []);
+
+  // Theme Persistence
   useEffect(() => {
     localStorage.setItem("docTheme", theme);
   }, [theme]);
 
+  // Fetch Details
   useEffect(() => {
     const fetchDetails = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/document/view/${id}`,
+          `${import.meta.env.VITE_API_URL}/api/document/view/${id}`
         );
         setDoc(res.data);
       } catch (err) {
@@ -129,7 +166,6 @@ const ViewDoc = () => {
     fetchDetails();
   }, [id]);
 
-  // THIS WAS THE MISSING FUNCTION
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
     setPageNumber(1);
@@ -146,7 +182,7 @@ const ViewDoc = () => {
 
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "document.pdf"); // file name
+      link.setAttribute("download", "document.pdf");
       document.body.appendChild(link);
       link.click();
 
@@ -157,8 +193,6 @@ const ViewDoc = () => {
       console.error(error);
     }
   };
-
-  
 
   return (
     <div
@@ -226,7 +260,7 @@ const ViewDoc = () => {
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
             >
               <div
-                className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center px-2 py-1 rounded-sm`}
+                className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} items-center px-2 py-1 rounded-sm`}
               >
                 <button onClick={handleDownload}>
                   <Download size={17} color={iconColor} />
@@ -276,7 +310,6 @@ const ViewDoc = () => {
           <div
             className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
           >
-            {/* Counter-Clockwise 180 (Double Rotate) */}
             <div
               className={`flex items-center ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-1 px-1 rounded-sm`}
             >
@@ -289,7 +322,6 @@ const ViewDoc = () => {
               </button>
             </div>
 
-            {/* Counter-Clockwise 90 */}
             <div
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex py-1 rounded-sm`}
             >
@@ -298,7 +330,6 @@ const ViewDoc = () => {
               </button>
             </div>
 
-            {/* Clockwise 90 */}
             <div
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}
             >
@@ -307,7 +338,6 @@ const ViewDoc = () => {
               </button>
             </div>
 
-            {/* Clockwise 180 (Double Rotate) */}
             <div
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center py-1 rounded-sm`}
             >
@@ -346,13 +376,14 @@ const ViewDoc = () => {
       <div
         ref={containerRef}
         className={`w-full mt-1 overflow-auto py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
-        style={{ height: "calc(100vh - 140px)", touchAction: "pan-x pan-y" }}
+        style={{ height: "calc(100vh - 140px)", touchAction: "none" }} // 'none' helps prevent mobile browsers from hijacking the gesture
       >
         {loadingDetails ? (
            <Loading />
         ) : finalUrl ? (
           <div
-            className={`w-max mx-auto transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
+            ref={pdfWrapperRef} // ATTACHED THE NEW REF HERE
+            className={`w-max mx-auto transition-transform duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
           >
             <Document
               file={finalUrl}
