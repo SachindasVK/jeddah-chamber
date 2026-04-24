@@ -34,6 +34,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 const ViewDoc = () => {
   const { id } = useParams();
   const containerRef = useRef(null);
+  const lastDistance = useRef(null);
 
   const [doc, setDoc] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(true);
@@ -49,7 +50,6 @@ const ViewDoc = () => {
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
   const finalUrl = doc?.pdfUrl || doc?.pdfPath;
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth > 640 ? 600 : window.innerWidth - 32;
@@ -62,28 +62,57 @@ const ViewDoc = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Wheel zoom (Ctrl + scroll or plain scroll to zoom)
+
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+  const el = containerRef.current;
+  if (!el) return;
 
-    const onWheel = (e) => {
-      if (!e.ctrlKey && !e.metaKey) return; // Ctrl/Cmd + scroll to zoom
-      e.preventDefault();
-      const delta = e.deltaY > 0 ? -0.1 : 0.1;
-      setZoom((prev) => Math.min(Math.max(prev + delta, 0.5), 3));
-    };
+  const getDistance = (t1, t2) => {
+    return Math.hypot(
+      t2.pageX - t1.pageX,
+      t2.pageY - t1.pageY
+    );
+  };
 
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, []);
+  const onTouchMove = (e) => {
+    if (e.touches.length !== 2) return;
+    
+    const distance = getDistance(e.touches[0], e.touches[1]);
 
-  // Persist theme
+    if (!lastDistance.current) {
+      lastDistance.current = distance;
+      return;
+    }
+
+    const delta = distance - lastDistance.current;
+
+    if (Math.abs(delta) > 10) {
+      setZoom((prev) =>
+        delta > 0
+          ? Math.min(prev + 0.1, 3)
+          : Math.max(prev - 0.1, 0.5)
+      );
+      lastDistance.current = distance;
+    }
+  };
+
+  const onTouchEnd = () => {
+    lastDistance.current = null;
+  };
+
+  el.addEventListener("touchmove", onTouchMove, { passive: false });
+  el.addEventListener("touchend", onTouchEnd);
+
+  return () => {
+    el.removeEventListener("touchmove", onTouchMove);
+    el.removeEventListener("touchend", onTouchEnd);
+  };
+}, []);
+
   useEffect(() => {
     localStorage.setItem("docTheme", theme);
   }, [theme]);
 
-  // Fetch document details
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -100,6 +129,7 @@ const ViewDoc = () => {
     fetchDetails();
   }, [id]);
 
+  // THIS WAS THE MISSING FUNCTION
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
     setPageNumber(1);
@@ -116,7 +146,7 @@ const ViewDoc = () => {
 
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "document.pdf");
+      link.setAttribute("download", "document.pdf"); // file name
       document.body.appendChild(link);
       link.click();
 
@@ -127,6 +157,8 @@ const ViewDoc = () => {
       console.error(error);
     }
   };
+
+  
 
   return (
     <div
@@ -244,7 +276,7 @@ const ViewDoc = () => {
           <div
             className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
           >
-            {/* Counter-Clockwise 180 */}
+            {/* Counter-Clockwise 180 (Double Rotate) */}
             <div
               className={`flex items-center ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-1 px-1 rounded-sm`}
             >
@@ -275,7 +307,7 @@ const ViewDoc = () => {
               </button>
             </div>
 
-            {/* Clockwise 180 */}
+            {/* Clockwise 180 (Double Rotate) */}
             <div
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center py-1 rounded-sm`}
             >
@@ -314,10 +346,10 @@ const ViewDoc = () => {
       <div
         ref={containerRef}
         className={`w-full mt-1 overflow-auto py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
-        style={{ height: "calc(100vh - 140px)", touchAction: "auto" }}
+        style={{ height: "calc(100vh - 140px)", touchAction: "pan-x pan-y" }}
       >
         {loadingDetails ? (
-          <Loading />
+           <Loading />
         ) : finalUrl ? (
           <div
             className={`w-max mx-auto transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
