@@ -362,7 +362,7 @@ const ViewDoc = () => {
             >
               <Page
                 pageNumber={pageNumber}
-                width={containerWidth * zoom}
+                width={containerWidth}
                 rotate={rotation}
                 devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
                 renderTextLayer={true}
