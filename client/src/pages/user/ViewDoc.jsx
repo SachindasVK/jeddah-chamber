@@ -351,27 +351,21 @@ const ViewDoc = () => {
         {loadingDetails ? (
            <Loading />
         ) : finalUrl ? (
-          <div
-            className={`w-max mx-auto transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
-          >
-            <Document
-              file={finalUrl}
-              onLoadSuccess={onDocumentLoadSuccess}
-              error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
-              loading={<></>}
-            >
-              <Page
-                pageNumber={pageNumber}
-                width={containerWidth}
-                rotate={rotation}
-                devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
-                renderTextLayer={true}
-                renderAnnotationLayer={false}
-                canvasBackground="white"
-                className="pdf-page-high-quality"
-              />
-            </Document>
-          </div>
+         <div
+  style={{
+    transform: `scale(${zoom}) rotate(${rotation}deg)`,
+    transformOrigin: "center center",
+    transition: "transform 0.1s ease-out",
+  }}
+>
+  <Page
+    pageNumber={pageNumber}
+    width={containerWidth}
+    devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
+    renderTextLayer={true}
+    renderAnnotationLayer={false}
+  />
+</div>
         ) : (
           <div className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
             No PDF document available.
