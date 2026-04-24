@@ -8,8 +8,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./context/ProtectedRoutes";
 import { Toaster } from "react-hot-toast";
+import ViewDoc from "./pages/user/ViewDoc";
 const Dashboard = React.lazy(() => import("./pages/admin/Dashboard"));
-const ViewDoc = React.lazy(() => import("./pages/user/ViewDoc"));
 const Login = React.lazy(() => import("./pages/admin/Login"));
 const PdfList = React.lazy(() => import("./pages/admin/PdfList"));
 const PdfDetails = React.lazy(() => import("./pages/admin/PdfDetails"));
@@ -19,13 +19,6 @@ const App = () => {
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   if (showSplash) {
     return <Loading />;
