@@ -357,7 +357,6 @@ const ViewDoc = () => {
               <div
                 style={{
                   transform: `scale(${zoom}) rotate(${rotation}deg)`,
-                  transformOrigin: "center center",
                   transition: "transform 0.08s ease-out",
                 }}
               >
