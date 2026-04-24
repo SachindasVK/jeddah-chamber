@@ -1,6 +1,5 @@
 import "./Loading.css";
-import jcc from "../../assets/jcc.svg";
-
+import { ReactComponent as Logo } from "../../assets/jcc.svg";
 const Loading = () => {
   return (
     <div className="splash-overlay">
@@ -9,7 +8,7 @@ const Loading = () => {
         <div className="pulse-circle pulse2"></div>
         <div className="pulse-circle pulse3"></div>
         <div className="logo-wrap">
-          <img src={jcc} alt="" />
+          <Logo />
         </div>
       </div>
     </div>
