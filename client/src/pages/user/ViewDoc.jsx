@@ -63,50 +63,19 @@ const ViewDoc = () => {
   }, []);
 
 
-  useEffect(() => {
+ useEffect(() => {
   const el = containerRef.current;
   if (!el) return;
 
-  const getDistance = (t1, t2) => {
-    return Math.hypot(
-      t2.pageX - t1.pageX,
-      t2.pageY - t1.pageY
-    );
+  const onWheel = (e) => {
+    if (!e.ctrlKey && !e.metaKey) return; // Ctrl+scroll to zoom
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+    setZoom((prev) => Math.min(Math.max(prev + delta, 0.5), 3));
   };
 
-  const onTouchMove = (e) => {
-    if (e.touches.length !== 2) return;
-    
-    const distance = getDistance(e.touches[0], e.touches[1]);
-
-    if (!lastDistance.current) {
-      lastDistance.current = distance;
-      return;
-    }
-
-    const delta = distance - lastDistance.current;
-
-    if (Math.abs(delta) > 10) {
-      setZoom((prev) =>
-        delta > 0
-          ? Math.min(prev + 0.1, 3)
-          : Math.max(prev - 0.1, 0.5)
-      );
-      lastDistance.current = distance;
-    }
-  };
-
-  const onTouchEnd = () => {
-    lastDistance.current = null;
-  };
-
-  el.addEventListener("touchmove", onTouchMove, { passive: false });
-  el.addEventListener("touchend", onTouchEnd);
-
-  return () => {
-    el.removeEventListener("touchmove", onTouchMove);
-    el.removeEventListener("touchend", onTouchEnd);
-  };
+  el.addEventListener("wheel", onWheel, { passive: false });
+  return () => el.removeEventListener("wheel", onWheel);
 }, []);
 
   useEffect(() => {
