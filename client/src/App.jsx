@@ -16,9 +16,20 @@ const PdfDetails = React.lazy(() => import("./pages/admin/PdfDetails"));
 const NotFound = React.lazy(() => import("./pages/user/NotFound"));
 
 const App = () => {
+  const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 500);
 
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showSplash) {
+    return <Loading />;
+  }
   return (
     <>
       <Toaster position="top-center" reverseOrder={true} />
