@@ -405,6 +405,32 @@ const ViewDoc = () => {
               />
             </Document>
           </div>
+{numPages > 0 && (
+  <div className="fixed bottom-0 left-0 w-full z-20 bg-black/70 backdrop-blur-md py-2 px-2 overflow-x-auto">
+    <div className="flex gap-3 w-max">
+      {Array.from(new Array(numPages), (_, index) => (
+        <div
+          key={index}
+          onClick={() => setPageNumber(index + 1)}
+          className={`cursor-pointer rounded-md overflow-hidden border-2 transition-all ${
+            pageNumber === index + 1
+              ? "border-blue-500 scale-105"
+              : "border-transparent opacity-70"
+          }`}
+        >
+          <Document file={finalUrl}>
+            <Page
+              pageNumber={index + 1}
+              width={70}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+            />
+          </Document>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
         ) : (
           <div
             className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
