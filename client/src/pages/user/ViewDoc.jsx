@@ -382,7 +382,7 @@ const ViewDoc = () => {
           >
             <Page
               pageNumber={index + 1}
-              width={110}
+              width={100}
               renderTextLayer={false}
               renderAnnotationLayer={false}
             />
