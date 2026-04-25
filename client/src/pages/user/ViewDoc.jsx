@@ -163,28 +163,28 @@ const ViewDoc = () => {
       >
         <div className="flex items-center w-full gap-1.5">
           <div
-  className={`${
-    theme === "dark"
-      ? "bg-gray-800 border-gray-600"
-      : "bg-gray-100 border-gray-300"
-  } border py-0.5 px-0.5 rounded-sm`}
->
-  <div
-    onClick={() => setShowSidebar((prev) => !prev)}
-    className={`border flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
-      showSidebar
-        ? "bg-blue-800 border-blue-700"
-        : theme === "dark"
-        ? "border-gray-600"
-        : "border-gray-300"
-    }`}
-  >
-    <MdViewSidebar
-      size={15}
-      color={showSidebar ? "#ffffff" : iconColor}
-    />
-  </div>
-</div>
+            className={`${
+              theme === "dark"
+                ? "bg-gray-800 border-gray-600"
+                : "bg-gray-100 border-gray-300"
+            } border py-0.5 px-0.5 rounded-sm`}
+          >
+            <div
+              onClick={() => setShowSidebar((prev) => !prev)}
+              className={`border flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
+                showSidebar
+                  ? "bg-blue-700 border-blue-700"
+                  : theme === "dark"
+                    ? "border-gray-600"
+                    : "border-gray-300"
+              }`}
+            >
+              <MdViewSidebar
+                size={15}
+                color={showSidebar ? "#ffffff" : iconColor}
+              />
+            </div>
+          </div>
 
           <div
             className={`flex items-center gap-0.5 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
@@ -350,48 +350,48 @@ const ViewDoc = () => {
       </div>
 
       {/* Bottom Thumbnail Sidebar (FULL HIDE FIX) */}
-<div
-  className={`fixed bottom-0 left-0 w-full z-20 ${
-    showSidebar
-      ? "translate-y-0 opacity-100 visible"
-      : "translate-y-full opacity-0 invisible pointer-events-none"
-  }`}
->
-  {/* Overlay */}
-  <div
-    className="absolute inset-0 bg-black/30"
-    onClick={() => setShowSidebar(false)}
-  />
+      <div
+        className={`fixed bottom-0 left-0 w-full z-20 ${
+          showSidebar
+            ? "translate-y-0 opacity-100 visible"
+            : "translate-y-full opacity-0 invisible pointer-events-none"
+        }`}
+      >
+        {/* Overlay */}
+        <div
+          className="absolute inset-0 bg-black/30"
+          onClick={() => setShowSidebar(false)}
+        />
 
-  {/* Bottom Bar */}
-  <div className="relative bg-blue-700 h-[147px] flex items-center overflow-x-auto gap-2 shadow-2xl">
-    {finalUrl && (
-      <Document file={finalUrl}>
-        {Array.from(new Array(numPages || 0), (_, index) => (
-          <div
-            key={index}
-            onClick={() => {
-              setPageNumber(index + 1);
-              setShowSidebar(false);
-            }}
-            className={`cursor-pointer border-2 ${
-              pageNumber === index + 1
-                ? "border-blue-400"
-                : "border-transparent"
-            }`}
-          >
-            <Page
-              pageNumber={index + 1}
-              width={100}
-              renderTextLayer={false}
-              renderAnnotationLayer={false}
-            />
-          </div>
-        ))}
-      </Document>
-    )}
-  </div>
-</div>
+        {/* Bottom Bar */}
+        <div className="relative bg-blue-700 h-[147px] flex items-center overflow-x-auto gap-2 shadow-2xl">
+          {finalUrl && (
+            <Document file={finalUrl}>
+              {Array.from(new Array(numPages || 0), (_, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setPageNumber(index + 1);
+                    setShowSidebar(false);
+                  }}
+                  className={`cursor-pointer border-2 ${
+                    pageNumber === index + 1
+                      ? "border-blue-400"
+                      : "border-transparent"
+                  }`}
+                >
+                  <Page
+                    pageNumber={index + 1}
+                    width={100}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                  />
+                </div>
+              ))}
+            </Document>
+          )}
+        </div>
+      </div>
 
       {/* PDF Container */}
       <div
