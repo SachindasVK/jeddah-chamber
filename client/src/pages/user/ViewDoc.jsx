@@ -349,20 +349,22 @@ const ViewDoc = () => {
         </div>
       </div>
 
-      {/* Bottom Thumbnail Sidebar (FIXED - no reload) */}
+      {/* Bottom Thumbnail Sidebar (FULL HIDE FIX) */}
 <div
   className={`fixed bottom-0 left-0 w-full z-20 transition-all duration-300 ${
-    showSidebar ? "translate-y-0" : "translate-y-full pointer-events-none"
+    showSidebar
+      ? "translate-y-0 opacity-100 visible"
+      : "translate-y-full opacity-0 invisible pointer-events-none"
   }`}
 >
-  {/* Background overlay */}
+  {/* Overlay */}
   <div
     className="absolute inset-0 bg-black/30"
     onClick={() => setShowSidebar(false)}
   />
 
   {/* Bottom Bar */}
-  <div className="relative h-[150px] flex items-center px-2 overflow-x-auto gap-2 shadow-2xl">
+  <div className="relative bg-blue-700 h-[150px] flex items-center px-2 overflow-x-auto gap-2 shadow-2xl">
     {finalUrl && (
       <Document file={finalUrl}>
         {Array.from(new Array(numPages || 0), (_, index) => (
