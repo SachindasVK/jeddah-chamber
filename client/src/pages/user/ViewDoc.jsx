@@ -198,11 +198,11 @@ const ViewDoc = () => {
             <div
               className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} py-0  px-5 rounded-sm`}
             >
-              <span
+              <div
                 className={`px-1 sm:px-4 text-sm sm:text-base font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}
               >
                 {pageNumber}/{numPages || 1}
-              </span>
+              </div>
             </div>
 
             <div
