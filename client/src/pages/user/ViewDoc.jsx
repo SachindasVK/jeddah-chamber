@@ -364,7 +364,7 @@ const ViewDoc = () => {
   />
 
   {/* Bottom Bar */}
-  <div className="relative bg-blue-700 h-[150px] flex items-center overflow-x-auto gap-2 shadow-2xl">
+  <div className="relative bg-blue-700 h-[140px] flex items-center overflow-x-auto gap-2 shadow-2xl">
     {finalUrl && (
       <Document file={finalUrl}>
         {Array.from(new Array(numPages || 0), (_, index) => (
@@ -382,7 +382,7 @@ const ViewDoc = () => {
           >
             <Page
               pageNumber={index + 1}
-              width={100}
+              width={120}
               renderTextLayer={false}
               renderAnnotationLayer={false}
             />
