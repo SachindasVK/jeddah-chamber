@@ -284,7 +284,7 @@ const ViewDoc = () => {
                 <FaArrowRotateLeft
                   size={16}
                   color={iconColor}
-                  className="border p-0.1 rounded-full"
+                  className="border p-0.5 rounded-full"
                 />
               </button>
             </div>
@@ -315,7 +315,7 @@ const ViewDoc = () => {
                 <FaArrowRotateRight
                   size={16}
                   color={iconColor}
-                  className="border p-0.1 rounded-full"
+                  className="border p-0.5 rounded-full"
                 />
               </button>
             </div>
