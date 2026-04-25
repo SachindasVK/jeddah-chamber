@@ -175,7 +175,7 @@ const ViewDoc = () => {
             <div
               className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-0.5 px-0.5 rounded-sm`}
             >
-              <MdViewSidebar size={16} color={iconColor} />
+              <MdViewSidebar size={15} color={iconColor} />
             </div>
           </div>
 
@@ -190,7 +190,7 @@ const ViewDoc = () => {
                 disabled={pageNumber <= 1}
               >
                 <FaChevronLeft
-                  size={16}
+                  size={15}
                   color={pageNumber <= 1 ? "#64748b" : iconColor}
                 />
               </button>
@@ -215,7 +215,7 @@ const ViewDoc = () => {
                 disabled={pageNumber >= numPages}
               >
                 <FaChevronRight
-                  size={16}
+                  size={15}
                   color={pageNumber >= numPages ? "#64748b" : iconColor}
                 />
               </button>
@@ -229,7 +229,7 @@ const ViewDoc = () => {
                 className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center px-1 py-0.5 rounded-sm`}
               >
                 <button onClick={handleDownload}>
-                  <Download size={16} color={iconColor} />
+                  <Download size={15} color={iconColor} />
                 </button>
               </div>
             </div>
@@ -246,7 +246,7 @@ const ViewDoc = () => {
               <button
                 onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}
               >
-                <ZoomOut size={16} color={iconColor} />
+                <ZoomOut size={15} color={iconColor} />
               </button>
             </div>
 
@@ -254,7 +254,7 @@ const ViewDoc = () => {
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center rounded-sm`}
             >
               <button onClick={() => setZoom((prev) => prev + 0.2)}>
-                <ZoomIn size={16} color={iconColor} />
+                <ZoomIn size={15} color={iconColor} />
               </button>
             </div>
 
@@ -267,7 +267,7 @@ const ViewDoc = () => {
                   setRotation(0);
                 }}
               >
-                <MoveHorizontal size={16} color={iconColor} />
+                <MoveHorizontal size={15} color={iconColor} />
               </button>
             </div>
           </div>
@@ -282,7 +282,7 @@ const ViewDoc = () => {
             >
               <button onClick={() => setRotation((prev) => prev - 180)}>
                 <FaArrowRotateLeft
-                  size={16}
+                  size={15}
                   color={iconColor}
                   className="border p-0.5 rounded-full"
                 />
@@ -294,7 +294,7 @@ const ViewDoc = () => {
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex py-0.5 rounded-sm`}
             >
               <button onClick={() => setRotation((prev) => prev - 90)}>
-                <RotateCcw size={16} color={iconColor} />
+                <RotateCcw size={15} color={iconColor} />
               </button>
             </div>
 
@@ -303,7 +303,7 @@ const ViewDoc = () => {
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1.5 flex items-center py-0.5 rounded-sm`}
             >
               <button onClick={() => setRotation((prev) => prev + 90)}>
-                <RotateCw size={16} color={iconColor} />
+                <RotateCw size={15} color={iconColor} />
               </button>
             </div>
 
@@ -313,7 +313,7 @@ const ViewDoc = () => {
             >
               <button onClick={() => setRotation((prev) => prev + 180)}>
                 <FaArrowRotateRight
-                  size={16}
+                  size={15}
                   color={iconColor}
                   className="border p-0.5 rounded-full"
                 />
@@ -332,9 +332,9 @@ const ViewDoc = () => {
                 className={`${theme === "dark" ? "bg-gray-700 border-gray-400" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
               >
                 {theme === "light" ? (
-                  <IoMoonOutline size={16} color="#4b5563" />
+                  <IoMoonOutline size={15} color="#4b5563" />
                 ) : (
-                  <Sun size={16} color="white" />
+                  <Sun size={15} color="white" />
                 )}
               </div>
             </div>
