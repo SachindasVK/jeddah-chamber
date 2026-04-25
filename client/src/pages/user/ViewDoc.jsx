@@ -157,7 +157,6 @@ const ViewDoc = () => {
     <div
       className={`min-h-screen flex flex-col ${theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"}`}
     >
-      
       {/* Header Toolbar */}
       <div
         className={`w-full sticky top-0 z-10 flex flex-col gap-2 p-3 shadow-md border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}
@@ -342,47 +341,43 @@ const ViewDoc = () => {
       </div>
 
       {/* Bottom Thumbnail Sidebar */}
-{showSidebar && (
-  <div className="fixed bottom-0 left-0 w-full z-20">
-    
-    {/* Background overlay (click to close) */}
-    <div
-      className="absolute inset-0 bg-black/30"
-      onClick={() => setShowSidebar(false)}
-    />
+      {showSidebar && (
+        <div className="fixed bottom-0 left-0 w-full z-20">
+          <div
+            className="absolute inset-0 bg-blue-800"
+            onClick={() => setShowSidebar(false)}
+          />
 
-    {/* Bottom Bar */}
-    <div className="relative bg-[#1e293b] h-[110px] flex items-center px-2 overflow-x-auto gap-2 shadow-2xl">
-      
-      {finalUrl && (
-        <Document file={finalUrl}>
-          {Array.from(new Array(numPages), (_, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                setPageNumber(index + 1);
-                setShowSidebar(false);
-              }}
-              className={`cursor-pointer border-2 ${
-                pageNumber === index + 1
-                  ? "border-blue-500"
-                  : "border-transparent"
-              }`}
-            >
-              <Page
-                pageNumber={index + 1}
-                width={70}
-                renderTextLayer={false}
-                renderAnnotationLayer={false}
-              />
-            </div>
-          ))}
-        </Document>
+          {/* Bottom Bar */}
+          <div className="relative bg-[#1e293b] h-[110px] flex items-center px-2 overflow-x-auto gap-2 shadow-2xl">
+            {finalUrl && (
+              <Document file={finalUrl}>
+                {Array.from(new Array(numPages), (_, index) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setPageNumber(index + 1);
+                      setShowSidebar(false);
+                    }}
+                    className={`cursor-pointer border-2 ${
+                      pageNumber === index + 1
+                        ? "border-blue-500"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <Page
+                      pageNumber={index + 1}
+                      width={90}
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
+                    />
+                  </div>
+                ))}
+              </Document>
+            )}
+          </div>
+        </div>
       )}
-
-    </div>
-  </div>
-)}
 
       {/* PDF Container */}
       <div
