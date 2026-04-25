@@ -251,7 +251,7 @@ const ViewDoc = () => {
             </div>
 
             <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1.5 flex items-center rounded-sm`}
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center rounded-sm`}
             >
               <button onClick={() => setZoom((prev) => prev + 0.2)}>
                 <ZoomIn size={16} color={iconColor} />
@@ -259,7 +259,7 @@ const ViewDoc = () => {
             </div>
 
             <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1.5 flex items-center py-0.5 rounded-sm`}
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center py-0.5 rounded-sm`}
             >
               <button
                 onClick={() => {
@@ -282,7 +282,7 @@ const ViewDoc = () => {
             >
               <button onClick={() => setRotation((prev) => prev - 180)}>
                 <FaArrowRotateLeft
-                  size={17}
+                  size={16}
                   color={iconColor}
                   className="border p-0.1 rounded-full"
                 />
@@ -291,10 +291,10 @@ const ViewDoc = () => {
 
             {/* Counter-Clockwise 90 */}
             <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex py-1 rounded-sm`}
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex py-0.5 rounded-sm`}
             >
               <button onClick={() => setRotation((prev) => prev - 90)}>
-                <RotateCcw size={17} color={iconColor} />
+                <RotateCcw size={16} color={iconColor} />
               </button>
             </div>
 
@@ -303,7 +303,7 @@ const ViewDoc = () => {
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1.5 flex items-center py-0.5 rounded-sm`}
             >
               <button onClick={() => setRotation((prev) => prev + 90)}>
-                <RotateCw size={17} color={iconColor} />
+                <RotateCw size={16} color={iconColor} />
               </button>
             </div>
 
@@ -313,7 +313,7 @@ const ViewDoc = () => {
             >
               <button onClick={() => setRotation((prev) => prev + 180)}>
                 <FaArrowRotateRight
-                  size={17}
+                  size={16}
                   color={iconColor}
                   className="border p-0.1 rounded-full"
                 />
