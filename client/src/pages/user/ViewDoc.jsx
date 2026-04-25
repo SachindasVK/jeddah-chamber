@@ -183,14 +183,14 @@ const ViewDoc = () => {
             className={`flex items-center gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
           >
             <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-2 flex items-center py-1 rounded-sm`}
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1.5 flex items-center py-0.5 rounded-sm`}
             >
               <button
                 onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
                 disabled={pageNumber <= 1}
               >
                 <FaChevronLeft
-                  size={17}
+                  size={16}
                   color={pageNumber <= 1 ? "#64748b" : iconColor}
                 />
               </button>
@@ -199,14 +199,14 @@ const ViewDoc = () => {
               className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-5 rounded-sm`}
             >
               <span
-                className={`px-2 sm:px-4 text-sm sm:text-base font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}
+                className={`px-1 sm:px-4 text-sm sm:text-base font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}
               >
                 {pageNumber}/{numPages || 1}
               </span>
             </div>
 
             <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center py-1 rounded-sm`}
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center py-0.5 rounded-sm`}
             >
               <button
                 onClick={() =>
@@ -215,7 +215,7 @@ const ViewDoc = () => {
                 disabled={pageNumber >= numPages}
               >
                 <FaChevronRight
-                  size={17}
+                  size={16}
                   color={pageNumber >= numPages ? "#64748b" : iconColor}
                 />
               </button>
@@ -226,7 +226,7 @@ const ViewDoc = () => {
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
             >
               <div
-                className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center px-2 py-1 rounded-sm`}
+                className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center px-1.5 py-0.5 rounded-sm`}
               >
                 <button onClick={handleDownload}>
                   <Download size={17} color={iconColor} />
@@ -236,30 +236,30 @@ const ViewDoc = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 w-full sm:w-auto">
+        <div className="flex items-center gap-1 w-full sm:w-auto">
           <div
             className={`flex gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
           >
             <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center rounded-sm`}
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1.5 flex items-center rounded-sm`}
             >
               <button
                 onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}
               >
-                <ZoomOut size={17} color={iconColor} />
+                <ZoomOut size={16} color={iconColor} />
               </button>
             </div>
 
             <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center rounded-sm`}
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1.5 flex items-center rounded-sm`}
             >
               <button onClick={() => setZoom((prev) => prev + 0.2)}>
-                <ZoomIn size={17} color={iconColor} />
+                <ZoomIn size={16} color={iconColor} />
               </button>
             </div>
 
             <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1.5 flex items-center py-0.5 rounded-sm`}
             >
               <button
                 onClick={() => {
@@ -267,7 +267,7 @@ const ViewDoc = () => {
                   setRotation(0);
                 }}
               >
-                <MoveHorizontal size={17} color={iconColor} />
+                <MoveHorizontal size={16} color={iconColor} />
               </button>
             </div>
           </div>
@@ -278,13 +278,13 @@ const ViewDoc = () => {
           >
             {/* Counter-Clockwise 180 (Double Rotate) */}
             <div
-              className={`flex items-center ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-1 px-1 rounded-sm`}
+              className={`flex items-center ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-0.5 px-1 rounded-sm`}
             >
               <button onClick={() => setRotation((prev) => prev - 180)}>
                 <FaArrowRotateLeft
                   size={17}
                   color={iconColor}
-                  className="border p-1 rounded-full"
+                  className="border p-0.1 rounded-full"
                 />
               </button>
             </div>
@@ -300,7 +300,7 @@ const ViewDoc = () => {
 
             {/* Clockwise 90 */}
             <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1.5 flex items-center py-0.5 rounded-sm`}
             >
               <button onClick={() => setRotation((prev) => prev + 90)}>
                 <RotateCw size={17} color={iconColor} />
@@ -309,13 +309,13 @@ const ViewDoc = () => {
 
             {/* Clockwise 180 (Double Rotate) */}
             <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center py-1 rounded-sm`}
+              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center py-0.5 rounded-sm`}
             >
               <button onClick={() => setRotation((prev) => prev + 180)}>
                 <FaArrowRotateRight
                   size={17}
                   color={iconColor}
-                  className="border p-1 rounded-full"
+                  className="border p-0.1 rounded-full"
                 />
               </button>
             </div>
