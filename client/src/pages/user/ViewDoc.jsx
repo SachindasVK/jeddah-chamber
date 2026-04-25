@@ -329,12 +329,12 @@ const ViewDoc = () => {
               className={`p-0.5 rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
             >
               <div
-                className={`${theme === "dark" ? "bg-gray-700 border-gray-400" : "bg-gray-100 border-gray-300"} border p-1 rounded-sm`}
+                className={`${theme === "dark" ? "bg-gray-700 border-gray-400" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
               >
                 {theme === "light" ? (
-                  <IoMoonOutline size={17} color="#4b5563" />
+                  <IoMoonOutline size={16} color="#4b5563" />
                 ) : (
-                  <Sun size={17} color="white" />
+                  <Sun size={16} color="white" />
                 )}
               </div>
             </div>
