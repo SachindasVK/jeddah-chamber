@@ -196,7 +196,7 @@ const ViewDoc = () => {
               </button>
             </div>
             <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} py-4  px-5 rounded-sm`}
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} py-0  px-5 rounded-sm`}
             >
               <span
                 className={`px-1 sm:px-4 text-sm sm:text-base font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}
