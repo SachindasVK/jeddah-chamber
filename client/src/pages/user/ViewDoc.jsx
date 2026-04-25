@@ -199,7 +199,7 @@ const ViewDoc = () => {
       <div
         className={`border ${
           theme === "dark" ? "border-gray-600" : "border-gray-300"
-        } px-1.5 flex items-center py-0.5 rounded-sm`}
+        } px-1.5 flex items-center py-5 rounded-sm`}
       >
         <button
           onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
