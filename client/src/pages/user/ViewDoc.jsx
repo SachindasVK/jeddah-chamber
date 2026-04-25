@@ -349,44 +349,47 @@ const ViewDoc = () => {
         </div>
       </div>
 
-      {/* Bottom Thumbnail Sidebar */}
-      {showSidebar && (
-        <div className="fixed bottom-0 left-0 w-full z-20">
-          <div
-            className="absolute inset-0 bg-blue-700"
-            onClick={() => setShowSidebar(false)}
-          />
+      {/* Bottom Thumbnail Sidebar (FIXED - no reload) */}
+<div
+  className={`fixed bottom-0 left-0 w-full z-20 transition-all duration-300 ${
+    showSidebar ? "translate-y-0" : "translate-y-full pointer-events-none"
+  }`}
+>
+  {/* Background overlay */}
+  <div
+    className="absolute inset-0 bg-black/30"
+    onClick={() => setShowSidebar(false)}
+  />
 
-          {/* Bottom Bar */}
-          <div className="relative bg-blue-700 h-[150px] flex items-center px-2 overflow-x-auto gap-2 shadow-2xl">
-            {finalUrl && (
-              <Document file={finalUrl}>
-                {Array.from(new Array(numPages), (_, index) => (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setPageNumber(index + 1);
-                      setShowSidebar(false);
-                    }}
-                    className={`cursor-pointer border-2 ${
-                      pageNumber === index + 1
-                        ? "border-blue-500"
-                        : "border-transparent"
-                    }`}
-                  >
-                    <Page
-                      pageNumber={index + 1}
-                      width={80}
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                    />
-                  </div>
-                ))}
-              </Document>
-            )}
+  {/* Bottom Bar */}
+  <div className="relative bg-blue-700 h-[150px] flex items-center px-2 overflow-x-auto gap-2 shadow-2xl">
+    {finalUrl && (
+      <Document file={finalUrl}>
+        {Array.from(new Array(numPages || 0), (_, index) => (
+          <div
+            key={index}
+            onClick={() => {
+              setPageNumber(index + 1);
+              setShowSidebar(false);
+            }}
+            className={`cursor-pointer border-2 ${
+              pageNumber === index + 1
+                ? "border-blue-400"
+                : "border-transparent"
+            }`}
+          >
+            <Page
+              pageNumber={index + 1}
+              width={80}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+            />
           </div>
-        </div>
-      )}
+        ))}
+      </Document>
+    )}
+  </div>
+</div>
 
       {/* PDF Container */}
       <div
