@@ -351,7 +351,7 @@ const ViewDoc = () => {
 
       {/* Bottom Thumbnail Sidebar (FULL HIDE FIX) */}
 <div
-  className={`fixed bottom-0 left-0 w-full z-20 transition-all duration-100 ${
+  className={`fixed bottom-0 left-0 w-full z-20 ${
     showSidebar
       ? "translate-y-0 opacity-100 visible"
       : "translate-y-full opacity-0 invisible pointer-events-none"
