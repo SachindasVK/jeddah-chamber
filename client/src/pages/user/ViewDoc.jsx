@@ -166,14 +166,14 @@ const ViewDoc = () => {
     >
      {/* Header Toolbar */}
 <div
-  className={`w-full sticky top-0 z-10 flex flex-col gap-1 p-2 shadow-md border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}
+  className={`w-full sticky top-0 z-10 flex flex-col gap-1.5 p-2.5 shadow-md border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}
 >
-  <div className="flex items-center w-full gap-1">
+  <div className="flex items-center w-full gap-1.5">
     <div
       className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-0.5 px-1 rounded-sm`}
     >
       <div
-        className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-0.5 px-1.5 rounded-sm`}
+        className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-1 px-2 rounded-sm`}
       >
         <MdViewSidebar size={16} color={iconColor} />
       </div>
@@ -182,29 +182,29 @@ const ViewDoc = () => {
     <div
       className={`flex items-center gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
     >
-      <div className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} px-1.5 flex items-center py-0.5 rounded-sm`}>
+      <div className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} px-2 flex items-center py-1 rounded-sm`}>
         <button
           onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
           disabled={pageNumber <= 1}
         >
-          <FaChevronLeft size={15} color={pageNumber <= 1 ? "#64748b" : iconColor} />
+          <FaChevronLeft size={16} color={pageNumber <= 1 ? "#64748b" : iconColor} />
         </button>
       </div>
 
-      <div className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} px-4 rounded-sm`}>
+      <div className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} px-5 rounded-sm`}>
         <span
-          className={`px-2 text-xs sm:text-sm font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}
+          className={`px-2 sm:px-3 text-sm font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}
         >
           {pageNumber}/{numPages || 1}
         </span>
       </div>
 
-      <div className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} px-1.5 flex items-center py-0.5 rounded-sm`}>
+      <div className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} px-1 flex items-center py-1 rounded-sm`}>
         <button
           onClick={() => setPageNumber((prev) => Math.min(prev + 1, numPages))}
           disabled={pageNumber >= numPages}
         >
-          <FaChevronRight size={15} color={pageNumber >= numPages ? "#64748b" : iconColor} />
+          <FaChevronRight size={16} color={pageNumber >= numPages ? "#64748b" : iconColor} />
         </button>
       </div>
     </div>
@@ -213,77 +213,77 @@ const ViewDoc = () => {
       className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
     >
       <div
-        className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} items-center px-1.5 py-0.5 rounded-sm`}
+        className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} items-center px-2 py-1 rounded-sm`}
       >
         <button onClick={handleDownload}>
-          <Download size={15} color={iconColor} />
+          <Download size={16} color={iconColor} />
         </button>
       </div>
     </div>
   </div>
 
-  <div className="flex items-center gap-1 w-full sm:w-auto">
+  <div className="flex items-center gap-1.5 w-full sm:w-auto">
     <div
       className={`flex gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
     >
-      <div className={`border px-1.5 flex items-center rounded-sm`}>
+      <div className={`border px-2 flex items-center rounded-sm`}>
         <button onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}>
-          <ZoomOut size={15} color={iconColor} />
+          <ZoomOut size={16} color={iconColor} />
         </button>
       </div>
 
-      <div className={`border px-1.5 flex items-center rounded-sm`}>
+      <div className={`border px-2 flex items-center rounded-sm`}>
         <button onClick={() => setZoom((prev) => prev + 0.2)}>
-          <ZoomIn size={15} color={iconColor} />
+          <ZoomIn size={16} color={iconColor} />
         </button>
       </div>
 
-      <div className={`border px-1.5 flex items-center py-0.5 rounded-sm`}>
+      <div className={`border px-2 flex items-center py-1 rounded-sm`}>
         <button
           onClick={() => {
             setZoom(1);
             setRotation(0);
           }}
         >
-          <MoveHorizontal size={15} color={iconColor} />
+          <MoveHorizontal size={16} color={iconColor} />
         </button>
       </div>
     </div>
 
     {/* Rotation */}
     <div className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}>
-      <div className={`border py-0.5 px-1 rounded-sm`}>
+      <div className={`border py-1 px-1 rounded-sm`}>
         <button onClick={() => setRotation((prev) => prev - 180)}>
-          <FaArrowRotateLeft size={15} color={iconColor} className="border p-0.5 rounded-full" />
+          <FaArrowRotateLeft size={16} color={iconColor} className="border p-0.5 rounded-full" />
         </button>
       </div>
 
-      <div className={`border px-1.5 flex py-0.5 rounded-sm`}>
+      <div className={`border px-2 flex py-1 rounded-sm`}>
         <button onClick={() => setRotation((prev) => prev - 90)}>
-          <RotateCcw size={15} color={iconColor} />
+          <RotateCcw size={16} color={iconColor} />
         </button>
       </div>
 
-      <div className={`border px-1.5 flex items-center py-0.5 rounded-sm`}>
+      <div className={`border px-2 flex items-center py-1 rounded-sm`}>
         <button onClick={() => setRotation((prev) => prev + 90)}>
-          <RotateCw size={15} color={iconColor} />
+          <RotateCw size={16} color={iconColor} />
         </button>
       </div>
 
-      <div className={`border px-1 flex items-center py-0.5 rounded-sm`}>
+      <div className={`border px-1 flex items-center py-1 rounded-sm`}>
         <button onClick={() => setRotation((prev) => prev + 180)}>
-          <FaArrowRotateRight size={15} color={iconColor} className="border p-0.5 rounded-full" />
+          <FaArrowRotateRight size={16} color={iconColor} className="border p-0.5 rounded-full" />
         </button>
       </div>
     </div>
 
     <div onClick={() => setTheme(theme === "light" ? "dark" : "light")} className="cursor-pointer">
       <div className={`p-0.5 rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}>
-        <div className={`border p-0.5 rounded-sm`}>
+        <div className={`border p-1 rounded-sm`}>
           {theme === "light" ? (
-            <IoMoonOutline size={15} color="#4b5563" />
+            <IoMoonOutline size={16} color="#4b5563" />
           ) : (
-            <Sun size={15} color="white" />
+            <Sun size={16} color="white" />
           )}
         </div>
       </div>
