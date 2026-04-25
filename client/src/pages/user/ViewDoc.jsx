@@ -352,10 +352,10 @@ const ViewDoc = () => {
     />
 
     {/* Sidebar */}
-    <div className="relative w-[90px] sm:w-[110px] h-full bg-black/60 backdrop-blur-md p-2 flex flex-col items-center rounded-r-2xl shadow-xl">
+    <div className="relative w-[90px] sm:w-[110px] h-full bg-black/60 backdrop-blur-md p-2 flex flex-col items-center shadow-xl">
       
       <div className="mt-4 w-full flex justify-center">
-        <div className="rounded-xl overflow-hidden shadow-lg">
+        <div className="overflow-hidden shadow-lg">
           {finalUrl && (
             <Document file={finalUrl}>
               <Page
