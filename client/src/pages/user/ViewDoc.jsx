@@ -180,7 +180,7 @@ const ViewDoc = () => {
           </div>
 
           <div
-            className={`flex items-center gap-0.5 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.1 rounded-sm`}
+            className={`flex items-center gap-0.5 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
           >
             <div
               className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center py-0.5 rounded-sm`}
