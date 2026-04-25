@@ -8,7 +8,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { MdViewSidebar } from "react-icons/md";
-import Loading from '../../components/Loading/Loading'
+import Loading from "../../components/Loading/Loading";
 
 import {
   FaChevronLeft,
@@ -35,6 +35,7 @@ const ViewDoc = () => {
   const { id } = useParams();
   const containerRef = useRef(null);
   const lastDistance = useRef(null);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const [doc, setDoc] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(true);
@@ -62,52 +63,46 @@ const ViewDoc = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   useEffect(() => {
-  const el = containerRef.current;
-  if (!el) return;
+    const el = containerRef.current;
+    if (!el) return;
 
-  const getDistance = (t1, t2) => {
-    return Math.hypot(
-      t2.pageX - t1.pageX,
-      t2.pageY - t1.pageY
-    );
-  };
+    const getDistance = (t1, t2) => {
+      return Math.hypot(t2.pageX - t1.pageX, t2.pageY - t1.pageY);
+    };
 
-  const onTouchMove = (e) => {
-    if (e.touches.length !== 2) return;
-    
-    const distance = getDistance(e.touches[0], e.touches[1]);
+    const onTouchMove = (e) => {
+      if (e.touches.length !== 2) return;
 
-    if (!lastDistance.current) {
-      lastDistance.current = distance;
-      return;
-    }
+      const distance = getDistance(e.touches[0], e.touches[1]);
 
-    const delta = distance - lastDistance.current;
+      if (!lastDistance.current) {
+        lastDistance.current = distance;
+        return;
+      }
 
-    if (Math.abs(delta) > 10) {
-      setZoom((prev) =>
-        delta > 0
-          ? Math.min(prev + 0.1, 3)
-          : Math.max(prev - 0.1, 0.5)
-      );
-      lastDistance.current = distance;
-    }
-  };
+      const delta = distance - lastDistance.current;
 
-  const onTouchEnd = () => {
-    lastDistance.current = null;
-  };
+      if (Math.abs(delta) > 10) {
+        setZoom((prev) =>
+          delta > 0 ? Math.min(prev + 0.1, 3) : Math.max(prev - 0.1, 0.5),
+        );
+        lastDistance.current = distance;
+      }
+    };
 
-  el.addEventListener("touchmove", onTouchMove, { passive: false });
-  el.addEventListener("touchend", onTouchEnd);
+    const onTouchEnd = () => {
+      lastDistance.current = null;
+    };
 
-  return () => {
-    el.removeEventListener("touchmove", onTouchMove);
-    el.removeEventListener("touchend", onTouchEnd);
-  };
-}, []);
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd);
+
+    return () => {
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("docTheme", theme);
@@ -158,12 +153,41 @@ const ViewDoc = () => {
     }
   };
 
-  
-
   return (
     <div
       className={`min-h-screen flex flex-col ${theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"}`}
     >
+      {/* Floating Sidebar Preview */}
+{showSidebar && (
+  <div className="fixed inset-0 z-20 flex">
+    
+    {/* Blur background */}
+    <div
+      className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      onClick={() => setShowSidebar(false)}
+    />
+
+    {/* Sidebar */}
+    <div className="relative w-[90px] sm:w-[110px] h-full bg-black/60 backdrop-blur-md p-2 flex flex-col items-center rounded-r-2xl shadow-xl">
+      
+      <div className="mt-4 w-full flex justify-center">
+        <div className="rounded-xl overflow-hidden shadow-lg">
+          {finalUrl && (
+            <Document file={finalUrl}>
+              <Page
+                pageNumber={1}
+                width={80}
+                renderTextLayer={false}
+                renderAnnotationLayer={false}
+              />
+            </Document>
+          )}
+        </div>
+      </div>
+
+    </div>
+  </div>
+)}
       {/* Header Toolbar */}
       <div
         className={`w-full sticky top-0 z-10 flex flex-col gap-2 p-3 shadow-md border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}
@@ -175,7 +199,12 @@ const ViewDoc = () => {
             <div
               className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-0.5 px-0.5 rounded-sm`}
             >
-              <MdViewSidebar size={15} color={iconColor} />
+              <MdViewSidebar
+                size={15}
+                color={iconColor}
+                onClick={() => setShowSidebar((prev) => !prev)}
+                className="cursor-pointer"
+              />
             </div>
           </div>
 
@@ -241,21 +270,19 @@ const ViewDoc = () => {
             className={`flex gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
           >
             <div
-            onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}
+              onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center rounded-sm`}
             >
-              <button
-                
-              >
+              <button>
                 <ZoomOut size={15} color={iconColor} />
               </button>
             </div>
 
             <div
-            onClick={() => setZoom((prev) => prev + 0.2)}
+              onClick={() => setZoom((prev) => prev + 0.2)}
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center rounded-sm`}
             >
-              <button >
+              <button>
                 <ZoomIn size={15} color={iconColor} />
               </button>
             </div>
@@ -351,7 +378,7 @@ const ViewDoc = () => {
         style={{ height: "calc(100vh - 140px)", touchAction: "pan-x pan-y" }}
       >
         {loadingDetails ? (
-           <Loading />
+          <Loading />
         ) : finalUrl ? (
           <div
             className={`w-max mx-auto transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
@@ -359,7 +386,9 @@ const ViewDoc = () => {
             <Document
               file={finalUrl}
               onLoadSuccess={onDocumentLoadSuccess}
-              error={<div className="p-20 text-red-500">Failed to load PDF.</div>}
+              error={
+                <div className="p-20 text-red-500">Failed to load PDF.</div>
+              }
               loading={<></>}
             >
               <Page
@@ -375,7 +404,9 @@ const ViewDoc = () => {
             </Document>
           </div>
         ) : (
-          <div className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+          <div
+            className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
+          >
             No PDF document available.
           </div>
         )}
