@@ -341,33 +341,44 @@ const ViewDoc = () => {
         </div>
       </div>
 
-      {/* Floating Sidebar Preview */}
+      {/* Bottom Thumbnail Sidebar */}
 {showSidebar && (
-  <div className="fixed inset-0 z-20 flex">
+  <div className="fixed bottom-0 left-0 w-full z-20">
     
-    {/* Blur background */}
+    {/* Background overlay (click to close) */}
     <div
-      className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      className="absolute inset-0 bg-black/30"
       onClick={() => setShowSidebar(false)}
     />
 
-    {/* Sidebar */}
-    <div className="relative w-[90px] sm:w-[110px] h-full bg-black/60 backdrop-blur-md p-2 flex flex-col items-center shadow-xl">
+    {/* Bottom Bar */}
+    <div className="relative bg-[#1e293b] h-[110px] flex items-center px-2 overflow-x-auto gap-2 shadow-2xl">
       
-      <div className="mt-4 w-full flex justify-center">
-        <div className="overflow-hidden shadow-lg">
-          {finalUrl && (
-            <Document file={finalUrl}>
+      {finalUrl && (
+        <Document file={finalUrl}>
+          {Array.from(new Array(numPages), (_, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                setPageNumber(index + 1);
+                setShowSidebar(false);
+              }}
+              className={`cursor-pointer border-2 ${
+                pageNumber === index + 1
+                  ? "border-blue-500"
+                  : "border-transparent"
+              }`}
+            >
               <Page
-                pageNumber={1}
-                width={80}
+                pageNumber={index + 1}
+                width={70}
                 renderTextLayer={false}
                 renderAnnotationLayer={false}
               />
-            </Document>
-          )}
-        </div>
-      </div>
+            </div>
+          ))}
+        </Document>
+      )}
 
     </div>
   </div>
