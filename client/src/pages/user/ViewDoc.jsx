@@ -173,9 +173,9 @@ const ViewDoc = () => {
             className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-0.5 px-1 rounded-sm`}
           >
             <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-1 px-2 rounded-sm`}
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-0.5 px-1 rounded-sm`}
             >
-              <MdViewSidebar size={18} color={iconColor} />
+              <MdViewSidebar size={17} color={iconColor} />
             </div>
           </div>
 
