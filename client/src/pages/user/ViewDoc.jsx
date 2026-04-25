@@ -164,183 +164,113 @@ const ViewDoc = () => {
     <div
       className={`min-h-screen flex flex-col ${theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"}`}
     >
-      {/* Header Toolbar */}
       <div
-        className={`w-full sticky top-0 z-10 flex flex-col gap-2 p-3 shadow-md border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}
-      >
-        <div className="flex items-center w-full gap-1.5">
-          <div
-            className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-0.5 px-1 rounded-sm`}
-          >
-            <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-1 px-2 rounded-sm`}
-            >
-              <MdViewSidebar size={18} color={iconColor} />
-            </div>
-          </div>
-
-          <div
-            className={`flex items-center gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
-          >
-            <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-2 flex items-center py-1 rounded-sm`}
-            >
-              <button
-                onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
-                disabled={pageNumber <= 1}
-              >
-                <FaChevronLeft
-                  size={17}
-                  color={pageNumber <= 1 ? "#64748b" : iconColor}
-                />
-              </button>
-            </div>
-            <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-5 rounded-sm`}
-            >
-              <span
-                className={`px-2 sm:px-4 text-sm sm:text-base font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}
-              >
-                {pageNumber}/{numPages || 1}
-              </span>
-            </div>
-
-            <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center py-1 rounded-sm`}
-            >
-              <button
-                onClick={() =>
-                  setPageNumber((prev) => Math.min(prev + 1, numPages))
-                }
-                disabled={pageNumber >= numPages}
-              >
-                <FaChevronRight
-                  size={17}
-                  color={pageNumber >= numPages ? "#64748b" : iconColor}
-                />
-              </button>
-            </div>
-          </div>
-          <div className="flex">
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
-            >
-              <div
-                className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center px-2 py-1 rounded-sm`}
-              >
-                <button onClick={handleDownload}>
-                  <Download size={17} color={iconColor} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-1.5 w-full sm:w-auto">
-          <div
-            className={`flex gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
-          >
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center rounded-sm`}
-            >
-              <button
-                onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}
-              >
-                <ZoomOut size={17} color={iconColor} />
-              </button>
-            </div>
-
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center rounded-sm`}
-            >
-              <button onClick={() => setZoom((prev) => prev + 0.2)}>
-                <ZoomIn size={17} color={iconColor} />
-              </button>
-            </div>
-
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}
-            >
-              <button
-                onClick={() => {
-                  setZoom(1);
-                  setRotation(0);
-                }}
-              >
-                <MoveHorizontal size={17} color={iconColor} />
-              </button>
-            </div>
-          </div>
-
-          {/* Rotation Section */}
-          <div
-            className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
-          >
-            {/* Counter-Clockwise 180 (Double Rotate) */}
-            <div
-              className={`flex items-center ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-1 px-1 rounded-sm`}
-            >
-              <button onClick={() => setRotation((prev) => prev - 180)}>
-                <FaArrowRotateLeft
-                  size={17}
-                  color={iconColor}
-                  className="border p-1 rounded-full"
-                />
-              </button>
-            </div>
-
-            {/* Counter-Clockwise 90 */}
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex py-1 rounded-sm`}
-            >
-              <button onClick={() => setRotation((prev) => prev - 90)}>
-                <RotateCcw size={17} color={iconColor} />
-              </button>
-            </div>
-
-            {/* Clockwise 90 */}
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-2 flex items-center py-1 rounded-sm`}
-            >
-              <button onClick={() => setRotation((prev) => prev + 90)}>
-                <RotateCw size={17} color={iconColor} />
-              </button>
-            </div>
-
-            {/* Clockwise 180 (Double Rotate) */}
-            <div
-              className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center py-1 rounded-sm`}
-            >
-              <button onClick={() => setRotation((prev) => prev + 180)}>
-                <FaArrowRotateRight
-                  size={17}
-                  color={iconColor}
-                  className="border p-1 rounded-full"
-                />
-              </button>
-            </div>
-          </div>
-
-          <div
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            className="cursor-pointer"
-          >
-            <div
-              className={`p-0.5 rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
-            >
-              <div
-                className={`${theme === "dark" ? "bg-gray-700 border-gray-400" : "bg-gray-100 border-gray-300"} border p-1 rounded-sm`}
-              >
-                {theme === "light" ? (
-                  <IoMoonOutline size={17} color="#4b5563" />
-                ) : (
-                  <Sun size={17} color="white" />
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+  className={`w-full sticky top-0 z-10 flex flex-col gap-1 p-2 shadow-sm border ${
+    theme === "dark"
+      ? "bg-[#1e293b] border-gray-700"
+      : "bg-white border-gray-100"
+  }`}
+>
+  <div className="flex items-center w-full gap-1">
+    
+    {/* Sidebar */}
+    <div className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-[2px] rounded`}>
+      <div className="border px-1 py-[2px] rounded">
+        <MdViewSidebar size={14} color={iconColor} />
       </div>
+    </div>
+
+    {/* Pagination */}
+    <div className={`flex items-center gap-1 border p-[2px] rounded ${
+      theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"
+    }`}>
+      
+      <button
+        onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
+        disabled={pageNumber <= 1}
+        className="px-1 py-[2px]"
+      >
+        <FaChevronLeft size={14} color={pageNumber <= 1 ? "#64748b" : iconColor} />
+      </button>
+
+      <span className="text-xs font-semibold px-1">
+        {pageNumber}/{numPages || 1}
+      </span>
+
+      <button
+        onClick={() =>
+          setPageNumber((prev) => Math.min(prev + 1, numPages))
+        }
+        disabled={pageNumber >= numPages}
+        className="px-1 py-[2px]"
+      >
+        <FaChevronRight size={14} color={pageNumber >= numPages ? "#64748b" : iconColor} />
+      </button>
+    </div>
+
+    {/* Download */}
+    <div className="border p-[2px] rounded">
+      <button onClick={handleDownload} className="px-1 py-[2px]">
+        <Download size={14} color={iconColor} />
+      </button>
+    </div>
+  </div>
+
+  {/* Controls */}
+  <div className="flex items-center gap-1">
+    
+    {/* Zoom */}
+    <div className="flex gap-1 border p-[2px] rounded">
+      <button onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}>
+        <ZoomOut size={14} color={iconColor} />
+      </button>
+
+      <button onClick={() => setZoom((prev) => prev + 0.2)}>
+        <ZoomIn size={14} color={iconColor} />
+      </button>
+
+      <button
+        onClick={() => {
+          setZoom(1);
+          setRotation(0);
+        }}
+      >
+        <MoveHorizontal size={14} color={iconColor} />
+      </button>
+    </div>
+
+    {/* Rotation */}
+    <div className="flex gap-1 border p-[2px] rounded">
+      <button onClick={() => setRotation((prev) => prev - 180)}>
+        <FaArrowRotateLeft size={14} color={iconColor} />
+      </button>
+
+      <button onClick={() => setRotation((prev) => prev - 90)}>
+        <RotateCcw size={14} color={iconColor} />
+      </button>
+
+      <button onClick={() => setRotation((prev) => prev + 90)}>
+        <RotateCw size={14} color={iconColor} />
+      </button>
+
+      <button onClick={() => setRotation((prev) => prev + 180)}>
+        <FaArrowRotateRight size={14} color={iconColor} />
+      </button>
+    </div>
+
+    {/* Theme */}
+    <button
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      className="border p-[3px] rounded"
+    >
+      {theme === "light" ? (
+        <IoMoonOutline size={14} />
+      ) : (
+        <Sun size={14} />
+      )}
+    </button>
+  </div>
+</div>
 
       {/* PDF Container */}
       <div
