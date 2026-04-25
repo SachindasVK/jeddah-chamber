@@ -183,7 +183,7 @@ const ViewDoc = () => {
             className={`flex items-center gap-0.5 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border rounded-sm`}
           >
             <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center py-0.5 rounded-sm`}
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center rounded-sm`}
             >
               <button
                 onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
