@@ -241,19 +241,21 @@ const ViewDoc = () => {
             className={`flex gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
           >
             <div
+            onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center rounded-sm`}
             >
               <button
-                onClick={() => setZoom((prev) => Math.max(prev - 0.2, 0.3))}
+                
               >
                 <ZoomOut size={15} color={iconColor} />
               </button>
             </div>
 
             <div
+            onClick={() => setZoom((prev) => prev + 0.2)}
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border px-1 flex items-center rounded-sm`}
             >
-              <button onClick={() => setZoom((prev) => prev + 0.2)}>
+              <button >
                 <ZoomIn size={15} color={iconColor} />
               </button>
             </div>
