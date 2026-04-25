@@ -163,27 +163,28 @@ const ViewDoc = () => {
       >
         <div className="flex items-center w-full gap-1.5">
           <div
-            className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border py-0.5 px-0.5 rounded-sm`}
-          >
-            <div
-              className={`border
-                ${
-                  showSidebar
-                    ? "bg-blue-800 border-blue-700"
-                    : theme === "dark"
-                      ? "bg-gray-800 border-gray-600"
-                      : "bg-gray-100 border-gray-300"
-                }
-                 ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-0.5 px-0.5 rounded-sm`}
-            >
-              <MdViewSidebar
-                size={15}
-                color={iconColor}
-                onClick={() => setShowSidebar((prev) => !prev)}
-                className="cursor-pointer"
-              />
-            </div>
-          </div>
+  className={`${
+    theme === "dark"
+      ? "bg-gray-800 border-gray-600"
+      : "bg-gray-100 border-gray-300"
+  } border py-0.5 px-0.5 rounded-sm`}
+>
+  <div
+    onClick={() => setShowSidebar((prev) => !prev)}
+    className={`border flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
+      showSidebar
+        ? "bg-blue-800 border-blue-700"
+        : theme === "dark"
+        ? "border-gray-600"
+        : "border-gray-300"
+    }`}
+  >
+    <MdViewSidebar
+      size={15}
+      color={showSidebar ? "#ffffff" : iconColor}
+    />
+  </div>
+</div>
 
           <div
             className={`flex items-center gap-0.5 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
