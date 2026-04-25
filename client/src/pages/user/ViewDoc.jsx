@@ -157,37 +157,7 @@ const ViewDoc = () => {
     <div
       className={`min-h-screen flex flex-col ${theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"}`}
     >
-      {/* Floating Sidebar Preview */}
-{showSidebar && (
-  <div className="fixed inset-0 z-20 flex">
-    
-    {/* Blur background */}
-    <div
-      className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-      onClick={() => setShowSidebar(false)}
-    />
-
-    {/* Sidebar */}
-    <div className="relative w-[90px] sm:w-[110px] h-full bg-black/60 backdrop-blur-md p-2 flex flex-col items-center rounded-r-2xl shadow-xl">
       
-      <div className="mt-4 w-full flex justify-center">
-        <div className="rounded-xl overflow-hidden shadow-lg">
-          {finalUrl && (
-            <Document file={finalUrl}>
-              <Page
-                pageNumber={1}
-                width={80}
-                renderTextLayer={false}
-                renderAnnotationLayer={false}
-              />
-            </Document>
-          )}
-        </div>
-      </div>
-
-    </div>
-  </div>
-)}
       {/* Header Toolbar */}
       <div
         className={`w-full sticky top-0 z-10 flex flex-col gap-2 p-3 shadow-md border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}
@@ -370,6 +340,38 @@ const ViewDoc = () => {
           </div>
         </div>
       </div>
+
+      {/* Floating Sidebar Preview */}
+{showSidebar && (
+  <div className="fixed inset-0 z-20 flex">
+    
+    {/* Blur background */}
+    <div
+      className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      onClick={() => setShowSidebar(false)}
+    />
+
+    {/* Sidebar */}
+    <div className="relative w-[90px] sm:w-[110px] h-full bg-black/60 backdrop-blur-md p-2 flex flex-col items-center rounded-r-2xl shadow-xl">
+      
+      <div className="mt-4 w-full flex justify-center">
+        <div className="rounded-xl overflow-hidden shadow-lg">
+          {finalUrl && (
+            <Document file={finalUrl}>
+              <Page
+                pageNumber={1}
+                width={80}
+                renderTextLayer={false}
+                renderAnnotationLayer={false}
+              />
+            </Document>
+          )}
+        </div>
+      </div>
+
+    </div>
+  </div>
+)}
 
       {/* PDF Container */}
       <div
