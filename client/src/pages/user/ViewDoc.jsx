@@ -175,7 +175,7 @@ const ViewDoc = () => {
             <div
               className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center py-0.5 px-1 rounded-sm`}
             >
-              <MdViewSidebar size={17} color={iconColor} />
+              <MdViewSidebar size={16} color={iconColor} />
             </div>
           </div>
 
@@ -183,7 +183,7 @@ const ViewDoc = () => {
             className={`flex items-center gap-1 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
           >
             <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1.5 flex items-center py-0.5 rounded-sm`}
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center py-0.5 rounded-sm`}
             >
               <button
                 onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
@@ -226,10 +226,10 @@ const ViewDoc = () => {
               className={`${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
             >
               <div
-                className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center px-1.5 py-0.5 rounded-sm`}
+                className={`flex border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} flex items-center px-1 py-0.5 rounded-sm`}
               >
                 <button onClick={handleDownload}>
-                  <Download size={17} color={iconColor} />
+                  <Download size={16} color={iconColor} />
                 </button>
               </div>
             </div>
@@ -274,7 +274,7 @@ const ViewDoc = () => {
 
           {/* Rotation Section */}
           <div
-            className={`flex gap-1 px-1 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
+            className={`flex gap-1 px-0.5 p-0.5 items-center rounded-sm ${theme === "dark" ? "border border-gray-600" : "bg-gray-100 border border-gray-300"}`}
           >
             {/* Counter-Clockwise 180 (Double Rotate) */}
             <div
