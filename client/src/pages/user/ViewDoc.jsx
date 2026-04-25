@@ -180,10 +180,10 @@ const ViewDoc = () => {
           </div>
 
           <div
-            className={`flex items-center gap-0.5 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border rounded-sm`}
+            className={`flex items-center gap-0.5 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
           >
             <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center rounded-sm`}
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"}  px-1 flex items-center py-0.5 rounded-sm`}
             >
               <button
                 onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
@@ -196,7 +196,7 @@ const ViewDoc = () => {
               </button>
             </div>
             <div
-              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} py-0  px-5 rounded-sm`}
+              className={`border ${theme === "dark" ? "border-gray-600" : "border-gray-300"} py-4  px-5 rounded-sm`}
             >
               <span
                 className={`px-1 sm:px-4 text-sm sm:text-base font-bold ${theme === "dark" ? "text-gray-200" : "text-gray-600"}`}
