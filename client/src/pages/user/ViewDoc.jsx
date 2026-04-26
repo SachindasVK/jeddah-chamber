@@ -9,6 +9,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { MdViewSidebar } from "react-icons/md";
 import Loading from "../../components/Loading/Loading";
+import side from '../../assets/Sidebar.jpeg'
 
 import {
   FaChevronLeft,
@@ -179,6 +180,7 @@ const ViewDoc = () => {
                     : "border-gray-300"
               }`}
             >
+              <img src={side} alt="" />
               <MdViewSidebar
                 size={15}
                 color={showSidebar ? "#ffffff" : iconColor}
