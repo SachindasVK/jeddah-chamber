@@ -9,7 +9,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { MdViewSidebar } from "react-icons/md";
 import Loading from "../../components/Loading/Loading";
-import side from '../../assets/Sidebar.jpeg'
+import side from '../../assets/sidebar.jpeg'
 
 import {
   FaChevronLeft,
