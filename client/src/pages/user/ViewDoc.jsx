@@ -163,30 +163,38 @@ const ViewDoc = () => {
         className={`w-full sticky top-0 z-10 flex flex-col gap-2 p-3 shadow-md border ${theme === "dark" ? "bg-[#1e293b] border-gray-700" : "bg-white border-gray-100"}`}
       >
         <div className="flex items-center w-full gap-1.5">
-          <div
-            className={`${
-              theme === "dark"
-                ? "bg-gray-800 border-gray-600"
-                : "bg-gray-100 border-gray-300"
-            } border py-0.5 px-0.5 rounded-sm`}
-          >
-            <div
-              onClick={() => setShowSidebar((prev) => !prev)}
-              className={`border bg-white flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
-                showSidebar
-                  ? "bg-blue-700 border-blue-700"
-                  : theme === "dark"
-                    ? "border-gray-600"
-                    : "border-gray-300"
-              }`}
-            >
-              <img src={side} alt="" className={`bg-white w-3 h-3`} />
-              <MdViewSidebar
-                size={15}
-                color={showSidebar ? "#ffffff" : iconColor}
-              />
-            </div>
-          </div>
+  <div
+    className={`${
+      theme === "dark"
+        ? "bg-gray-800 border-gray-600"
+        : "bg-gray-100 border-gray-300"
+    } border py-0.5 px-0.5 rounded-sm`}
+  >
+    <div
+      onClick={() => setShowSidebar((prev) => !prev)}
+      className={`flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
+        showSidebar
+          ? "bg-blue-700 border-blue-700"
+          : theme === "dark"
+          ? "border-gray-600"
+          : "border-gray-300"
+      }`}
+    >
+      <div
+        className="w-[15px] h-[15px]"
+        style={{
+          backgroundColor: showSidebar ? "#ffffff" : iconColor,
+          WebkitMaskImage: `url(${side})`,
+          maskImage: `url(${side})`,
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+        }}
+      />
+    </div>
+  </div>
+</div>
 
           <div
             className={`flex items-center gap-0.5 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-gray-100 border-gray-300"} border p-0.5 rounded-sm`}
