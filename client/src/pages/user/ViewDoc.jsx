@@ -172,7 +172,7 @@ const ViewDoc = () => {
           >
             <div
               onClick={() => setShowSidebar((prev) => !prev)}
-              className={`border flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
+              className={`border bg-white flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
                 showSidebar
                   ? "bg-blue-700 border-blue-700"
                   : theme === "dark"
@@ -180,7 +180,7 @@ const ViewDoc = () => {
                     : "border-gray-300"
               }`}
             >
-              <img src={side} alt="" className={`bg-white w-7 h-7`} />
+              <img src={side} alt="" className={`bg-white w-3 h-3`} />
               <MdViewSidebar
                 size={15}
                 color={showSidebar ? "#ffffff" : iconColor}
