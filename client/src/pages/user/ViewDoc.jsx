@@ -180,7 +180,7 @@ const ViewDoc = () => {
                     : "border-gray-300"
               }`}
             >
-              <img src={side} alt="" className={`bg-white`} />
+              <img src={side} alt="" className={`bg-white w-7 h-7`} />
               <MdViewSidebar
                 size={15}
                 color={showSidebar ? "#ffffff" : iconColor}
