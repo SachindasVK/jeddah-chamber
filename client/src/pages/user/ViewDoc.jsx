@@ -9,7 +9,6 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { MdViewSidebar } from "react-icons/md";
 import Loading from "../../components/Loading/Loading";
-import sbar from '../../assets/sbar.png'
 
 import {
   FaChevronLeft,
@@ -172,7 +171,7 @@ const ViewDoc = () => {
           >
             <div
               onClick={() => setShowSidebar((prev) => !prev)}
-              className={`border bg-white flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
+              className={`border flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
                 showSidebar
                   ? "bg-blue-700 border-blue-700"
                   : theme === "dark"
@@ -180,7 +179,10 @@ const ViewDoc = () => {
                     : "border-gray-300"
               }`}
             >
-              <img src={sbar} className="bg-white" alt="" />
+              <MdViewSidebar
+                size={15}
+                color={showSidebar ? "#ffffff" : iconColor}
+              />
             </div>
           </div>
 
