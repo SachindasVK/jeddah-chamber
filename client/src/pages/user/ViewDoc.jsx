@@ -15,6 +15,7 @@ import {
   FaChevronRight,
   FaArrowRotateLeft,
   FaArrowRotateRight,
+  FaArrowsLeftRightToLine
 } from "react-icons/fa6";
 
 import { IoMoonOutline } from "react-icons/io5";
@@ -274,7 +275,7 @@ const ViewDoc = () => {
                   setRotation(0);
                 }}
               >
-                <MoveHorizontal size={15} color={iconColor} />
+                <FaArrowsLeftRightToLine size={15} color={iconColor} />
               </button>
             </div>
           </div>
