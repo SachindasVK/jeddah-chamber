@@ -172,7 +172,7 @@ const ViewDoc = () => {
           >
             <div
               onClick={() => setShowSidebar((prev) => !prev)}
-              className={`borde flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
+              className={`border bg-white flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
                 showSidebar
                   ? "bg-blue-700 border-blue-700"
                   : theme === "dark"
