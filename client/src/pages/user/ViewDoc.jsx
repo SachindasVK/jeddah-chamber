@@ -180,7 +180,7 @@ const ViewDoc = () => {
                     : "border-gray-300"
               }`}
             >
-              <img src={sbar} alt="" />
+              <img src={sbar} className="bg-white" alt="" />
             </div>
           </div>
 
