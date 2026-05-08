@@ -27,7 +27,7 @@ export const createDocumentAndQR = async (req, res) => {
 
     const qrOptions = {
       errorCorrectionLevel: "H",
-      version:13,
+      version:12,
       margin: 3,
       width: 300,
     };
