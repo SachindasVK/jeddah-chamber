@@ -27,8 +27,9 @@ export const createDocumentAndQR = async (req, res) => {
 
     const qrOptions = {
       errorCorrectionLevel: "L",
+      version:12,
       margin: 1,
-      scale:6
+      width: 300,
     };
 
     const qrCodeImage = await QRCode.toDataURL(qrUrl, qrOptions);
