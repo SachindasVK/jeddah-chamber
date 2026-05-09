@@ -26,7 +26,7 @@ export const createDocumentAndQR = async (req, res) => {
     const qrUrl = `${process.env.CLIENT_URL}/view/${uniqueId}`;
 
     const qrOptions = {
-      errorCorrectionLevel: "L",
+      errorCorrectionLevel: "Q",
       version:12,
       margin: 1,
       width: 300,
