@@ -367,7 +367,12 @@ const ViewDoc = () => {
         {/* Bottom Bar */}
         <div className="relative bg-blue-700 h-[147px] flex items-center overflow-x-auto gap-2 shadow-2xl">
           {finalUrl && (
-            <Document file={finalUrl}>
+            <Document file={finalUrl}
+            loading={
+    <div className="text-center p-4 text-gray-500">
+      Loading PDF...
+    </div>
+  }>
               {Array.from(new Array(numPages || 0), (_, index) => (
                 <div
                   key={index}
