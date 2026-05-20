@@ -19,7 +19,7 @@ const PdfList = () => {
   const fetchDocs = async (currentPage) => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API}/api/document/all?page=${currentPage}&limit=10`,
+      const res = await axios.get(`${API}/api/document/all?page=${currentPage}&limit=15`,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
         },
