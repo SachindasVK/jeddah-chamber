@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { API_URL } from "../../services/api";
 import jcc from '../../assets/jcc.svg'
 import jccLogoblue from '../../assets/jccLogoblue.jpeg'
 
@@ -20,7 +21,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/login`, formData);
+      const res = await axios.post(`${API_URL}/api/admin/login`, formData);
       if (res.data.success) {
         localStorage.setItem("adminToken", res.data.token);
         toast.success("Login Successful!");

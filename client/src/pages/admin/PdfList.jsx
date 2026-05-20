@@ -88,26 +88,26 @@ const PdfList = () => {
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead className="bg-gray-100 border-b">
                 <tr>
                   <th className="p-4 text-gray-700 font-semibold">#</th>
-                  <th className="p-4 text-gray-700 font-semibold">
-                    Document Title
-                  </th>
-                  <th className="p-4 text-gray-700 font-semibold">
-                    Date Created
-                  </th>
+                  <th className="p-4 text-gray-700 font-semibold">Title</th>
+                  <th className="p-4 text-gray-700 font-semibold">Doc #</th>
+                  <th className="p-4 text-gray-700 font-semibold">Unified #</th>
+                  <th className="p-4 text-gray-700 font-semibold">Creation Date</th>
                   <th className="p-4 text-gray-700 font-semibold">Status</th>
-                  <th className="p-4 text-gray-700 font-semibold text-center">
-                    Actions
-                  </th>
+                  <th className="p-4 text-gray-700 font-semibold">Establishment</th>
+                  <th className="p-4 text-gray-700 font-semibold">Subscription #</th>
+                  <th className="p-4 text-gray-700 font-semibold">Submitter</th>
+                  <th className="p-4 text-gray-700 font-semibold">PDF</th>
+                  <th className="p-4 text-gray-700 font-semibold text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {loading ? (
                   <tr>
-                    <td colSpan="5" className="p-10 text-center text-gray-500">
+                    <td colSpan="11" className="p-10 text-center text-gray-500">
                       <div className="flex justify-center items-center gap-2">
                         <div className="w-5 h-5 border-t-2 border-blue-500 rounded-full animate-spin"></div>
                         Loading documents...
@@ -116,7 +116,7 @@ const PdfList = () => {
                   </tr>
                 ) : documents.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="p-10 text-center text-gray-500">
+                    <td colSpan="11" className="p-10 text-center text-gray-500">
                       No documents found.
                     </td>
                   </tr>
@@ -126,24 +126,49 @@ const PdfList = () => {
                       key={doc._id}
                       className="hover:bg-gray-50 transition-colors"
                     >
-                      <td className="p-4 text-gray-500 text-sm">
+                          <td className="p-4 text-gray-500 text-sm">
                         {(page - 1) * 5 + index + 1}
                       </td>
-                      <td className="p-4 font-medium text-gray-800">
-                        {doc.title}
+                      <td className="p-4 font-medium text-gray-800">{doc.title}</td>
+                      <td className="p-4 text-gray-600 text-sm">{doc.docNumber || "-"}</td>
+                      <td className="p-4 text-gray-600 text-sm">{doc.unifiedNumber || "-"}</td>
+                      <td className="p-4 text-gray-600 text-sm">
+                        {doc.creationDate
+                          ? new Date(doc.creationDate).toLocaleDateString()
+                          : "-"}
                       </td>
                       <td className="p-4 text-gray-600 text-sm">
-                        {new Date(doc.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="p-4">
-                        {doc.pdfPath ? (
-                          <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
-                            Active
+                        {doc.docStatus ? (
+                          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
+                            {doc.docStatus}
                           </span>
                         ) : (
-                          <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">
-                            Pending PDF
+                          <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
+                            Unknown
                           </span>
+                        )}
+                      </td>
+                      <td className="p-4 text-gray-600 text-sm">
+                        {doc.establishmentName || "-"}
+                      </td>
+                      <td className="p-4 text-gray-600 text-sm">
+                        {doc.subscriptionNumber || "-"}
+                      </td>
+                      <td className="p-4 text-gray-600 text-sm">
+                        {doc.requestSubmitter || "-"}
+                      </td>
+                      <td className="p-4 text-gray-600 text-sm break-words">
+                        {doc.pdfPath ? (
+                          <a
+                            href={doc.pdfPath}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-600 hover:text-blue-800 underline"
+                          >
+                            View PDF
+                          </a>
+                        ) : (
+                          <span className="text-orange-700">Pending</span>
                         )}
                       </td>
                       <td className="p-4">

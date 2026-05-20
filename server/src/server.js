@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
-dotenv.config();
+
+dotenv.config({ path: new URL("../.env", import.meta.url).pathname });
 import connectDB from "./config/db.js";
 import cors from "cors";
 import adminRoutes from "./routes/adminAuthRoutes.js";
@@ -17,10 +18,11 @@ app.use(
   }),
 );
 app.use(compression());
+const clientOrigin = process.env.CLIENT_URL || "http://localhost:5173";
 const allowedOrigins = [
   "https://esjcci.org.in",
   "https://www.esjcci.org.in",
-  process.env.CLIENT_URL, // keep env fallback
+  clientOrigin,
 ];
 
 app.use(

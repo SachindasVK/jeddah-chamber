@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Sidebar from "../../components/Sidebar";
 
@@ -16,21 +15,66 @@ const Dashboard = () => {
   const [qrPreview, setQrPreview] = useState(null);
   const [qrLoading, setQrLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [detailsSaved, setDetailsSaved] = useState(false);
+
+  // Arabic Form States
+  const [docNumber, setDocNumber] = useState("");
+  const [unifiedNumber, setUnifiedNumber] = useState("");
+  const [creationDate, setCreationDate] = useState("");
+  const [docStatus, setDocStatus] = useState("");
+  const [establishmentName, setEstablishmentName] = useState("");
+  const [subscriptionNumber, setSubscriptionNumber] = useState("");
+  const [requestSubmitter, setRequestSubmitter] = useState("");
+
+  useEffect(() => {
+    if (!adminToken) {
+      navigate("/admin/login");
+    }
+  }, [adminToken, navigate]);
 
   if (!adminToken) {
-    navigate("/admin/login");
     return null;
   }
 
+  const handleSaveDetails = (e) => {
+    e.preventDefault();
+
+    if (
+      !docNumber.trim() ||
+      !unifiedNumber.trim() ||
+      !creationDate.trim() ||
+      !docStatus.trim() ||
+      !establishmentName.trim() ||
+      !subscriptionNumber.trim() ||
+      !requestSubmitter.trim()
+    ) {
+      toast.error("Please fill in all document details before submitting.");
+      return;
+    }
+
+    setDetailsSaved(true);
+    toast.success("Document details saved successfully");
+  };
+
   // Generate QR
   const handleGenerateQR = async () => {
+    if (!detailsSaved) return toast.error("Fill the details before generating the QR");
     if (!docTitle.trim()) return toast.error("Please enter a document title");
 
     setQrLoading(true);
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/document/generate`,
-        { title: docTitle.trim() },
+        {
+  title: docTitle.trim(),
+  docNumber,
+  unifiedNumber,
+  creationDate,
+  docStatus,
+  establishmentName,
+  subscriptionNumber,
+  requestSubmitter,
+},
         { headers: { Authorization: `Bearer ${adminToken}` } },
       );
 
@@ -105,16 +149,148 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
+
       {/* sidebar  */}
       <Sidebar />
       {/* Main Content */}
       <div className="flex-1 p-4 sm:p-6 md:p-8 lg:p-10 bg-gray-800">
-        {/* Header */}
+
+
+  {/* Header */}
         <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Admin Panel
           </h1>
         </header>
+
+      {/* Arabic Document Form */}
+<div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-sm border mb-8">
+  <h2 className="text-lg sm:text-xl font-bold mb-6 text-gray-700">
+    معلومات الوثيقة
+  </h2>
+
+  <form onSubmit={handleSaveDetails} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {/* رقم الوثيقة */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        رقم الوثيقة
+      </label>
+
+      <input
+        type="text"
+        value={docNumber}
+        onChange={(e) => setDocNumber(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="أدخل رقم الوثيقة"
+      />
+    </div>
+
+    {/* الرقم الموحد */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        الرقم الموحد
+      </label>
+
+      <input
+        type="text"
+        value={unifiedNumber}
+        onChange={(e) => setUnifiedNumber(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="أدخل الرقم الموحد"
+      />
+    </div>
+
+    {/* تاريخ الإنشاء */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        تاريخ الإنشاء
+      </label>
+
+      <input
+        type="date"
+        value={creationDate}
+        onChange={(e) => setCreationDate(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    {/* حالة الوثيقة */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        حالة الوثيقة
+      </label>
+
+      <select
+        value={docStatus}
+        onChange={(e) => setDocStatus(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">اختر الحالة</option>
+        <option value="active">نشطة</option>
+        <option value="inactive">غير نشطة</option>
+        <option value="archived">مؤرشفة</option>
+      </select>
+    </div>
+
+    {/* اسم المنشأة */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        اسم المنشأة
+      </label>
+
+      <input
+        type="text"
+        value={establishmentName}
+        onChange={(e) => setEstablishmentName(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="أدخل اسم المنشأة"
+      />
+    </div>
+
+    {/* رقم الإشتراك */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        رقم الإشتراك
+      </label>
+
+      <input
+        type="text"
+        value={subscriptionNumber}
+        onChange={(e) => setSubscriptionNumber(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="أدخل رقم الإشتراك"
+      />
+    </div>
+
+    {/* مقدم الطلب */}
+    <div className="md:col-span-2">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        مقدم الطلب
+      </label>
+
+      <input
+        type="text"
+        value={requestSubmitter}
+        onChange={(e) => setRequestSubmitter(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="أدخل اسم مقدم الطلب"
+      />
+    </div>
+
+    <div className="md:col-span-2 flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-gray-200 mt-4">
+      <span className="text-sm text-gray-500">
+        {detailsSaved ? "Details saved. You can now generate the QR." : "Fill the details and press Submit."}
+      </span>
+      <button
+        type="submit"
+        className="w-full sm:w-auto bg-indigo-600 text-white py-3 px-6 rounded-lg font-bold hover:bg-indigo-700"
+      >
+        Submit Details
+      </button>
+    </div>
+  </form>
+</div>
+      
 
         {/* QR + Upload Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-10">
@@ -135,8 +311,8 @@ const Dashboard = () => {
 
               <button
                 onClick={handleGenerateQR}
-                disabled={loading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700"
+                disabled={qrLoading || !detailsSaved}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-60"
               >
                 {qrLoading ? "Generating..." : "Generate QR"}
               </button>

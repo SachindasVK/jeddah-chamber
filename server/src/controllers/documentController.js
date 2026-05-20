@@ -11,7 +11,16 @@ cloudinary.config({
 
 export const createDocumentAndQR = async (req, res) => {
   try {
-    const { title } = req.body;
+    const {
+      title,
+      docNumber,
+      unifiedNumber,
+      creationDate,
+      docStatus,
+      establishmentName,
+      subscriptionNumber,
+      requestSubmitter,
+    } = req.body;
 
     const existingDoc = await Document.findOne({ title: title.trim() });
     if (existingDoc) {
@@ -27,7 +36,7 @@ export const createDocumentAndQR = async (req, res) => {
 
     const qrOptions = {
       errorCorrectionLevel: "Q",
-      version:15,
+      version: 15,
       margin: 2,
       width: 300,
     };
@@ -39,6 +48,13 @@ export const createDocumentAndQR = async (req, res) => {
       uniqueId,
       qrUrl,
       createdBy: req.admin.id,
+      docNumber,
+      unifiedNumber,
+      creationDate,
+      docStatus,
+      establishmentName,
+      subscriptionNumber,
+      requestSubmitter,
     });
 
     await newDoc.save();
@@ -96,6 +112,7 @@ export const uploadPdf = async (req, res) => {
 
     uploadStream.end(req.file.buffer);
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: "Server error during upload" });
   }
 };
