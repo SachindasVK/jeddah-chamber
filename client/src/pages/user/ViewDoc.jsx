@@ -367,12 +367,13 @@ const ViewDoc = () => {
         {/* Bottom Bar */}
         <div className="relative bg-blue-700 h-[147px] flex items-center overflow-x-auto gap-2 shadow-2xl">
           {finalUrl && (
-            <Document file={finalUrl}
-            loading={
-    <div className="text-center p-4 text-gray-500">
-      Loading PDF...
-    </div>
-  }>
+            <Document
+  file={finalUrl}
+  onLoadSuccess={onDocumentLoadSuccess}
+  error={
+    <div className="p-20 text-red-500">Failed to load PDF.</div>
+  }
+>
               {Array.from(new Array(numPages || 0), (_, index) => (
                 <div
                   key={index}
@@ -391,11 +392,6 @@ const ViewDoc = () => {
                     width={100}
                     renderTextLayer={false}
                     renderAnnotationLayer={false}
-                    loading={
-          <div className="w-[100px] h-[140px] flex items-center justify-center text-xs">
-            Loading...
-          </div>
-        }
                   />
                 </div>
               ))}
