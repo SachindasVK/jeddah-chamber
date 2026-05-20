@@ -48,6 +48,7 @@ const ViewDoc = () => {
   const [theme, setTheme] = useState(
     localStorage.getItem("docTheme") || "light",
   );
+  const [pdfLoading, setPdfLoading] = useState(true);
 
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
   const finalUrl = doc?.pdfUrl || doc?.pdfPath;
@@ -413,13 +414,20 @@ const ViewDoc = () => {
             className={`w-max mx-auto transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
           >
             <Document
-              file={finalUrl}
-              onLoadSuccess={onDocumentLoadSuccess}
-              error={
-                <div className="p-20 text-red-500">Failed to load PDF.</div>
-              }
-              loading={<></>}
-            >
+  file={finalUrl}
+  onLoadSuccess={(pdf) => {
+    onDocumentLoadSuccess(pdf);
+    setPdfLoading(false);
+  }}
+  onLoadError={() => {
+    setPdfLoading(false);
+  }}
+  error={
+    <div className="p-20 text-red-500">
+      Failed to load PDF.
+    </div>
+  }
+>
               <Page
                 pageNumber={pageNumber}
                 width={containerWidth * zoom}
