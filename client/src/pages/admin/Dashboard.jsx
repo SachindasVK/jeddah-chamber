@@ -58,7 +58,6 @@ const Dashboard = () => {
 
   // Generate QR
   const handleGenerateQR = async () => {
-    if (!detailsSaved) return toast.error("Fill the details before generating the QR");
     if (!docTitle.trim()) return toast.error("Please enter a document title");
 
     setQrLoading(true);
@@ -67,13 +66,13 @@ const Dashboard = () => {
         `${import.meta.env.VITE_API_URL}/api/document/generate`,
         {
   title: docTitle.trim(),
-  docNumber,
-  unifiedNumber,
-  creationDate,
-  docStatus,
-  establishmentName,
-  subscriptionNumber,
-  requestSubmitter,
+  docNumber: docNumber || "",
+  unifiedNumber: unifiedNumber || "",
+  creationDate: creationDate || "",
+  docStatus: docStatus || "",
+  establishmentName: establishmentName || "",
+  subscriptionNumber: subscriptionNumber || "",
+  requestSubmitter: requestSubmitter || "",
 },
         { headers: { Authorization: `Bearer ${adminToken}` } },
       );
@@ -311,7 +310,7 @@ const Dashboard = () => {
 
               <button
                 onClick={handleGenerateQR}
-                disabled={qrLoading || !detailsSaved}
+                disabled={qrLoading}
                 className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-60"
               >
                 {qrLoading ? "Generating..." : "Generate QR"}
