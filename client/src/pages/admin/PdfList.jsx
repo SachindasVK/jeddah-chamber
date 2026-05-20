@@ -127,7 +127,7 @@ const PdfList = () => {
                       className="hover:bg-gray-50 transition-colors"
                     >
                           <td className="p-4 text-gray-500 text-sm">
-                        {(page - 1) * 5 + index + 1}
+                        {(page - 1) * 10 + index + 1}
                       </td>
                       <td className="p-4 font-medium text-gray-800">{doc.title}</td>
                       <td className="p-4 text-gray-600 text-sm">{doc.docNumber || "-"}</td>
