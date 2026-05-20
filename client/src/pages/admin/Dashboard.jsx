@@ -38,20 +38,6 @@ const Dashboard = () => {
 
   const handleSaveDetails = (e) => {
     e.preventDefault();
-
-    if (
-      !docNumber.trim() ||
-      !unifiedNumber.trim() ||
-      !creationDate.trim() ||
-      !docStatus.trim() ||
-      !establishmentName.trim() ||
-      !subscriptionNumber.trim() ||
-      !requestSubmitter.trim()
-    ) {
-      toast.error("Please fill in all document details before submitting.");
-      return;
-    }
-
     setDetailsSaved(true);
     toast.success("Document details saved successfully");
   };
@@ -66,13 +52,13 @@ const Dashboard = () => {
         `${import.meta.env.VITE_API_URL}/api/document/generate`,
         {
   title: docTitle.trim(),
-  docNumber: docNumber || "",
-  unifiedNumber: unifiedNumber || "",
-  creationDate: creationDate || "",
-  docStatus: docStatus || "",
-  establishmentName: establishmentName || "",
-  subscriptionNumber: subscriptionNumber || "",
-  requestSubmitter: requestSubmitter || "",
+  docNumber,
+  unifiedNumber,
+  creationDate,
+  docStatus,
+  establishmentName,
+  subscriptionNumber,
+  requestSubmitter,
 },
         { headers: { Authorization: `Bearer ${adminToken}` } },
       );
@@ -311,7 +297,7 @@ const Dashboard = () => {
               <button
                 onClick={handleGenerateQR}
                 disabled={qrLoading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-60"
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700"
               >
                 {qrLoading ? "Generating..." : "Generate QR"}
               </button>

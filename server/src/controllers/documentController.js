@@ -8,9 +8,10 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
 export const createDocumentAndQR = async (req, res) => {
   try {
-    let {
+    const {
       title,
       docNumber,
       unifiedNumber,
@@ -21,27 +22,18 @@ export const createDocumentAndQR = async (req, res) => {
       requestSubmitter,
     } = req.body;
 
-    // Auto title if empty
-    title =
-      title?.trim() || `Document-${Date.now()}`;
-
-    // Check duplicate title
-    const existingDoc = await Document.findOne({ title });
-
+    const existingDoc = await Document.findOne({ title: title.trim() });
     if (existingDoc) {
       return res.status(400).json({
         success: false,
         message:
-          "A document with this title already exists.",
+          "A document with this title already exists. Please use a unique title.",
       });
     }
 
-    // Unique QR ID
     const uniqueId = uuidv4();
-
     const qrUrl = `${process.env.CLIENT_URL}/view/${uniqueId}`;
 
-    // QR Config
     const qrOptions = {
       errorCorrectionLevel: "Q",
       version: 15,
@@ -49,27 +41,20 @@ export const createDocumentAndQR = async (req, res) => {
       width: 300,
     };
 
-    // Generate QR
-    const qrCodeImage = await QRCode.toDataURL(
-      qrUrl,
-      qrOptions
-    );
+    const qrCodeImage = await QRCode.toDataURL(qrUrl, qrOptions);
 
-    // Save Document
     const newDoc = new Document({
-      title,
+      title: title.trim(),
       uniqueId,
       qrUrl,
       createdBy: req.admin.id,
-
-      // Optional fields
-      docNumber: docNumber || "",
-      unifiedNumber: unifiedNumber || "",
-      creationDate: creationDate || null,
-      docStatus: docStatus || "",
-      establishmentName: establishmentName || "",
-      subscriptionNumber: subscriptionNumber || "",
-      requestSubmitter: requestSubmitter || "",
+      docNumber,
+      unifiedNumber,
+      creationDate,
+      docStatus,
+      establishmentName,
+      subscriptionNumber,
+      requestSubmitter,
     });
 
     await newDoc.save();
@@ -80,19 +65,13 @@ export const createDocumentAndQR = async (req, res) => {
       qrCodeImage,
     });
   } catch (err) {
-    console.log(err);
-
     if (err.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: "Duplicate title or ID detected.",
-      });
+      return res
+      .status(400)
+      .json({ message: "Duplicate title or ID detected." });
     }
-
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    console.log(err)
+    res.status(500).json({ message: err.message });
   }
 };
 
