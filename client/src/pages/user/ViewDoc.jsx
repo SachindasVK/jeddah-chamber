@@ -401,89 +401,53 @@ const ViewDoc = () => {
         </div>
       </div>
 
-     {/* PDF Container */}
-<div
-  ref={containerRef}
-  className={`w-full mt-1 overflow-auto py-4 ${
-    theme === "dark" ? "bg-gray-900" : "bg-gray-100"
-  }`}
-  style={{ height: "calc(100vh - 140px)", touchAction: "pan-x pan-y" }}
->
-  {loadingDetails ? (
-    <Loading />
-  ) : finalUrl ? (
-    <div
-      className={`relative w-max mx-auto transition-all duration-300 h-fit ${
-        theme === "dark"
-          ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-          : "shadow-lg"
-      }`}
-    >
-      {/* Fancy PDF Loader */}
-      {pdfLoading && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/20 rounded-xl">
-          <div
-            className={`flex items-center gap-3 px-6 py-4 rounded-2xl border shadow-2xl ${
-              theme === "dark"
-                ? "bg-[#1e293bcc] border-gray-700 text-white"
-                : "bg-white/90 border-gray-200 text-gray-700"
-            }`}
-          >
-            {/* Spinner */}
-            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-
-            {/* Text */}
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold">
-                Please wait...
-              </span>
-
-              <span className="text-xs opacity-70">
-                Loading PDF document
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <Document
-        file={finalUrl}
-        onLoadSuccess={(pdf) => {
-          onDocumentLoadSuccess(pdf);
-          setPdfLoading(false);
-        }}
-        onLoadError={() => {
-          setPdfLoading(false);
-        }}
-        loading={null}
-        error={
-          <div className="p-20 text-red-500">
-            Failed to load PDF.
-          </div>
-        }
+      {/* PDF Container */}
+      <div
+        ref={containerRef}
+        className={`w-full mt-1 overflow-auto py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
+        style={{ height: "calc(100vh - 140px)", touchAction: "pan-x pan-y" }}
       >
-        <Page
-          pageNumber={pageNumber}
-          width={containerWidth * zoom}
-          rotate={rotation}
-          devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
-          renderTextLayer={true}
-          renderAnnotationLayer={false}
-          canvasBackground="white"
-          className="pdf-page-high-quality"
-        />
-      </Document>
+        {loadingDetails ? (
+          <Loading />
+        ) : finalUrl ? (
+          <div
+            className={`w-max mx-auto transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
+          >
+            <Document
+  file={finalUrl}
+  onLoadSuccess={(pdf) => {
+    onDocumentLoadSuccess(pdf);
+    setPdfLoading(false);
+  }}
+  onLoadError={() => {
+    setPdfLoading(false);
+  }}
+  error={
+    <div className="p-20 text-red-500">
+      Failed to load PDF.
     </div>
-  ) : (
-    <div
-      className={`p-20 text-lg ${
-        theme === "dark" ? "text-gray-400" : "text-gray-500"
-      }`}
-    >
-      No PDF document available.
-    </div>
-  )}
-</div>
+  }
+>
+              <Page
+                pageNumber={pageNumber}
+                width={containerWidth * zoom}
+                rotate={rotation}
+                devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
+                renderTextLayer={true}
+                renderAnnotationLayer={false}
+                canvasBackground="white"
+                className="pdf-page-high-quality"
+              />
+            </Document>
+          </div>
+        ) : (
+          <div
+            className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
+          >
+            No PDF document available.
+          </div>
+        )}
+      </div>
     </div>
   );
 };
