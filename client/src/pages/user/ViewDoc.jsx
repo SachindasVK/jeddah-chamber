@@ -386,6 +386,11 @@ const ViewDoc = () => {
                     width={100}
                     renderTextLayer={false}
                     renderAnnotationLayer={false}
+                    loading={
+          <div className="w-[100px] h-[140px] flex items-center justify-center text-xs">
+            Loading...
+          </div>
+        }
                   />
                 </div>
               ))}
