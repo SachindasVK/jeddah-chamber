@@ -471,37 +471,37 @@ const ViewDoc = () => {
                   labelAr: "اسم المنشأة",
                   labelEn: "Establishment Name",
                   value: doc?.establishmentName,
-                 
+                  icon: Building2,
                 },
                 {
                   labelAr: "رقم الوثيقة",
                   labelEn: "Document Number",
                   value: doc?.docNumber,
-  
+                  icon: FileText,
                 },
                 {
                   labelAr: "الرقم الموحد",
                   labelEn: "Unified Number",
                   value: doc?.unifiedNumber,
-                  
+                  icon: Hash,
                 },
                 {
                   labelAr: "تاريخ الإنشاء",
                   labelEn: "Creation Date",
                   value: doc?.creationDate ? new Date(doc.creationDate).toLocaleDateString("ar-SA", { year: 'numeric', month: 'long', day: 'numeric' }) + " / " + new Date(doc.creationDate).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }) : null,
-                  
+                  icon: CalendarRange,
                 },
                 {
                   labelAr: "رقم الإشتراك",
                   labelEn: "Subscription Number",
                   value: doc?.subscriptionNumber,
-  
+                  icon: Hash,
                 },
                 {
                   labelAr: "مقدم الطلب",
                   labelEn: "Request Submitter",
                   value: doc?.requestSubmitter,
-                  
+                  icon: UserCheck,
                 },
               ].map((item, idx) => (
                 <div key={idx} className={`p-3.5 rounded-xl border flex flex-col gap-1.5 ${
