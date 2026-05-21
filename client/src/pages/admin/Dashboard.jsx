@@ -23,7 +23,7 @@ const Dashboard = () => {
   // Arabic Form States
   const [docNumber, setDocNumber] = useState("");
   const [unifiedNumber, setUnifiedNumber] = useState("");
-  const [creationDate, setCreationDate] = useState("");
+  const [creationDate, setCreationDate] = useState(null);
   const [docStatus, setDocStatus] = useState("");
   const [establishmentName, setEstablishmentName] = useState("");
   const [subscriptionNumber, setSubscriptionNumber] = useState("");
