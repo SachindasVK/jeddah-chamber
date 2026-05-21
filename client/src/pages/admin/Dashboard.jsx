@@ -188,20 +188,6 @@ const Dashboard = () => {
       />
     </div>
 
-    {/* تاريخ الإنشاء */}
-   <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    تاريخ الإنشاء
-  </label>
-
- <DatePicker
-  selected={creationDate}
-  onChange={(date) => setCreationDate(date)}
-  dateFormat="MMM/dd/yyyy"
-  placeholderText="MM/DD/YYYY"
-  className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-/>
-</div>
 
     {/* حالة الوثيقة */}
    <div>
@@ -262,6 +248,21 @@ const Dashboard = () => {
         placeholder="أدخل اسم مقدم الطلب"
       />
     </div>
+
+     {/* تاريخ الإنشاء */}
+   <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    تاريخ الإنشاء
+  </label>
+
+ <DatePicker
+  selected={creationDate}
+  onChange={(date) => setCreationDate(date)}
+  dateFormat="MMM/dd/yyyy"
+  placeholderText="MM/DD/YYYY"
+  className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+/>
+</div>
 
     <div className="md:col-span-2 flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-gray-200 mt-4">
       <span className="text-sm text-gray-500">

@@ -416,28 +416,7 @@ const ViewDoc = () => {
             ? "bg-[#1e293b] border-gray-700 text-white" 
             : "bg-white border-gray-200 text-gray-800"
         } flex flex-col gap-5`} dir="rtl">
-          {/* Header Badge */}
-          <div className={`flex flex-col items-center justify-center p-6 rounded-2xl border text-center ${
-            theme === "dark" 
-              ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-400" 
-              : "bg-emerald-50 border-emerald-200 text-emerald-700"
-          }`}>
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 animate-pulse ${
-              theme === "dark" ? "bg-emerald-900/40" : "bg-emerald-100"
-            }`}>
-              <ShieldCheck size={40} className="stroke-[2.5]" />
-            </div>
-            <h2 className="text-xl font-bold tracking-wide">وثيقة معتمدة</h2>
-            <h3 className="text-sm font-semibold opacity-90 mt-0.5">Verified Document</h3>
-            <p className={`text-xs mt-3 ${
-              theme === "dark" ? "text-emerald-400/80" : "text-emerald-600/90"
-            }`}>
-              تم التحقق من صحة هذه الوثيقة من قبل الغرفة التجارية بجدة
-            </p>
-            <p className="text-[10px] opacity-75 mt-0.5">
-              Verified by Jeddah Chamber of Commerce
-            </p>
-          </div>
+         
 
           {/* Details Section */}
           <div className="space-y-4">
@@ -551,11 +530,7 @@ const ViewDoc = () => {
           <div className={`mt-auto p-4 rounded-xl border text-center flex items-center justify-center gap-3 ${
             theme === "dark" ? "bg-slate-850/50 border-slate-800 text-slate-400" : "bg-blue-50/30 border-blue-50 text-blue-800/75"
           }`}>
-            <Lock size={16} />
-            <div className="text-xs font-medium">
-              <div>بوابة التحقق آمنة ومشفرة بالكامل.</div>
-              <div className="text-[10px] opacity-75">The verification gateway is fully secure and encrypted.</div>
-            </div>
+            
           </div>
         </div>
 
