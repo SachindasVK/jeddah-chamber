@@ -4,12 +4,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Document, Page, pdfjs } from "react-pdf";
 
-// Essential styles for react-pdf
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
 import { MdViewSidebar } from "react-icons/md";
-import Loading from "../../components/Loading/Loading";
 
 import {
   FaChevronLeft,
@@ -29,6 +27,8 @@ import {
   Download,
   Sun,
 } from "lucide-react";
+
+import Loading from "../../components/Loading/Loading";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -130,7 +130,7 @@ const ViewDoc = () => {
     };
   }, []);
 
-  // THEME
+  // SAVE THEME
   useEffect(() => {
     localStorage.setItem("docTheme", theme);
   }, [theme]);
@@ -155,7 +155,7 @@ const ViewDoc = () => {
     fetchDetails();
   }, [id]);
 
-  // PDF LOAD
+  // PDF SUCCESS
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
     setPageNumber(1);
@@ -177,7 +177,6 @@ const ViewDoc = () => {
       const link = document.createElement("a");
 
       link.href = url;
-
       link.setAttribute("download", "document.pdf");
 
       document.body.appendChild(link);
@@ -539,12 +538,8 @@ const ViewDoc = () => {
                   onClick={() =>
                     setPageNumber((prev) => Math.max(prev - 1, 1))
                   }
-                  disabled={pageNumber <= 1}
                 >
-                  <FaChevronLeft
-                    size={15}
-                    color={pageNumber <= 1 ? "#64748b" : iconColor}
-                  />
+                  <FaChevronLeft size={15} color={iconColor} />
                 </button>
               </div>
 
@@ -579,12 +574,8 @@ const ViewDoc = () => {
                       Math.min(prev + 1, numPages)
                     )
                   }
-                  disabled={pageNumber >= numPages}
                 >
-                  <FaChevronRight
-                    size={15}
-                    color={pageNumber >= numPages ? "#64748b" : iconColor}
-                  />
+                  <FaChevronRight size={15} color={iconColor} />
                 </button>
               </div>
             </div>
@@ -709,7 +700,128 @@ const ViewDoc = () => {
         </div>
       </div>
 
+      {/* PDF THUMBNAIL SIDEBAR */}
+      <div
+        className={`fixed bottom-0 left-0 w-full z-20 transition-all duration-300 ${
+          showSidebar
+            ? "translate-y-0 opacity-100 visible"
+            : "translate-y-full opacity-0 invisible pointer-events-none"
+        }`}
+      >
+        <div
+          className="absolute inset-0 bg-black/30"
+          onClick={() => setShowSidebar(false)}
+        />
 
+        <div className="relative bg-blue-700 h-[147px] flex items-center overflow-x-auto gap-2 shadow-2xl px-2">
+          {finalUrl && (
+            <Document
+              file={finalUrl}
+              onLoadSuccess={onDocumentLoadSuccess}
+            >
+              {Array.from(new Array(numPages || 0), (_, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setPageNumber(index + 1);
+                    setShowSidebar(false);
+                  }}
+                  className={`cursor-pointer border-2 rounded-md overflow-hidden ${
+                    pageNumber === index + 1
+                      ? "border-white"
+                      : "border-transparent"
+                  }`}
+                >
+                  <Page
+                    pageNumber={index + 1}
+                    width={100}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                  />
+                </div>
+              ))}
+            </Document>
+          )}
+        </div>
+      </div>
+
+      {/* MAIN CONTENT */}
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        {/* LEFT PANEL */}
+        <div
+          className={`w-full lg:w-[420px] p-5 lg:p-6 overflow-y-auto border-b lg:border-b-0 lg:border-r ${
+            theme === "dark"
+              ? "bg-[#1e293b] border-gray-700 text-white"
+              : "bg-white border-gray-200 text-gray-800"
+          } flex flex-col gap-5`}
+          dir="rtl"
+        >
+          {/* YOUR DETAILS CONTENT */}
+
+          <div
+            className={`mt-auto p-4 rounded-xl border text-center flex items-center justify-center gap-3 ${
+              theme === "dark"
+                ? "bg-slate-850/50 border-slate-800 text-slate-400"
+                : "bg-blue-50/30 border-blue-50 text-blue-800/75"
+            }`}
+          >
+            {/* FOOTER */}
+          </div>
+        </div>
+
+        {/* PDF VIEWER */}
+        <div
+          ref={containerRef}
+          className={`flex-1 overflow-auto py-4 relative ${
+            theme === "dark" ? "bg-gray-900" : "bg-gray-100"
+          }`}
+          style={{
+            height: "calc(100vh - 140px)",
+            touchAction: "pan-x pan-y",
+          }}
+        >
+          {loadingDetails ? (
+            <Loading />
+          ) : finalUrl ? (
+            <div
+              className={`w-max mx-auto transition-all duration-300 h-fit ${
+                theme === "dark"
+                  ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                  : "shadow-lg"
+              }`}
+            >
+              <Document
+                file={finalUrl}
+                onLoadSuccess={onDocumentLoadSuccess}
+              >
+                <Page
+                  pageNumber={pageNumber}
+                  width={containerWidth * zoom}
+                  rotate={rotation}
+                  devicePixelRatio={Math.max(
+                    window.devicePixelRatio || 1,
+                    2
+                  )}
+                  renderTextLayer={true}
+                  renderAnnotationLayer={false}
+                  canvasBackground="white"
+                  className="pdf-page-high-quality"
+                />
+              </Document>
+            </div>
+          ) : (
+            <div
+              className={`p-20 text-lg ${
+                theme === "dark"
+                  ? "text-gray-400"
+                  : "text-gray-500"
+              }`}
+            >
+              No PDF document available.
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
