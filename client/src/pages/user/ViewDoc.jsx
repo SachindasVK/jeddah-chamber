@@ -747,27 +747,7 @@ const ViewDoc = () => {
 
       {/* MAIN CONTENT */}
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* LEFT PANEL */}
-        <div
-          className={`w-full lg:w-[420px] p-5 lg:p-6 overflow-y-auto border-b lg:border-b-0 lg:border-r ${
-            theme === "dark"
-              ? "bg-[#1e293b] border-gray-700 text-white"
-              : "bg-white border-gray-200 text-gray-800"
-          } flex flex-col gap-5`}
-          dir="rtl"
-        >
-          {/* YOUR DETAILS CONTENT */}
-
-          <div
-            className={`mt-auto p-4 rounded-xl border text-center flex items-center justify-center gap-3 ${
-              theme === "dark"
-                ? "bg-slate-850/50 border-slate-800 text-slate-400"
-                : "bg-blue-50/30 border-blue-50 text-blue-800/75"
-            }`}
-          >
-            {/* FOOTER */}
-          </div>
-        </div>
+        
 
         {/* PDF VIEWER */}
         <div
