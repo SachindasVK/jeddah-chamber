@@ -197,7 +197,7 @@ const Dashboard = () => {
  <DatePicker
   selected={creationDate}
   onChange={(date) => setCreationDate(date)}
-  dateFormat="MM/dd/yyyy"
+  dateFormat="MMM/dd/yyyy"
   placeholderText="MM/DD/YYYY"
   className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
 />
@@ -329,7 +329,7 @@ const Dashboard = () => {
             </h2>
 
             <form onSubmit={handleUpload} className="space-y-4">
-              <div className="border-2 border-dashed rounded-lg p-4 sm:p-6 text-center hover:border-blue-500">
+              <div className="border-2 border-dashed rounded-lg p-3 sm:p-3 text-center hover:border-blue-500">
                 <input
                   type="file"
                   accept=".pdf"
