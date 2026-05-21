@@ -186,18 +186,19 @@ const Dashboard = () => {
     </div>
 
     {/* تاريخ الإنشاء */}
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        تاريخ الإنشاء
-      </label>
+   <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    تاريخ الإنشاء
+  </label>
 
-      <input
-        type="date"
-        value={creationDate}
-        onChange={(e) => setCreationDate(e.target.value)}
-        className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
+  <input
+    type="text"
+    value={creationDate}
+    onChange={(e) => setCreationDate(e.target.value)}
+    placeholder="MM/DD/YYYY"
+    className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
 
     {/* حالة الوثيقة */}
    <div>
