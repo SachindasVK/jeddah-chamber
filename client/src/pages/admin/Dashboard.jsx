@@ -200,22 +200,19 @@ const Dashboard = () => {
     </div>
 
     {/* حالة الوثيقة */}
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        حالة الوثيقة
-      </label>
+   <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    حالة الوثيقة
+  </label>
 
-      <select
-        value={docStatus}
-        onChange={(e) => setDocStatus(e.target.value)}
-        className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="">اختر الحالة</option>
-        <option value="active">نشطة</option>
-        <option value="inactive">غير نشطة</option>
-        <option value="archived">مؤرشفة</option>
-      </select>
-    </div>
+  <input
+    type="text"
+    value={docStatus}
+    onChange={(e) => setDocStatus(e.target.value)}
+    className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+    placeholder="أدخل حالة الوثيقة"
+  />
+</div>
 
     {/* اسم المنشأة */}
     <div>
