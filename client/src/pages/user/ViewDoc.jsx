@@ -330,21 +330,21 @@ const ViewDoc = () => {
           <div className="flex items-center gap-1">
             {/* ZOOM */}
             <div
-              className={`flex gap-1 ${
+              className={`flex gap-1 border p-0.5 rounded-sm${
                 theme === "dark"
                   ? "bg-gray-800 border-gray-600"
                   : "bg-gray-100 border-gray-300"
-              } border p-0.5 rounded-sm`}
+              }`}
             >
               <div
                 onClick={() =>
                   setZoom((prev) => Math.max(prev - 0.2, 0.3))
                 }
-                className={`${
+                className={`border px-1 flex items-center rounded-sm ${
                   theme === "dark"
                     ? "bg-gray-800 border-gray-600"
                     : "bg-gray-100 border-gray-300"
-                } border px-1 flex items-center rounded-sm`}
+                }`}
               >
                 <button>
                   <ZoomOut size={15} color={iconColor} />
@@ -353,11 +353,11 @@ const ViewDoc = () => {
 
               <div
                 onClick={() => setZoom((prev) => prev + 0.2)}
-                className={`${
+                className={`border px-1 flex items-center rounded-sm ${
                   theme === "dark"
                     ? "bg-gray-800 border-gray-600"
                     : "bg-gray-100 border-gray-300"
-                } border px-1 flex items-center rounded-sm`}
+                }`}
               >
                 <button>
                   <ZoomIn size={15} color={iconColor} />
@@ -365,11 +365,11 @@ const ViewDoc = () => {
               </div>
 
               <div
-                className={`${
+                className={`border px-1 flex items-center py-0.5 rounded-sm ${
                   theme === "dark"
                     ? "bg-gray-800 border-gray-600"
                     : "bg-gray-100 border-gray-300"
-                } border px-1 flex items-center py-0.5 rounded-sm`}
+                } `}
               >
                 <button
                   onClick={() => {
@@ -387,18 +387,18 @@ const ViewDoc = () => {
 
             {/* ROTATION */}
             <div
-              className={`flex gap-1 px-0.5 p-0.5 items-center rounded-sm ${
+              className={`flex gap-1 px-0.5 p-0.5 items-center rounded-sm border${
                 theme === "dark"
-                  ? "border border-gray-600"
+                  ? "bg-gray-800 border-gray-600"
                   : "bg-gray-100 border border-gray-300"
               }`}
             >
               <div
-                className={`flex items-center ${
+                className={`border py-0.5 px-1 rounded-sm flex items-center ${
                   theme === "dark"
                     ? "bg-gray-800 border-gray-600"
                     : "bg-gray-100 border-gray-300"
-                } border py-0.5 px-1 rounded-sm`}
+                } `}
               >
                 <button
                   onClick={() => setRotation((prev) => prev - 180)}
@@ -412,11 +412,11 @@ const ViewDoc = () => {
               </div>
 
               <div
-                className={`${
+                className={`border px-1 flex py-0.5 rounded-sm ${
                   theme === "dark"
                     ? "bg-gray-800 border-gray-600"
                     : "bg-gray-100 border-gray-300"
-                } border px-1 flex py-0.5 rounded-sm`}
+                }`}
               >
                 <button
                   onClick={() => setRotation((prev) => prev - 90)}
@@ -426,11 +426,11 @@ const ViewDoc = () => {
               </div>
 
               <div
-                className={`${
+                className={`border px-1.5 flex items-center py-0.5 rounded-sm ${
                   theme === "dark"
                     ? "bg-gray-800 border-gray-600"
                     : "bg-gray-100 border-gray-300"
-                } border px-1.5 flex items-center py-0.5 rounded-sm`}
+                }`}
               >
                 <button
                   onClick={() => setRotation((prev) => prev + 90)}
@@ -440,11 +440,11 @@ const ViewDoc = () => {
               </div>
 
               <div
-                className={`${
+                className={`border px-1 flex items-center py-0.5 rounded-sm ${
                   theme === "dark"
                     ? "bg-gray-800 border-gray-600"
                     : "bg-gray-100 border-gray-300"
-                } border px-1 flex items-center py-0.5 rounded-sm`}
+                }`}
               >
                 <button
                   onClick={() => setRotation((prev) => prev + 180)}
@@ -466,18 +466,18 @@ const ViewDoc = () => {
               className="cursor-pointer"
             >
               <div
-                className={`p-0.5 rounded-sm ${
+                className={`p-0.5 rounded-sm border ${
                   theme === "dark"
-                    ? "border border-gray-600"
+                    ? "bg-gray-800 border-gray-600"
                     : "bg-gray-100 border border-gray-300"
                 }`}
               >
                 <div
-                  className={`${
+                  className={`border p-0.5 rounded-sm ${
                     theme === "dark"
-                      ? "bg-gray-700 border-gray-400"
+                      ? "bg-gray-800 border-gray-400"
                       : "bg-gray-100 border-gray-300"
-                  } border p-0.5 rounded-sm`}
+                  }`}
                 >
                   {theme === "light" ? (
                     <IoMoonOutline size={15} color="#4b5563" />
