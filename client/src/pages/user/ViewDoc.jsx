@@ -507,11 +507,11 @@ const ViewDoc = () => {
                       <div className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{item.labelEn}</div>
                     </div>
                   </div>
-                  <div className={`text-sm font-bold pr-11 text-right ${
-                    theme === "dark" ? "text-slate-100" : "text-slate-800"
-                  }`}>
-                    {item.value || "-"}
-                  </div>
+                 <div className={`text-sm font-bold text-right ${
+  theme === "dark" ? "text-slate-100" : "text-slate-800"
+}`}>
+  {item.value || "-"}
+</div>
                 </div>
               ))}
             </div>
