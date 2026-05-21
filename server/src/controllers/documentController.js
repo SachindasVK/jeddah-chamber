@@ -22,7 +22,9 @@ export const createDocumentAndQR = async (req, res) => {
       requestSubmitter,
     } = req.body;
 
-    const existingDoc = await Document.findOne({ title: title.trim() });
+    const docTitle = title?.trim() || `Document-${Date.now()}`;
+
+    const existingDoc = await Document.findOne({ title: docTitle });
     if (existingDoc) {
       return res.status(400).json({
         success: false,
@@ -44,17 +46,17 @@ export const createDocumentAndQR = async (req, res) => {
     const qrCodeImage = await QRCode.toDataURL(qrUrl, qrOptions);
 
     const newDoc = new Document({
-      title: title.trim(),
+      title: docTitle,
       uniqueId,
       qrUrl,
       createdBy: req.admin.id,
-      docNumber,
-      unifiedNumber,
-      creationDate,
-      docStatus,
-      establishmentName,
-      subscriptionNumber,
-      requestSubmitter,
+      docNumber: docNumber || undefined,
+      unifiedNumber: unifiedNumber || undefined,
+      creationDate: creationDate || undefined,
+      docStatus: (docStatus && ["active", "inactive", "archived"].includes(docStatus)) ? docStatus : undefined,
+      establishmentName: establishmentName || undefined,
+      subscriptionNumber: subscriptionNumber || undefined,
+      requestSubmitter: requestSubmitter || undefined,
     });
 
     await newDoc.save();
@@ -68,10 +70,10 @@ export const createDocumentAndQR = async (req, res) => {
     if (err.code === 11000) {
       return res
       .status(400)
-      .json({ message: "Duplicate title or ID detected." });
+      .json({ success: false, message: "Duplicate title or ID detected." });
     }
-    console.log(err)
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -133,6 +135,13 @@ export const pdfDetails = async (req, res) => {
       title: doc.title,
       pdfUrl: doc.pdfPath,
       date: doc.createdAt,
+      docNumber: doc.docNumber,
+      unifiedNumber: doc.unifiedNumber,
+      creationDate: doc.creationDate,
+      docStatus: doc.docStatus,
+      establishmentName: doc.establishmentName,
+      subscriptionNumber: doc.subscriptionNumber,
+      requestSubmitter: doc.requestSubmitter,
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

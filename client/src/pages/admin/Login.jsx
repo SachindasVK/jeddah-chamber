@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { API_URL } from "../../services/api";
-import jcc from '../../assets/jcc.svg'
 import jccLogoblue from '../../assets/jccLogoblue.jpeg'
 
 const Login = () => {

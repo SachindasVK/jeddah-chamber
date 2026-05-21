@@ -47,8 +47,22 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/admin/pdf-list" element={<PdfList />} />
-          <Route path="/admin/document/:id" element={<PdfDetails />} />
+          <Route
+            path="/admin/pdf-list"
+            element={
+              <ProtectedRoute>
+                <PdfList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/document/:id"
+            element={
+              <ProtectedRoute>
+                <PdfDetails />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/view/:id" element={<ViewDoc />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

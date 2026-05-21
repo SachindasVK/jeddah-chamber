@@ -16,7 +16,7 @@ const PdfList = () => {
   const navigate = useNavigate()
 
   // Fetch Documents with Pagination
-  const fetchDocs = async (currentPage) => {
+  const fetchDocs = React.useCallback(async (currentPage) => {
     setLoading(true);
     try {
       const res = await axios.get(`${API}/api/document/all?page=${currentPage}&limit=15`,
@@ -28,15 +28,19 @@ const PdfList = () => {
       setDocuments(res.data.documents);
       setTotalPages(res.data.totalPages);
     } catch (err) {
+      console.error("Failed to load documents:", err);
       toast.error("Failed to load documents");
     } finally {
       setLoading(false);
     }
-  };
+  }, [adminToken]);
 
   useEffect(() => {
-    fetchDocs(page);
-  }, [page]);
+    const timer = setTimeout(() => {
+      fetchDocs(page);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [page, fetchDocs]);
 
   // Delete Logic
 
@@ -70,6 +74,7 @@ const PdfList = () => {
         fetchDocs(page);
       }
     } catch (err) {
+      console.error("Failed to delete PDF:", err);
       toast.error("Failed to delete PDF");
     }
   };
@@ -127,7 +132,7 @@ const PdfList = () => {
                       className="hover:bg-gray-50 transition-colors"
                     >
                           <td className="p-4 text-gray-500 text-sm">
-                        {(page - 1) * 5 + index + 1}
+                        {(page - 1) * 15 + index + 1}
                       </td>
                       <td className="p-4 font-medium text-gray-800">{doc.title}</td>
                       <td className="p-4 text-gray-600 text-sm">{doc.docNumber || "-"}</td>

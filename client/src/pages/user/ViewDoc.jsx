@@ -27,7 +27,14 @@ import {
   RotateCw,
   Download,
   Sun,
-  MoveHorizontal,
+  ShieldCheck,
+  Building2,
+  CalendarRange,
+  Fingerprint,
+  UserCheck,
+  Hash,
+  FileText,
+  Lock,
 } from "lucide-react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -48,7 +55,6 @@ const ViewDoc = () => {
   const [theme, setTheme] = useState(
     localStorage.getItem("docTheme") || "light",
   );
-  const [pdfLoading, setPdfLoading] = useState(true);
 
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
   const finalUrl = doc?.pdfUrl || doc?.pdfPath;
@@ -118,6 +124,7 @@ const ViewDoc = () => {
         );
         setDoc(res.data);
       } catch (err) {
+        console.error("Verification failed:", err);
         toast.error("Verification failed");
       } finally {
         setLoadingDetails(false);
@@ -401,52 +408,198 @@ const ViewDoc = () => {
         </div>
       </div>
 
-      {/* PDF Container */}
-      <div
-        ref={containerRef}
-        className={`w-full mt-1 overflow-auto py-4 ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
-        style={{ height: "calc(100vh - 140px)", touchAction: "pan-x pan-y" }}
-      >
-        {loadingDetails ? (
-          <Loading />
-        ) : finalUrl ? (
-          <div
-            className={`w-max mx-auto transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
-          >
-            <Document
-  file={finalUrl}
-  onLoadSuccess={(pdf) => {
-    onDocumentLoadSuccess(pdf);
-    setPdfLoading(false);
-  }}
-  onLoadError={() => {
-    setPdfLoading(false);
-  }}
-  error={
-    <div className="p-20 text-red-500">
-      Failed to load PDF.
-    </div>
-  }
->
-              <Page
-                pageNumber={pageNumber}
-                width={containerWidth * zoom}
-                rotate={rotation}
-                devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
-                renderTextLayer={true}
-                renderAnnotationLayer={false}
-                canvasBackground="white"
-                className="pdf-page-high-quality"
-              />
-            </Document>
+      {/* Main Grid Content */}
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        {/* Verification Info Side Panel */}
+        <div className={`w-full lg:w-[420px] p-5 lg:p-6 overflow-y-auto border-b lg:border-b-0 lg:border-r ${
+          theme === "dark" 
+            ? "bg-[#1e293b] border-gray-700 text-white" 
+            : "bg-white border-gray-200 text-gray-800"
+        } flex flex-col gap-5`} dir="rtl">
+          {/* Header Badge */}
+          <div className={`flex flex-col items-center justify-center p-6 rounded-2xl border text-center ${
+            theme === "dark" 
+              ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-400" 
+              : "bg-emerald-50 border-emerald-200 text-emerald-700"
+          }`}>
+            <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 animate-pulse ${
+              theme === "dark" ? "bg-emerald-900/40" : "bg-emerald-100"
+            }`}>
+              <ShieldCheck size={40} className="stroke-[2.5]" />
+            </div>
+            <h2 className="text-xl font-bold tracking-wide">وثيقة معتمدة</h2>
+            <h3 className="text-sm font-semibold opacity-90 mt-0.5">Verified Document</h3>
+            <p className={`text-xs mt-3 ${
+              theme === "dark" ? "text-emerald-400/80" : "text-emerald-600/90"
+            }`}>
+              تم التحقق من صحة هذه الوثيقة من قبل الغرفة التجارية بجدة
+            </p>
+            <p className="text-[10px] opacity-75 mt-0.5">
+              Verified by Jeddah Chamber of Commerce
+            </p>
           </div>
-        ) : (
-          <div
-            className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
-          >
-            No PDF document available.
+
+          {/* Details Section */}
+          <div className="space-y-4">
+            <h4 className={`text-xs font-bold uppercase tracking-wider pb-2 border-b ${
+              theme === "dark" ? "text-gray-400 border-gray-700" : "text-gray-500 border-gray-100"
+            }`}>
+              تفاصيل التحقق / Verification Details
+            </h4>
+
+            <div className="space-y-3.5">
+              {/* Status Row */}
+              <div className={`p-3.5 rounded-xl border flex items-center justify-between ${
+                theme === "dark" ? "bg-slate-800/40 border-slate-700" : "bg-slate-50/50 border-slate-100"
+              }`}>
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${theme === "dark" ? "bg-slate-700/50 text-gray-300" : "bg-white text-gray-500 shadow-sm"}`}>
+                    <Fingerprint size={18} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-gray-500 dark:text-gray-400">حالة الوثيقة</div>
+                    <div className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">Document Status</div>
+                  </div>
+                </div>
+                <div>
+                  {doc?.docStatus === "active" ? (
+                    <span className="inline-flex flex-col items-center px-3 py-1 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-lg text-xs font-bold border border-emerald-200 dark:border-emerald-900/50">
+                      <span>نشطة</span>
+                      <span className="text-[9px] font-semibold">Active</span>
+                    </span>
+                  ) : doc?.docStatus === "inactive" ? (
+                    <span className="inline-flex flex-col items-center px-3 py-1 bg-rose-100 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 rounded-lg text-xs font-bold border border-rose-200 dark:border-rose-900/50">
+                      <span>غير نشطة</span>
+                      <span className="text-[9px] font-semibold">Inactive</span>
+                    </span>
+                  ) : doc?.docStatus === "archived" ? (
+                    <span className="inline-flex flex-col items-center px-3 py-1 bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 rounded-lg text-xs font-bold border border-amber-200 dark:border-amber-900/50">
+                      <span>مؤرشفة</span>
+                      <span className="text-[9px] font-semibold">Archived</span>
+                    </span>
+                  ) : (
+                    <span className="inline-flex flex-col items-center px-3 py-1 bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-600/50">
+                      <span>غير محدد</span>
+                      <span className="text-[9px] font-semibold">Unknown</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Detail Rows */}
+              {[
+                {
+                  labelAr: "اسم المنشأة",
+                  labelEn: "Establishment Name",
+                  value: doc?.establishmentName,
+                  icon: Building2,
+                },
+                {
+                  labelAr: "رقم الوثيقة",
+                  labelEn: "Document Number",
+                  value: doc?.docNumber,
+                  icon: FileText,
+                },
+                {
+                  labelAr: "الرقم الموحد",
+                  labelEn: "Unified Number",
+                  value: doc?.unifiedNumber,
+                  icon: Hash,
+                },
+                {
+                  labelAr: "تاريخ الإنشاء",
+                  labelEn: "Creation Date",
+                  value: doc?.creationDate ? new Date(doc.creationDate).toLocaleDateString("ar-SA", { year: 'numeric', month: 'long', day: 'numeric' }) + " / " + new Date(doc.creationDate).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }) : null,
+                  icon: CalendarRange,
+                },
+                {
+                  labelAr: "رقم الإشتراك",
+                  labelEn: "Subscription Number",
+                  value: doc?.subscriptionNumber,
+                  icon: Hash,
+                },
+                {
+                  labelAr: "مقدم الطلب",
+                  labelEn: "Request Submitter",
+                  value: doc?.requestSubmitter,
+                  icon: UserCheck,
+                },
+              ].map((item, idx) => (
+                <div key={idx} className={`p-3.5 rounded-xl border flex flex-col gap-1.5 ${
+                  theme === "dark" ? "bg-slate-800/40 border-slate-700" : "bg-slate-50/50 border-slate-100"
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${theme === "dark" ? "bg-slate-700/50 text-gray-300" : "bg-white text-gray-500 shadow-sm"}`}>
+                      <item.icon size={18} />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-gray-500 dark:text-gray-400">{item.labelAr}</div>
+                      <div className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">{item.labelEn}</div>
+                    </div>
+                  </div>
+                  <div className={`text-sm font-bold pr-11 text-right ${
+                    theme === "dark" ? "text-slate-100" : "text-slate-800"
+                  }`}>
+                    {item.value || "-"}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        )}
+
+          {/* Secure verification note */}
+          <div className={`mt-auto p-4 rounded-xl border text-center flex items-center justify-center gap-3 ${
+            theme === "dark" ? "bg-slate-850/50 border-slate-800 text-slate-400" : "bg-blue-50/30 border-blue-50 text-blue-800/75"
+          }`}>
+            <Lock size={16} />
+            <div className="text-xs font-medium">
+              <div>بوابة التحقق آمنة ومشفرة بالكامل.</div>
+              <div className="text-[10px] opacity-75">The verification gateway is fully secure and encrypted.</div>
+            </div>
+          </div>
+        </div>
+
+        {/* PDF Container */}
+        <div
+          ref={containerRef}
+          className={`flex-1 overflow-auto py-4 relative ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
+          style={{ height: "calc(100vh - 140px)", touchAction: "pan-x pan-y" }}
+        >
+          {loadingDetails ? (
+            <Loading />
+          ) : finalUrl ? (
+            <div
+              className={`w-max mx-auto transition-all duration-300 h-fit ${theme === "dark" ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]" : "shadow-lg"}`}
+            >
+              <Document
+                file={finalUrl}
+                onLoadSuccess={onDocumentLoadSuccess}
+                error={
+                  <div className="p-20 text-red-500">
+                    Failed to load PDF.
+                  </div>
+                }
+              >
+                <Page
+                  pageNumber={pageNumber}
+                  width={containerWidth * zoom}
+                  rotate={rotation}
+                  devicePixelRatio={Math.max(window.devicePixelRatio || 1, 2)}
+                  renderTextLayer={true}
+                  renderAnnotationLayer={false}
+                  canvasBackground="white"
+                  className="pdf-page-high-quality"
+                />
+              </Document>
+            </div>
+          ) : (
+            <div
+              className={`p-20 text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
+            >
+              No PDF document available.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

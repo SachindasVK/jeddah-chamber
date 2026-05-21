@@ -47,6 +47,7 @@ const PdfDetails = () => {
         console.log(res.data.pdfPath);
         setDoc(res.data);
       } catch (err) {
+        console.error("Could not fetch document details:", err);
         toast.error("Could not fetch document details");
         navigate("/admin/pdf-list");
       } finally {
