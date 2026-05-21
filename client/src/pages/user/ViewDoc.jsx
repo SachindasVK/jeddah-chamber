@@ -500,7 +500,7 @@ const ViewDoc = () => {
                 }`}>
                   <div className="flex items-center gap-3">
                     <div className={`p-2 rounded-lg ${theme === "dark" ? "bg-slate-700/50 text-gray-300" : "bg-white text-gray-500 shadow-sm"}`}>
-                      <item.icon size={18} />
+                    
                     </div>
                     <div>
                       <div className="text-xs font-bold text-gray-500 dark:text-gray-400">{item.labelAr}</div>
