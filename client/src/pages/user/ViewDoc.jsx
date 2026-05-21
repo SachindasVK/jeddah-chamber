@@ -46,31 +46,28 @@ const ViewDoc = () => {
   const [pageNumber, setPageNumber] = useState(1);
 
   const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
 
-  const [containerWidth, setContainerWidth] = useState(window.innerWidth);
-
-  const [theme, setTheme] = useState(
-    localStorage.getItem("docTheme") || "light"
+  const [containerWidth, setContainerWidth] = useState(
+    window.innerWidth,
   );
 
-  const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
+  const [rotation, setRotation] = useState(0);
+
+  const [theme, setTheme] = useState(
+    localStorage.getItem("docTheme") || "light",
+  );
+
+  const iconColor =
+    theme === "dark" ? "#e2e8f0" : "#4b5563";
 
   const finalUrl = doc?.pdfUrl || doc?.pdfPath;
 
   useEffect(() => {
     const handleResize = () => {
-      let width;
-
-      if (window.innerWidth >= 1280) {
-        width = 900;
-      } else if (window.innerWidth >= 1024) {
-        width = 750;
-      } else if (window.innerWidth >= 640) {
-        width = 600;
-      } else {
-        width = window.innerWidth - 32;
-      }
+      const width =
+        window.innerWidth > 640
+          ? 600
+          : window.innerWidth - 32;
 
       setContainerWidth(width);
     };
@@ -79,7 +76,11 @@ const ViewDoc = () => {
 
     handleResize();
 
-    return () => window.removeEventListener("resize", handleResize);
+    return () =>
+      window.removeEventListener(
+        "resize",
+        handleResize,
+      );
   }, []);
 
   useEffect(() => {
@@ -88,13 +89,19 @@ const ViewDoc = () => {
     if (!el) return;
 
     const getDistance = (t1, t2) => {
-      return Math.hypot(t2.pageX - t1.pageX, t2.pageY - t1.pageY);
+      return Math.hypot(
+        t2.pageX - t1.pageX,
+        t2.pageY - t1.pageY,
+      );
     };
 
     const onTouchMove = (e) => {
       if (e.touches.length !== 2) return;
 
-      const distance = getDistance(e.touches[0], e.touches[1]);
+      const distance = getDistance(
+        e.touches[0],
+        e.touches[1],
+      );
 
       if (!lastDistance.current) {
         lastDistance.current = distance;
@@ -107,7 +114,7 @@ const ViewDoc = () => {
         setZoom((prev) =>
           delta > 0
             ? Math.min(prev + 0.1, 3)
-            : Math.max(prev - 0.1, 0.5)
+            : Math.max(prev - 0.1, 0.5),
         );
 
         lastDistance.current = distance;
@@ -118,13 +125,27 @@ const ViewDoc = () => {
       lastDistance.current = null;
     };
 
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener(
+      "touchmove",
+      onTouchMove,
+      { passive: false },
+    );
 
-    el.addEventListener("touchend", onTouchEnd);
+    el.addEventListener(
+      "touchend",
+      onTouchEnd,
+    );
 
     return () => {
-      el.removeEventListener("touchmove", onTouchMove);
-      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener(
+        "touchmove",
+        onTouchMove,
+      );
+
+      el.removeEventListener(
+        "touchend",
+        onTouchEnd,
+      );
     };
   }, []);
 
@@ -136,7 +157,7 @@ const ViewDoc = () => {
     const fetchDetails = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/document/view/${id}`
+          `${import.meta.env.VITE_API_URL}/api/document/view/${id}`,
         );
 
         setDoc(res.data);
@@ -151,7 +172,9 @@ const ViewDoc = () => {
     fetchDetails();
   }, [id]);
 
-  function onDocumentLoadSuccess({ numPages }) {
+  function onDocumentLoadSuccess({
+    numPages,
+  }) {
     setNumPages(numPages);
     setPageNumber(1);
   }
@@ -162,17 +185,25 @@ const ViewDoc = () => {
         responseType: "blob",
       });
 
-      const blob = new Blob([response.data], {
-        type: "application/pdf",
-      });
+      const blob = new Blob(
+        [response.data],
+        {
+          type: "application/pdf",
+        },
+      );
 
-      const url = window.URL.createObjectURL(blob);
+      const url =
+        window.URL.createObjectURL(blob);
 
-      const link = document.createElement("a");
+      const link =
+        document.createElement("a");
 
       link.href = url;
 
-      link.setAttribute("download", "document.pdf");
+      link.setAttribute(
+        "download",
+        "document.pdf",
+      );
 
       document.body.appendChild(link);
 
@@ -190,12 +221,14 @@ const ViewDoc = () => {
   return (
     <div
       className={`min-h-screen flex flex-col ${
-        theme === "dark" ? "bg-[#0f172a]" : "bg-[#f4f7f9]"
+        theme === "dark"
+          ? "bg-[#0f172a]"
+          : "bg-[#f4f7f9]"
       }`}
     >
       {/* HEADER */}
       <div
-        className={`w-full sticky top-0 z-20 p-3 shadow-md border ${
+        className={`w-full sticky top-0 z-10 p-3 shadow-md border ${
           theme === "dark"
             ? "bg-[#1e293b] border-gray-700"
             : "bg-white border-gray-100"
@@ -204,349 +237,411 @@ const ViewDoc = () => {
         {/* MOBILE */}
         <div className="flex flex-col gap-2 lg:hidden">
           {/* TOP */}
-          <div className="flex items-center gap-1.5 flex-wrap">
-            {/* Sidebar */}
-            <button
-              onClick={() => setShowSidebar((prev) => !prev)}
-              className={`border p-1 rounded-sm ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              }`}
-            >
-              <MdViewSidebar
-                size={15}
-                color={showSidebar ? "#3b82f6" : iconColor}
-              />
-            </button>
-
-            {/* Page Controls */}
+          <div className="flex items-center w-full gap-1.5">
+            {/* SIDEBAR */}
             <div
-              className={`flex items-center gap-1 border p-0.5 rounded-sm ${
+              className={`${
                 theme === "dark"
                   ? "bg-gray-800 border-gray-600"
                   : "bg-gray-100 border-gray-300"
-              }`}
+              } border py-0.5 px-0.5 rounded-sm`}
             >
-              <button
+              <div
                 onClick={() =>
-                  setPageNumber((prev) => Math.max(prev - 1, 1))
-                }
-                disabled={pageNumber <= 1}
-                className="border px-1 py-0.5 rounded-sm"
-              >
-                <FaChevronLeft
-                  size={15}
-                  color={pageNumber <= 1 ? "#64748b" : iconColor}
-                />
-              </button>
-
-              <div className="border px-4 py-0.5 rounded-sm text-sm font-bold">
-                {pageNumber}/{numPages || 1}
-              </div>
-
-              <button
-                onClick={() =>
-                  setPageNumber((prev) =>
-                    Math.min(prev + 1, numPages)
+                  setShowSidebar(
+                    (prev) => !prev,
                   )
                 }
-                disabled={pageNumber >= numPages}
-                className="border px-1 py-0.5 rounded-sm"
+                className={`flex items-center py-0.5 px-0.5 rounded-sm cursor-pointer ${
+                  showSidebar
+                    ? "bg-blue-700 border-blue-700"
+                    : theme === "dark"
+                      ? "border-gray-600"
+                      : "border-gray-300"
+                }`}
               >
-                <FaChevronRight
+                <MdViewSidebar
                   size={15}
-                  color={pageNumber >= numPages ? "#64748b" : iconColor}
+                  color={
+                    showSidebar
+                      ? "#ffffff"
+                      : iconColor
+                  }
                 />
-              </button>
+              </div>
             </div>
 
-            {/* Download */}
-            <button
-              onClick={handleDownload}
-              className={`border p-1 rounded-sm ${
+            {/* PAGE */}
+            <div
+              className={`flex items-center gap-0.5 ${
                 theme === "dark"
                   ? "bg-gray-800 border-gray-600"
                   : "bg-gray-100 border-gray-300"
-              }`}
+              } border p-0.5 rounded-sm`}
             >
-              <Download size={15} color={iconColor} />
-            </button>
+              <div
+                className={`border ${
+                  theme === "dark"
+                    ? "border-gray-600"
+                    : "border-gray-300"
+                } px-1 flex items-center py-0.5 rounded-sm`}
+              >
+                <button
+                  onClick={() =>
+                    setPageNumber((prev) =>
+                      Math.max(prev - 1, 1),
+                    )
+                  }
+                  disabled={pageNumber <= 1}
+                >
+                  <FaChevronLeft
+                    size={15}
+                    color={
+                      pageNumber <= 1
+                        ? "#64748b"
+                        : iconColor
+                    }
+                  />
+                </button>
+              </div>
+
+              <div
+                className={`border ${
+                  theme === "dark"
+                    ? "border-gray-600"
+                    : "border-gray-300"
+                } py-0 px-5 rounded-sm`}
+              >
+                <div
+                  className={`px-1 sm:px-4 text-sm sm:text-base font-bold ${
+                    theme === "dark"
+                      ? "text-gray-200"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {pageNumber}/
+                  {numPages || 1}
+                </div>
+              </div>
+
+              <div
+                className={`border ${
+                  theme === "dark"
+                    ? "border-gray-600"
+                    : "border-gray-300"
+                } px-1 flex items-center py-0.5 rounded-sm`}
+              >
+                <button
+                  onClick={() =>
+                    setPageNumber((prev) =>
+                      Math.min(
+                        prev + 1,
+                        numPages,
+                      ),
+                    )
+                  }
+                  disabled={
+                    pageNumber >= numPages
+                  }
+                >
+                  <FaChevronRight
+                    size={15}
+                    color={
+                      pageNumber >= numPages
+                        ? "#64748b"
+                        : iconColor
+                    }
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* DOWNLOAD */}
+            <div className="flex">
+              <div
+                className={`${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } border p-0.5 rounded-sm`}
+              >
+                <div
+                  className={`flex border ${
+                    theme === "dark"
+                      ? "border-gray-600"
+                      : "border-gray-300"
+                  } items-center px-1 py-0.5 rounded-sm`}
+                >
+                  <button
+                    onClick={handleDownload}
+                  >
+                    <Download
+                      size={15}
+                      color={iconColor}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* BOTTOM */}
-          <div className="flex items-center gap-1 flex-wrap">
-            {/* Zoom */}
+          <div className="flex items-center gap-1">
+            {/* ZOOM */}
             <div
-              className={`flex gap-1 border p-0.5 rounded-sm ${
+              className={`flex gap-1 ${
                 theme === "dark"
                   ? "bg-gray-800 border-gray-600"
                   : "bg-gray-100 border-gray-300"
-              }`}
+              } border p-0.5 rounded-sm`}
             >
-              <button
+              <div
                 onClick={() =>
-                  setZoom((prev) => Math.max(prev - 0.2, 0.3))
+                  setZoom((prev) =>
+                    Math.max(
+                      prev - 0.2,
+                      0.3,
+                    ),
+                  )
                 }
-                className="border px-1 py-0.5 rounded-sm"
+                className={`${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } border px-1 flex items-center rounded-sm`}
               >
-                <ZoomOut size={15} color={iconColor} />
-              </button>
+                <button>
+                  <ZoomOut
+                    size={15}
+                    color={iconColor}
+                  />
+                </button>
+              </div>
 
-              <button
-                onClick={() => setZoom((prev) => prev + 0.2)}
-                className="border px-1 py-0.5 rounded-sm"
+              <div
+                onClick={() =>
+                  setZoom(
+                    (prev) => prev + 0.2,
+                  )
+                }
+                className={`${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } border px-1 flex items-center rounded-sm`}
               >
-                <ZoomIn size={15} color={iconColor} />
-              </button>
+                <button>
+                  <ZoomIn
+                    size={15}
+                    color={iconColor}
+                  />
+                </button>
+              </div>
 
-              <button
-                onClick={() => {
-                  setZoom(1);
-                  setRotation(0);
-                }}
-                className="border px-1 py-0.5 rounded-sm"
+              <div
+                className={`${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } border px-1 flex items-center py-0.5 rounded-sm`}
               >
-                <FaArrowsLeftRightToLine
-                  size={15}
-                  color={iconColor}
-                />
-              </button>
+                <button
+                  onClick={() => {
+                    setZoom(1);
+                    setRotation(0);
+                  }}
+                >
+                  <FaArrowsLeftRightToLine
+                    size={15}
+                    color={iconColor}
+                  />
+                </button>
+              </div>
             </div>
 
-            {/* Rotation */}
+            {/* ROTATION */}
             <div
-              className={`flex gap-1 border p-0.5 rounded-sm ${
+              className={`flex gap-1 px-0.5 p-0.5 items-center rounded-sm ${
                 theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
+                  ? "border border-gray-600"
+                  : "bg-gray-100 border border-gray-300"
               }`}
             >
-              <button
-                onClick={() => setRotation((prev) => prev - 180)}
-                className="border px-1 py-0.5 rounded-sm"
+              <div
+                className={`flex items-center ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } border py-0.5 px-1 rounded-sm`}
               >
-                <FaArrowRotateLeft size={15} color={iconColor} />
-              </button>
+                <button
+                  onClick={() =>
+                    setRotation(
+                      (prev) => prev - 180,
+                    )
+                  }
+                >
+                  <FaArrowRotateLeft
+                    size={15}
+                    color={iconColor}
+                    className="border p-0.5 rounded-full"
+                  />
+                </button>
+              </div>
 
-              <button
-                onClick={() => setRotation((prev) => prev - 90)}
-                className="border px-1 py-0.5 rounded-sm"
+              <div
+                className={`${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } border px-1 flex py-0.5 rounded-sm`}
               >
-                <RotateCcw size={15} color={iconColor} />
-              </button>
+                <button
+                  onClick={() =>
+                    setRotation(
+                      (prev) => prev - 90,
+                    )
+                  }
+                >
+                  <RotateCcw
+                    size={15}
+                    color={iconColor}
+                  />
+                </button>
+              </div>
 
-              <button
-                onClick={() => setRotation((prev) => prev + 90)}
-                className="border px-1 py-0.5 rounded-sm"
+              <div
+                className={`${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } border px-1.5 flex items-center py-0.5 rounded-sm`}
               >
-                <RotateCw size={15} color={iconColor} />
-              </button>
+                <button
+                  onClick={() =>
+                    setRotation(
+                      (prev) => prev + 90,
+                    )
+                  }
+                >
+                  <RotateCw
+                    size={15}
+                    color={iconColor}
+                  />
+                </button>
+              </div>
 
-              <button
-                onClick={() => setRotation((prev) => prev + 180)}
-                className="border px-1 py-0.5 rounded-sm"
+              <div
+                className={`${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } border px-1 flex items-center py-0.5 rounded-sm`}
               >
-                <FaArrowRotateRight size={15} color={iconColor} />
-              </button>
+                <button
+                  onClick={() =>
+                    setRotation(
+                      (prev) => prev + 180,
+                    )
+                  }
+                >
+                  <FaArrowRotateRight
+                    size={15}
+                    color={iconColor}
+                    className="border p-0.5 rounded-full"
+                  />
+                </button>
+              </div>
             </div>
 
-            {/* Theme */}
-            <button
+            {/* THEME */}
+            <div
               onClick={() =>
-                setTheme(theme === "light" ? "dark" : "light")
+                setTheme(
+                  theme === "light"
+                    ? "dark"
+                    : "light",
+                )
               }
-              className={`border p-1 rounded-sm ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              }`}
+              className="cursor-pointer"
             >
-              {theme === "light" ? (
-                <IoMoonOutline size={15} color="#4b5563" />
-              ) : (
-                <Sun size={15} color="white" />
-              )}
-            </button>
+              <div
+                className={`p-0.5 rounded-sm ${
+                  theme === "dark"
+                    ? "border border-gray-600"
+                    : "bg-gray-100 border border-gray-300"
+                }`}
+              >
+                <div
+                  className={`${
+                    theme === "dark"
+                      ? "bg-gray-700 border-gray-400"
+                      : "bg-gray-100 border-gray-300"
+                  } border p-0.5 rounded-sm`}
+                >
+                  {theme === "light" ? (
+                    <IoMoonOutline
+                      size={15}
+                      color="#4b5563"
+                    />
+                  ) : (
+                    <Sun
+                      size={15}
+                      color="white"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* DESKTOP */}
         <div className="hidden lg:flex items-center justify-between">
           {/* LEFT */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowSidebar((prev) => !prev)}
-              className={`border p-1 rounded-sm ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              }`}
-            >
-              <MdViewSidebar
-                size={16}
-                color={showSidebar ? "#3b82f6" : iconColor}
-              />
-            </button>
+          <div className="flex items-center gap-1.5">
+            {/* sidebar */}
+            {/* SAME CODE HERE */}
 
-            <div
-              className={`flex items-center gap-1 border p-0.5 rounded-sm ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              }`}
-            >
-              <button
-                onClick={() =>
-                  setPageNumber((prev) => Math.max(prev - 1, 1))
-                }
-                disabled={pageNumber <= 1}
-                className="border px-2 py-1 rounded-sm"
-              >
-                <FaChevronLeft
-                  size={15}
-                  color={pageNumber <= 1 ? "#64748b" : iconColor}
-                />
-              </button>
+            {/* page */}
+            {/* SAME CODE HERE */}
 
-              <div className="border px-5 py-1 rounded-sm text-sm font-bold">
-                {pageNumber}/{numPages || 1}
-              </div>
-
-              <button
-                onClick={() =>
-                  setPageNumber((prev) =>
-                    Math.min(prev + 1, numPages)
-                  )
-                }
-                disabled={pageNumber >= numPages}
-                className="border px-2 py-1 rounded-sm"
-              >
-                <FaChevronRight
-                  size={15}
-                  color={pageNumber >= numPages ? "#64748b" : iconColor}
-                />
-              </button>
-            </div>
-
-            <button
-              onClick={handleDownload}
-              className={`border p-2 rounded-sm ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              }`}
-            >
-              <Download size={16} color={iconColor} />
-            </button>
+            {/* download */}
+            {/* SAME CODE HERE */}
           </div>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-2">
-            {/* Zoom */}
-            <div
-              className={`flex gap-1 border p-0.5 rounded-sm ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              }`}
-            >
-              <button
-                onClick={() =>
-                  setZoom((prev) => Math.max(prev - 0.2, 0.3))
-                }
-                className="border px-2 py-1 rounded-sm"
-              >
-                <ZoomOut size={15} color={iconColor} />
-              </button>
+          <div className="flex items-center gap-1">
+            {/* zoom */}
+            {/* SAME CODE HERE */}
 
-              <button
-                onClick={() => setZoom((prev) => prev + 0.2)}
-                className="border px-2 py-1 rounded-sm"
-              >
-                <ZoomIn size={15} color={iconColor} />
-              </button>
+            {/* rotation */}
+            {/* SAME CODE HERE */}
 
-              <button
-                onClick={() => {
-                  setZoom(1);
-                  setRotation(0);
-                }}
-                className="border px-2 py-1 rounded-sm"
-              >
-                <FaArrowsLeftRightToLine
-                  size={15}
-                  color={iconColor}
-                />
-              </button>
-            </div>
-
-            {/* Rotation */}
-            <div
-              className={`flex gap-1 border p-0.5 rounded-sm ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              }`}
-            >
-              <button
-                onClick={() => setRotation((prev) => prev - 180)}
-                className="border px-2 py-1 rounded-sm"
-              >
-                <FaArrowRotateLeft size={15} color={iconColor} />
-              </button>
-
-              <button
-                onClick={() => setRotation((prev) => prev - 90)}
-                className="border px-2 py-1 rounded-sm"
-              >
-                <RotateCcw size={15} color={iconColor} />
-              </button>
-
-              <button
-                onClick={() => setRotation((prev) => prev + 90)}
-                className="border px-2 py-1 rounded-sm"
-              >
-                <RotateCw size={15} color={iconColor} />
-              </button>
-
-              <button
-                onClick={() => setRotation((prev) => prev + 180)}
-                className="border px-2 py-1 rounded-sm"
-              >
-                <FaArrowRotateRight size={15} color={iconColor} />
-              </button>
-            </div>
-
-            {/* Theme */}
-            <button
-              onClick={() =>
-                setTheme(theme === "light" ? "dark" : "light")
-              }
-              className={`border p-2 rounded-sm ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              }`}
-            >
-              {theme === "light" ? (
-                <IoMoonOutline size={16} color="#4b5563" />
-              ) : (
-                <Sun size={16} color="white" />
-              )}
-            </button>
+            {/* theme */}
+            {/* SAME CODE HERE */}
           </div>
         </div>
       </div>
 
-      {/* MAIN */}
-      <div className="flex-1 flex items-center justify-center overflow-auto p-4">
+      {/* CONTENT */}
+      <div
+        ref={containerRef}
+        className={`flex-1 overflow-auto py-4 relative ${
+          theme === "dark"
+            ? "bg-gray-900"
+            : "bg-gray-100"
+        }`}
+        style={{
+          height: "calc(100vh - 140px)",
+          touchAction: "pan-x pan-y",
+        }}
+      >
         {loadingDetails ? (
           <Loading />
         ) : finalUrl ? (
           <div
-            ref={containerRef}
-            className={`transition-all duration-300 ${
+            className={`w-max mx-auto transition-all duration-300 h-fit ${
               theme === "dark"
                 ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                 : "shadow-lg"
@@ -554,7 +649,9 @@ const ViewDoc = () => {
           >
             <Document
               file={finalUrl}
-              onLoadSuccess={onDocumentLoadSuccess}
+              onLoadSuccess={
+                onDocumentLoadSuccess
+              }
               error={
                 <div className="p-20 text-red-500">
                   Failed to load PDF.
@@ -563,17 +660,25 @@ const ViewDoc = () => {
             >
               <Page
                 pageNumber={pageNumber}
-                width={containerWidth * zoom}
+                width={
+                  containerWidth * zoom
+                }
                 rotate={rotation}
+                devicePixelRatio={Math.max(
+                  window.devicePixelRatio ||
+                    1,
+                  2,
+                )}
+                renderTextLayer={true}
                 renderAnnotationLayer={false}
-                renderTextLayer
+                canvasBackground="white"
                 className="pdf-page-high-quality"
               />
             </Document>
           </div>
         ) : (
           <div
-            className={`text-lg ${
+            className={`p-20 text-lg ${
               theme === "dark"
                 ? "text-gray-400"
                 : "text-gray-500"
