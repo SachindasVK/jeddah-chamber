@@ -603,7 +603,7 @@ const ViewDoc = () => {
           </div>
 
           {/* RIGHT SIDE */}
-           <div className="flex items-center gap-1">
+           <div className="flex items-center gap-1 rounded-sm">
             {/* ZOOM */}
             <div
               className={`flex gap-1 border p-0.5 rounded-sm${
