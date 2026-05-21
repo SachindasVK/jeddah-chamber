@@ -423,10 +423,6 @@ const ViewDoc = () => {
               <div className={`p-3.5 rounded-xl border flex items-center justify-between ${
                 theme === "dark" ? "bg-slate-800/40 border-slate-700" : "bg-slate-50/50 border-slate-100"
               }`}>
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${theme === "dark" ? "bg-slate-700/50 text-gray-300" : "bg-white text-gray-500 shadow-sm"}`}>
-                   
-                  </div>
                   <div>
                     <div className="text-xs font-bold text-gray-500 dark:text-gray-400">حالة الوثيقة</div>
                     <div className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">Document Status</div>
