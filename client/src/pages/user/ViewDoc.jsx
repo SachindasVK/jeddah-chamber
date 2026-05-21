@@ -680,7 +680,14 @@ const ViewDoc = () => {
             </div>
 
             {/* THEME */}
-            <button
+             <div
+                className={`flex border ${
+                  theme === "dark"
+                    ? "border-gray-600"
+                    : "border-gray-300"
+                } items-center px-1 py-0.5 rounded-sm`}
+              >
+                <button
               onClick={() =>
                 setTheme(theme === "light" ? "dark" : "light")
               }
@@ -696,6 +703,7 @@ const ViewDoc = () => {
                 <Sun size={15} color="white" />
               )}
             </button>
+              </div>
           </div>
         </div>
       </div>
