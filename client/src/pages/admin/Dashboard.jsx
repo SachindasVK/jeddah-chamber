@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Sidebar from "../../components/Sidebar";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -191,13 +194,13 @@ const Dashboard = () => {
     تاريخ الإنشاء
   </label>
 
-  <input
-    type="text"
-    value={creationDate}
-    onChange={(e) => setCreationDate(e.target.value)}
-    placeholder="MM/DD/YYYY"
-    className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-  />
+ <DatePicker
+  selected={creationDate}
+  onChange={(date) => setCreationDate(date)}
+  dateFormat="MM/dd/yyyy"
+  placeholderText="MM/DD/YYYY"
+  className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+/>
 </div>
 
     {/* حالة الوثيقة */}
