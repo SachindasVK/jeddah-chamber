@@ -496,11 +496,11 @@ const ViewDoc = () => {
           <div className="flex items-center gap-2">
             {/* SIDEBAR */}
             <div
-              className={`${
+              className={`border py-0.5 px-0.5 rounded-sm ${
                 theme === "dark"
                   ? "bg-gray-800 border-gray-600"
                   : "bg-gray-100 border-gray-300"
-              } border py-0.5 px-0.5 rounded-sm`}
+              }`}
             >
               <div
                 onClick={() => setShowSidebar((prev) => !prev)}
@@ -603,107 +603,166 @@ const ViewDoc = () => {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="flex items-center gap-2">
+           <div className="flex items-center gap-1">
             {/* ZOOM */}
             <div
-              className={`flex gap-1 ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              } border p-0.5 rounded-sm`}
-            >
-              <button
-                onClick={() =>
-                  setZoom((prev) => Math.max(prev - 0.2, 0.3))
-                }
-                className="border px-1 py-0.5 rounded-sm"
-              >
-                <ZoomOut size={15} color={iconColor} />
-              </button>
-
-              <button
-                onClick={() => setZoom((prev) => prev + 0.2)}
-                className="border px-1 py-0.5 rounded-sm"
-              >
-                <ZoomIn size={15} color={iconColor} />
-              </button>
-
-              <button
-                onClick={() => {
-                  setZoom(1);
-                  setRotation(0);
-                }}
-                className="border px-1 py-0.5 rounded-sm"
-              >
-                <FaArrowsLeftRightToLine
-                  size={15}
-                  color={iconColor}
-                />
-              </button>
-            </div>
-
-            {/* ROTATE */}
-            <div
-              className={`flex gap-1 ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600"
-                  : "bg-gray-100 border-gray-300"
-              } border p-0.5 rounded-sm`}
-            >
-              <button
-                onClick={() => setRotation((prev) => prev - 180)}
-                className="border px-1 py-0.5 rounded-sm"
-              >
-                <FaArrowRotateLeft size={15} color={iconColor} />
-              </button>
-
-              <button
-                onClick={() => setRotation((prev) => prev - 90)}
-                className="border px-1 py-0.5 rounded-sm"
-              >
-                <RotateCcw size={15} color={iconColor} />
-              </button>
-
-              <button
-                onClick={() => setRotation((prev) => prev + 90)}
-                className="border px-1 py-0.5 rounded-sm"
-              >
-                <RotateCw size={15} color={iconColor} />
-              </button>
-
-              <button
-                onClick={() => setRotation((prev) => prev + 180)}
-                className="border px-1 py-0.5 rounded-sm"
-              >
-                <FaArrowRotateRight size={15} color={iconColor} />
-              </button>
-            </div>
-
-            {/* THEME */}
-             <div
-                className={`flex border ${
-                  theme === "dark"
-                    ? "border-gray-600"
-                    : "border-gray-300"
-                } items-center px-1 py-0.5 rounded-sm`}
-              >
-                <button
-              onClick={() =>
-                setTheme(theme === "light" ? "dark" : "light")
-              }
-              className={`p-1 rounded-sm border ${
+              className={`flex gap-1 border p-0.5 rounded-sm${
                 theme === "dark"
                   ? "bg-gray-800 border-gray-600"
                   : "bg-gray-100 border-gray-300"
               }`}
             >
-              {theme === "light" ? (
-                <IoMoonOutline size={15} color="#4b5563" />
-              ) : (
-                <Sun size={15} color="white" />
-              )}
-            </button>
+              <div
+                onClick={() =>
+                  setZoom((prev) => Math.max(prev - 0.2, 0.3))
+                }
+                className={`border px-1 flex items-center rounded-sm ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                }`}
+              >
+                <button>
+                  <ZoomOut size={15} color={iconColor} />
+                </button>
               </div>
+
+              <div
+                onClick={() => setZoom((prev) => prev + 0.2)}
+                className={`border px-1 flex items-center rounded-sm ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                }`}
+              >
+                <button>
+                  <ZoomIn size={15} color={iconColor} />
+                </button>
+              </div>
+
+              <div
+                className={`border px-1 flex items-center py-0.5 rounded-sm ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } `}
+              >
+                <button
+                  onClick={() => {
+                    setZoom(1);
+                    setRotation(0);
+                  }}
+                >
+                  <FaArrowsLeftRightToLine
+                    size={15}
+                    color={iconColor}
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* ROTATION */}
+            <div
+              className={`flex gap-1 px-0.5 p-0.5 items-center rounded-sm border${
+                theme === "dark"
+                  ? "bg-gray-800 border-gray-600"
+                  : "bg-gray-100 border border-gray-300"
+              }`}
+            >
+              <div
+                className={`border py-0.5 px-1 rounded-sm flex items-center ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                } `}
+              >
+                <button
+                  onClick={() => setRotation((prev) => prev - 180)}
+                >
+                  <FaArrowRotateLeft
+                    size={15}
+                    color={iconColor}
+                    className="border p-0.5 rounded-full"
+                  />
+                </button>
+              </div>
+
+              <div
+                className={`border px-1 flex py-0.5 rounded-sm ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                }`}
+              >
+                <button
+                  onClick={() => setRotation((prev) => prev - 90)}
+                >
+                  <RotateCcw size={15} color={iconColor} />
+                </button>
+              </div>
+
+              <div
+                className={`border px-1.5 flex items-center py-0.5 rounded-sm ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                }`}
+              >
+                <button
+                  onClick={() => setRotation((prev) => prev + 90)}
+                >
+                  <RotateCw size={15} color={iconColor} />
+                </button>
+              </div>
+
+              <div
+                className={`border px-1 flex items-center py-0.5 rounded-sm ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border-gray-300"
+                }`}
+              >
+                <button
+                  onClick={() => setRotation((prev) => prev + 180)}
+                >
+                  <FaArrowRotateRight
+                    size={15}
+                    color={iconColor}
+                    className="border p-0.5 rounded-full"
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* THEME */}
+            <div
+              onClick={() =>
+                setTheme(theme === "light" ? "dark" : "light")
+              }
+              className="cursor-pointer"
+            >
+              <div
+                className={`p-0.5 rounded-sm border ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600"
+                    : "bg-gray-100 border border-gray-300"
+                }`}
+              >
+                <div
+                  className={`border p-0.5 rounded-sm ${
+                    theme === "dark"
+                      ? "bg-gray-800 border-gray-400"
+                      : "bg-gray-100 border-gray-300"
+                  }`}
+                >
+                  {theme === "light" ? (
+                    <IoMoonOutline size={15} color="#4b5563" />
+                  ) : (
+                    <Sun size={15} color="white" />
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
