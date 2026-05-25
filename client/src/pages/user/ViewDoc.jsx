@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa6";
 
 import { IoMoonOutline } from "react-icons/io5";
+import { IoIosCloseCircleOutline } from "react-icons/io"
 
 import {
   ZoomIn,
@@ -959,8 +960,8 @@ const ViewDoc = () => {
           onClick={() => setShowInfo(false)}
           className="w-[54px] h-[54px] rounded-full border-2 border-gray-300 flex items-center justify-center"
         >
-          <span className="text-[40px] text-gray-300 leading-none">
-            ×
+          <span className="text-[40px] text-gray-300">
+            <IoIosCloseCircleOutline />
           </span>
         </button>
 
