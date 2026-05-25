@@ -270,16 +270,19 @@ const ViewDoc = () => {
           </span>
         </div>
 
-        {/* ITEM */}
+
+          {/* ITEM */}
         <div className="flex flex-col items-center min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            الرقم الموحد
+            الحالة
           </span>
 
-          <span className="text-[20px] font-semibold tracking-wide">
-            {doc?.unifiedNumber || "—"}
+          <span className={`text-[20px] font-semibold tracking-wide ${statusColor}`}>
+            {formatStatus(doc?.docStatus)}
           </span>
         </div>
+
+
 
         {/* ITEM */}
         <div className="flex flex-col items-center min-w-[120px]">
@@ -291,17 +294,21 @@ const ViewDoc = () => {
             {formatDate(doc?.creationDate)}
           </span>
         </div>
+        
 
         {/* ITEM */}
         <div className="flex flex-col items-center min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            الحالة
+            الرقم الموحد
           </span>
 
-          <span className={`text-[20px] font-semibold tracking-wide ${statusColor}`}>
-            {formatStatus(doc?.docStatus)}
+          <span className="text-[20px] font-semibold tracking-wide">
+            {doc?.unifiedNumber || "—"}
           </span>
         </div>
+
+
+      
 
 
         {/* ITEM */}
