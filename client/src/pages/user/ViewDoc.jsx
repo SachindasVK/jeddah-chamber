@@ -232,6 +232,18 @@ const ViewDoc = () => {
             : "bg-[#d9d9d9] text-gray-800"
         }`}
       >
+
+         {/* ITEM */}
+        <div className="flex flex-col items-center min-w-[120px]">
+          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+            السجل التجاري
+          </span>
+
+          <span className="text-[20px] font-semibold tracking-wide">
+            {doc?.subscriptionNumber || "—"}
+          </span>
+        </div>
+
         {/* ITEM */}
         <div className="flex flex-col items-center min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
@@ -240,6 +252,21 @@ const ViewDoc = () => {
 
           <span className="text-[20px] font-semibold tracking-wide">
             {doc?.docNumber || "—"}
+          </span>
+        </div>
+
+
+         {/* ITEM */}
+        <div className="flex flex-col items-center min-w-[240px]">
+          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+            اسم المنشأة
+          </span>
+
+          <span
+            dir="auto"
+            className="text-[20px] font-semibold text-center leading-8"
+          >
+            {doc?.establishmentName || "—"}
           </span>
         </div>
 
@@ -276,30 +303,6 @@ const ViewDoc = () => {
           </span>
         </div>
 
-        {/* ITEM */}
-        <div className="flex flex-col items-center min-w-[240px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            اسم المنشأة
-          </span>
-
-          <span
-            dir="auto"
-            className="text-[20px] font-semibold text-center leading-8"
-          >
-            {doc?.establishmentName || "—"}
-          </span>
-        </div>
-
-        {/* ITEM */}
-        <div className="flex flex-col items-center min-w-[120px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            السجل التجاري
-          </span>
-
-          <span className="text-[20px] font-semibold tracking-wide">
-            {doc?.subscriptionNumber || "—"}
-          </span>
-        </div>
 
         {/* ITEM */}
         <div className="flex flex-col items-center min-w-[120px]">
@@ -938,8 +941,6 @@ const ViewDoc = () => {
               <Info/>
             </button>
           </div>
-
-          {/* MOBILE DOCUMENT DETAILS */}
           {/* MOBILE DOCUMENT DETAILS */}
 {showInfo && (
   <div className="lg:hidden fixed inset-0 z-50 bg-[#f3f3f3] overflow-y-auto">
