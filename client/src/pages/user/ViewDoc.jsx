@@ -941,7 +941,7 @@ const ViewDoc = () => {
 </div>
           )}
           {/* MOBILE INFO BUTTON */}
-          <div className="lg:hidden flex justify-start py-12 px-3 mb-3">
+          <div className="lg:hidden flex justify-start py-20 px-3 mb-3">
             <button
               onClick={() => setShowInfo((prev) => !prev)}
               className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
@@ -953,8 +953,9 @@ const ViewDoc = () => {
               <Info/>
             </button>
           </div>
+
+
           {/* MOBILE DOCUMENT DETAILS */}
-              {/* MOBILE DOCUMENT DETAILS */}
 {showInfo && (
   <div
     className={`lg:hidden fixed inset-0 z-50 overflow-y-auto ${
