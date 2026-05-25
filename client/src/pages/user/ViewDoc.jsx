@@ -941,7 +941,7 @@ const ViewDoc = () => {
 </div>
           )}
           {/* MOBILE INFO BUTTON */}
-          <div className="lg:hidden flex justify-start py-10 px-3 mb-3">
+          <div className="lg:hidden flex justify-start py-6 px-3 mb-3">
             <button
               onClick={() => setShowInfo((prev) => !prev)}
               className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
@@ -998,6 +998,20 @@ const ViewDoc = () => {
           </p>
         </div>
 
+        {/* commercial Register Number */}
+        <div className="text-right">
+          <p
+            dir="rtl"
+            className="text-[20px] font-bold text-gray-600 mb-4"
+          >
+            رقم السجل التجاري
+          </p>
+
+          <p className="text-[23px] font-medium text-gray-800">
+            {doc?.commercialRegisterNumber || "—"}
+          </p>
+        </div>
+
         {/* UNIFIED NUMBER */}
         <div className="text-right">
           <p
@@ -1036,7 +1050,7 @@ const ViewDoc = () => {
           </p>
 
           <p className="text-[23px] font-medium text-gray-800">
-            {formatStatus(doc?.docStatus)}
+            سارية
           </p>
         </div>
 
@@ -1062,7 +1076,7 @@ const ViewDoc = () => {
           <p
             dir="rtl"
             className="text-[20px] font-bold text-gray-600 mb-4"
-          >
+          > 
             السجل التجاري
           </p>
 
