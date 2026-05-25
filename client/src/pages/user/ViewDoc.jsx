@@ -226,7 +226,7 @@ const ViewDoc = () => {
     >
       {/* DESKTOP DOCUMENT DETAILS */}
       <div
-        className={`hidden lg:flex items-start justify-between px-10 py-10 ${
+        className={`hidden lg:flex items-end justify-between px-10 py-10 ${
           theme === "dark"
             ? "bg-[#d9d9d9] text-gray-800"
             : "bg-[#d9d9d9] text-gray-800"
@@ -239,7 +239,7 @@ const ViewDoc = () => {
             السجل التجاري
           </span>
 
-          <span className="text-[20px] font-semibold tracking-wide">
+          <span className="text-[20px] tracking-wide">
             {doc?.subscriptionNumber || "—"}
           </span>
         </div>
@@ -250,7 +250,7 @@ const ViewDoc = () => {
             رقم الوثيقة
           </span>
 
-          <span className="text-[20px] font-semibold tracking-wide">
+          <span className="text-[20px] tracking-wide">
             {doc?.docNumber || "—"}
           </span>
         </div>
@@ -264,7 +264,7 @@ const ViewDoc = () => {
 
           <span
             dir="auto"
-            className="text-[20px] font-semibold text-center leading-8"
+            className="text-[20px] text-center leading-8"
           >
             {doc?.establishmentName || "—"}
           </span>
@@ -277,7 +277,7 @@ const ViewDoc = () => {
             الحالة
           </span>
 
-          <span className={`text-[20px] font-semibold tracking-wide ${statusColor}`}>
+          <span className={`text-[20px] tracking-wide ${statusColor}`}>
             {formatStatus(doc?.docStatus)}
           </span>
         </div>
@@ -290,11 +290,11 @@ const ViewDoc = () => {
             تاريخ الإصدار
           </span>
 
-          <span className="text-[20px] font-semibold tracking-wide">
+          <span className="text-[20px] tracking-wide">
             {formatDate(doc?.creationDate)}
           </span>
         </div>
-        
+
 
         {/* ITEM */}
         <div className="flex flex-col items-center min-w-[120px]">
@@ -302,7 +302,7 @@ const ViewDoc = () => {
             الرقم الموحد
           </span>
 
-          <span className="text-[20px] font-semibold tracking-wide">
+          <span className="text-[20px] tracking-wide">
             {doc?.unifiedNumber || "—"}
           </span>
         </div>
@@ -317,7 +317,7 @@ const ViewDoc = () => {
             الرقم الإلكتروني
           </span>
 
-          <span className="text-[20px] font-semibold tracking-wide">
+          <span className="text-[20px] tracking-wide">
             {doc?.requestSubmitter || "—"}
           </span>
         </div>
