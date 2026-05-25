@@ -226,7 +226,7 @@ const ViewDoc = () => {
     >
       {/* DESKTOP DOCUMENT DETAILS */}
       <div
-        className={`hidden lg:flex items-end justify-between px-10 py-10 ${
+        className={`hidden lg:flex items-start justify-between px-10 py-10 text-right ${
           theme === "dark"
             ? "bg-[#d9d9d9] text-gray-800"
             : "bg-[#d9d9d9] text-gray-800"
@@ -234,7 +234,7 @@ const ViewDoc = () => {
       >
 
          {/* ITEM */}
-        <div className="flex flex-col items-center min-w-[120px]">
+        <div className="flex flex-col items-end text-right min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
             السجل التجاري
           </span>
@@ -245,7 +245,7 @@ const ViewDoc = () => {
         </div>
 
         {/* ITEM */}
-        <div className="flex flex-col items-center min-w-[120px]">
+        <div className="flex flex-col items-end text-right min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
             رقم الوثيقة
           </span>
@@ -257,7 +257,7 @@ const ViewDoc = () => {
 
 
          {/* ITEM */}
-        <div className="flex flex-col items-center min-w-[240px]">
+        <div className="flex flex-col items-end text-right min-w-[240px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
             اسم المنشأة
           </span>
@@ -272,7 +272,7 @@ const ViewDoc = () => {
 
 
           {/* ITEM */}
-        <div className="flex flex-col items-center min-w-[120px]">
+        <div className="flex flex-col items-end text-right min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
             الحالة
           </span>
@@ -285,7 +285,7 @@ const ViewDoc = () => {
 
 
         {/* ITEM */}
-        <div className="flex flex-col items-center min-w-[120px]">
+        <div className="flex flex-col items-end text-right min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
             تاريخ الإصدار
           </span>
@@ -297,7 +297,7 @@ const ViewDoc = () => {
 
 
         {/* ITEM */}
-        <div className="flex flex-col items-center min-w-[120px]">
+        <div className="flex flex-col items-end text-right min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
             الرقم الموحد
           </span>
@@ -312,7 +312,7 @@ const ViewDoc = () => {
 
 
         {/* ITEM */}
-        <div className="flex flex-col items-center min-w-[120px]">
+        <div className="flex flex-col items-end text-right min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
             الرقم الإلكتروني
           </span>
