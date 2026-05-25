@@ -968,7 +968,7 @@ const ViewDoc = () => {
         {/* TITLE */}
         <h2
           dir="rtl"
-          className="text-[34px] font-extrabold text-[#12385b]"
+          className="text-[30px] font-extrabold text-[#12385b]"
         >
           معلومات الوثيقة
         </h2>
@@ -984,12 +984,12 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[25px] font-bold text-gray-600 mb-4"
+            className="text-[20px] font-bold text-gray-600 mb-4"
           >
             رقم الوثيقة
           </p>
 
-          <p className="text-[30px] font-medium text-gray-800">
+          <p className="text-[23px] font-medium text-gray-800">
             {doc?.docNumber || "—"}
           </p>
         </div>
@@ -998,12 +998,12 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[25px] font-bold text-gray-600 mb-4"
+            className="text-[20px] font-bold text-gray-600 mb-4"
           >
             الرقم الموحد
           </p>
 
-          <p className="text-[30px] font-medium text-gray-800">
+          <p className="text-[23px] font-medium text-gray-800">
             {doc?.unifiedNumber || "—"}
           </p>
         </div>
@@ -1012,12 +1012,12 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[25px] font-bold text-gray-600 mb-4"
+            className="text-[20px] font-bold text-gray-600 mb-4"
           >
             تاريخ الإنشاء
           </p>
 
-          <p className="text-[30px] font-medium text-gray-800">
+          <p className="text-[23px] font-medium text-gray-800">
             {formatDate(doc?.creationDate)}
           </p>
         </div>
@@ -1026,12 +1026,12 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[25px] font-bold text-gray-600 mb-4"
+            className="text-[20px] font-bold text-gray-600 mb-4"
           >
             حالة الوثيقة
           </p>
 
-          <p className="text-[30px] font-medium text-gray-800">
+          <p className="text-[23px] font-medium text-gray-800">
             {formatStatus(doc?.docStatus)}
           </p>
         </div>
@@ -1040,14 +1040,14 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[25px] font-bold text-gray-600 mb-4"
+            className="text-[20px] font-bold text-gray-600 mb-4"
           >
             اسم المنشأة
           </p>
 
           <p
             dir="rtl"
-            className="text-[30px] font-medium text-gray-800 leading-[55px]"
+            className="text-[23px] font-medium text-gray-800 leading-[55px]"
           >
             {doc?.establishmentName || "—"}
           </p>
@@ -1057,12 +1057,12 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[25px] font-bold text-gray-600 mb-4"
+            className="text-[20px] font-bold text-gray-600 mb-4"
           >
             السجل التجاري
           </p>
 
-          <p className="text-[30px] font-medium text-gray-800">
+          <p className="text-[23px] font-medium text-gray-800">
             {doc?.subscriptionNumber || "—"}
           </p>
         </div>
@@ -1071,14 +1071,14 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[25px] font-bold text-gray-600 mb-4"
+            className="text-[20px] font-bold text-gray-600 mb-4"
           >
             مقدم الطلب
           </p>
 
           <p
             dir="rtl"
-            className="text-[30px] font-medium text-gray-800 leading-[55px]"
+            className="text-[23px] font-medium text-gray-800 leading-[55px]"
           >
             {doc?.requestSubmitter || "—"}
           </p>
