@@ -28,6 +28,7 @@ const Dashboard = () => {
   const [establishmentName, setEstablishmentName] = useState("");
   const [subscriptionNumber, setSubscriptionNumber] = useState("");
   const [requestSubmitter, setRequestSubmitter] = useState("");
+  const [commercialRegisterNumber, setCommercialRegisterNumber] = useState("");
 
   useEffect(() => {
     if (!adminToken) {
@@ -62,6 +63,7 @@ const Dashboard = () => {
   establishmentName,
   subscriptionNumber,
   requestSubmitter,
+  commercialRegisterNumber
 },
         { headers: { Authorization: `Bearer ${adminToken}` } },
       );
@@ -248,6 +250,21 @@ const Dashboard = () => {
         placeholder="أدخل اسم مقدم الطلب"
       />
     </div>
+
+    {/* رقم السجل التجاري */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    رقم السجل التجاري
+  </label>
+
+  <input
+    type="text"
+    value={commercialRegisterNumber}
+    onChange={(e) => setCommercialRegisterNumber(e.target.value)}
+    className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+    placeholder="أدخل رقم السجل التجاري"
+  />
+</div>
 
      {/* تاريخ الإنشاء */}
    <div>

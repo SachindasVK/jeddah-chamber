@@ -101,7 +101,7 @@ const PdfList = () => {
                   <th className="p-4 text-gray-700 font-semibold">Doc #</th>
                   <th className="p-4 text-gray-700 font-semibold">Unified #</th>
                   <th className="p-4 text-gray-700 font-semibold">Creation Date</th>
-                  <th className="p-4 text-gray-700 font-semibold">Status</th>
+                  <th className="p-4 text-gray-700 font-semibold">Commercial Register Number</th>
                   <th className="p-4 text-gray-700 font-semibold">Establishment</th>
                   <th className="p-4 text-gray-700 font-semibold">Subscription #</th>
                   <th className="p-4 text-gray-700 font-semibold">Submitter</th>
@@ -145,7 +145,7 @@ const PdfList = () => {
                       <td className="p-4 text-gray-600 text-sm">
                         {doc.docStatus ? (
                           <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
-                            {doc.docStatus}
+                            {doc.commercialRegisterNumber}
                           </span>
                         ) : (
                           <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">

@@ -81,13 +81,6 @@ const ViewDoc = () => {
     return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
-  const statusColor =
-    doc?.docStatus === "active"
-      ? "text-green-600"
-      : doc?.docStatus === "inactive"
-        ? "text-red-500"
-        : "text-yellow-500";
-
   // RESPONSIVE WIDTH
   useEffect(() => {
     const handleResize = () => {
@@ -248,6 +241,17 @@ const ViewDoc = () => {
         {/* ITEM */}
         <div className="flex flex-col items-end text-right min-w-[120px]">
           <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+            رقم السجل التجاري
+          </span>
+
+          <span className="text-[15px] tracking-wide">
+            {doc?.commercialRegisterNumber || "—"}
+          </span>
+        </div>
+
+        {/* ITEM */}
+        <div className="flex flex-col items-end text-right min-w-[120px]">
+          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
             رقم الوثيقة
           </span>
 
@@ -279,7 +283,7 @@ const ViewDoc = () => {
           </span>
 
           <span className={`text-[15px] tracking-wide`}>
-            {formatStatus(doc?.docStatus === 'active' ? "سارية" : "غير سارية")}
+            "سارية"
           </span>
         </div>
 

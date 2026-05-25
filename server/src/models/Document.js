@@ -11,7 +11,7 @@ const documentSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-  }, // e.g., doc_12345
+  },
 
   qrUrl: {
     type: String,
@@ -30,6 +30,10 @@ const documentSchema = new mongoose.Schema({
   unifiedNumber: {
     type: String,
   },
+
+  commercialRegisterNumber: {
+    type: String,
+  }, // رقم السجل التجاري
 
   creationDate: {
     type: Date,
