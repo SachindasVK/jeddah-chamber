@@ -979,7 +979,7 @@ const ViewDoc = () => {
 
     {/* CONTENT */}
     <div className="px-8 pt-10 pb-24">
-      <div className="flex flex-col gap-16">
+      <div className="flex flex-col gap-10">
         {/* DOC NUMBER */}
         <div className="text-right">
           <p
