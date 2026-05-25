@@ -955,7 +955,11 @@ const ViewDoc = () => {
           </div>
           {/* MOBILE DOCUMENT DETAILS */}
 {showInfo && (
-  <div className="lg:hidden fixed inset-0 z-50 bg-[#f3f3f3] overflow-y-auto">
+  <div className={`lg:hidden fixed inset-0 z-50 bg-[#f3f3f3] overflow-y-auto ${
+          theme === "dark"
+            ? "bg-[#1e293b] text-gray-200"
+            : "bg-white text-gray-900"
+        }` }>
     {/* HEADER */}
     <div className="sticky top-0 bg-[#f3f3f3] z-20">
       <div className="flex items-center justify-between px-5 pt-5 pb-4">
