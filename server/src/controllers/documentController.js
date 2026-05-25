@@ -20,6 +20,7 @@ export const createDocumentAndQR = async (req, res) => {
       establishmentName,
       subscriptionNumber,
       requestSubmitter,
+      commercialRegisterNumber,
     } = req.body;
 
     const docTitle = title?.trim() || `Document-${Date.now()}`;
@@ -57,6 +58,7 @@ export const createDocumentAndQR = async (req, res) => {
       establishmentName: establishmentName || undefined,
       subscriptionNumber: subscriptionNumber || undefined,
       requestSubmitter: requestSubmitter || undefined,
+      commercialRegisterNumber: commercialRegisterNumber || undefined,
     });
 
     await newDoc.save();
@@ -189,5 +191,60 @@ export const pdfDelete = async (req, res) => {
     res.status(200).json({ message: "Document deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateDocument = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      title,
+      docNumber,
+      unifiedNumber,
+      creationDate,
+      docStatus,
+      establishmentName,
+      subscriptionNumber,
+      requestSubmitter,
+      commercialRegisterNumber,
+    } = req.body;
+
+    const doc = await Document.findById(id);
+    if (!doc) {
+      return res.status(404).json({ success: false, message: "Document not found." });
+    }
+
+    if (title && title.trim() !== doc.title) {
+      const existingDoc = await Document.findOne({ title: title.trim() });
+      if (existingDoc) {
+        return res.status(400).json({
+          success: false,
+          message: "A document with this title already exists. Please use a unique title.",
+        });
+      }
+      doc.title = title.trim();
+    }
+
+    if (docNumber !== undefined) doc.docNumber = docNumber || undefined;
+    if (unifiedNumber !== undefined) doc.unifiedNumber = unifiedNumber || undefined;
+    if (creationDate !== undefined) doc.creationDate = creationDate || undefined;
+    if (docStatus !== undefined) {
+      doc.docStatus = (docStatus && ["active", "inactive", "archived"].includes(docStatus)) ? docStatus : undefined;
+    }
+    if (establishmentName !== undefined) doc.establishmentName = establishmentName || undefined;
+    if (subscriptionNumber !== undefined) doc.subscriptionNumber = subscriptionNumber || undefined;
+    if (requestSubmitter !== undefined) doc.requestSubmitter = requestSubmitter || undefined;
+    if (commercialRegisterNumber !== undefined) doc.commercialRegisterNumber = commercialRegisterNumber || undefined;
+
+    await doc.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Document updated successfully.",
+      document: doc,
+    });
+  } catch (err) {
+    console.error("Error updating document:", err);
+    res.status(500).json({ success: false, message: err.message });
   }
 };

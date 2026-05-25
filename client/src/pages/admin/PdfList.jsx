@@ -4,6 +4,9 @@ import axios from "axios";
 import Sidebar from "../../components/Sidebar";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 const API = import.meta.env.VITE_API_URL;
 
 const PdfList = () => {
@@ -12,6 +15,20 @@ const PdfList = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const adminToken = localStorage.getItem("adminToken");
+
+  // Edit Modal States
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editDocId, setEditDocId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDocNumber, setEditDocNumber] = useState("");
+  const [editUnifiedNumber, setEditUnifiedNumber] = useState("");
+  const [editCreationDate, setEditCreationDate] = useState(null);
+  const [editDocStatus, setEditDocStatus] = useState("");
+  const [editEstablishmentName, setEditEstablishmentName] = useState("");
+  const [editSubscriptionNumber, setEditSubscriptionNumber] = useState("");
+  const [editRequestSubmitter, setEditRequestSubmitter] = useState("");
+  const [editCommercialRegisterNumber, setEditCommercialRegisterNumber] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const navigate = useNavigate()
 
@@ -79,6 +96,58 @@ const PdfList = () => {
     }
   };
 
+  const openEditModal = (doc) => {
+    setEditDocId(doc._id);
+    setEditTitle(doc.title || "");
+    setEditDocNumber(doc.docNumber || "");
+    setEditUnifiedNumber(doc.unifiedNumber || "");
+    setEditCreationDate(doc.creationDate ? new Date(doc.creationDate) : null);
+    setEditDocStatus(doc.docStatus || "");
+    setEditEstablishmentName(doc.establishmentName || "");
+    setEditSubscriptionNumber(doc.subscriptionNumber || "");
+    setEditRequestSubmitter(doc.requestSubmitter || "");
+    setEditCommercialRegisterNumber(doc.commercialRegisterNumber || "");
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    if (!editTitle.trim()) return toast.error("Please enter a document title");
+
+    setIsUpdating(true);
+    try {
+      await axios.put(
+        `${API}/api/document/${editDocId}`,
+        {
+          title: editTitle.trim(),
+          docNumber: editDocNumber,
+          unifiedNumber: editUnifiedNumber,
+          creationDate: editCreationDate,
+          docStatus: editDocStatus,
+          establishmentName: editEstablishmentName,
+          subscriptionNumber: editSubscriptionNumber,
+          requestSubmitter: editRequestSubmitter,
+          commercialRegisterNumber: editCommercialRegisterNumber,
+        },
+        {
+          headers: { Authorization: `Bearer ${adminToken}` },
+        }
+      );
+      toast.success("Document updated successfully");
+      setIsEditModalOpen(false);
+      fetchDocs(page);
+    } catch (err) {
+      console.error("Failed to update document:", err);
+      if (err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error("Failed to update document");
+      }
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100">
       <Sidebar />
@@ -143,7 +212,7 @@ const PdfList = () => {
                           : "-"}
                       </td>
                       <td className="p-4 text-gray-600 text-sm">
-                        {doc.docStatus ? (
+                        {doc.commercialRegisterNumber ? (
                           <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
                             {doc.commercialRegisterNumber}
                           </span>
@@ -170,7 +239,7 @@ const PdfList = () => {
                             rel="noreferrer"
                             className="text-blue-600 hover:text-blue-800 underline"
                           >
-                            View PDF
+                            Download
                           </a>
                         ) : (
                           <span className="text-orange-700">Pending</span>
@@ -188,6 +257,12 @@ const PdfList = () => {
                               View
                             </button>
                           )}
+                          <button
+                            onClick={() => openEditModal(doc)}
+                            className="text-indigo-600 hover:text-indigo-800 font-medium text-sm transition"
+                          >
+                            Edit
+                          </button>
                           <button
                             onClick={() => handleDelete(doc._id)}
                             className="text-red-500 hover:text-red-700 font-medium text-sm transition"
@@ -227,6 +302,178 @@ const PdfList = () => {
           </div>
         </div>
       </div>
+      
+      {/* Edit Document Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden my-8 transform transition-all">
+            {/* Modal Header */}
+            <div className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center border-b border-gray-700">
+              <h3 className="text-xl font-bold">تعديل الوثيقة (Edit Document)</h3>
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="text-gray-400 hover:text-white text-2xl font-bold leading-none cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <form onSubmit={handleUpdateSubmit} className="p-6 md:p-8 max-h-[80vh] overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Document Title */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">
+                    Document Title (العنوان)
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                    placeholder="Document Title"
+                  />
+                </div>
+
+                {/* رقم الوثيقة */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1 text-right">
+                    رقم الوثيقة (Document Number)
+                  </label>
+                  <input
+                    type="text"
+                    value={editDocNumber}
+                    onChange={(e) => setEditDocNumber(e.target.value)}
+                    className="w-full p-3 border border-gray-300 text-right rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                    placeholder="رقم الوثيقة"
+                  />
+                </div>
+
+                {/* الرقم الموحد */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1 text-right">
+                    الرقم الموحد (Unified Number)
+                  </label>
+                  <input
+                    type="text"
+                    value={editUnifiedNumber}
+                    onChange={(e) => setEditUnifiedNumber(e.target.value)}
+                    className="w-full p-3 border border-gray-300 text-right rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                    placeholder="الرقم الموحد"
+                  />
+                </div>
+
+                {/* حالة الوثيقة */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1 text-right">
+                    حالة الوثيقة (Document Status)
+                  </label>
+                  <select
+                    value={editDocStatus}
+                    onChange={(e) => setEditDocStatus(e.target.value)}
+                    className="w-full p-3 border border-gray-300 text-right rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                  >
+                    <option value="">اختر الحالة (Select Status)</option>
+                    <option value="active">Active (ساري)</option>
+                    <option value="inactive">Inactive (غير نشط)</option>
+                    <option value="archived">Archived (مؤرشف)</option>
+                  </select>
+                </div>
+
+                {/* اسم المنشأة */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1 text-right">
+                    اسم المنشأة (Establishment Name)
+                  </label>
+                  <input
+                    type="text"
+                    value={editEstablishmentName}
+                    onChange={(e) => setEditEstablishmentName(e.target.value)}
+                    className="w-full p-3 border border-gray-300 text-right rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                    placeholder="اسم المنشأة"
+                  />
+                </div>
+
+                {/* رقم الإشتراك */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1 text-right">
+                    رقم الإشتراك (Subscription Number)
+                  </label>
+                  <input
+                    type="text"
+                    value={editSubscriptionNumber}
+                    onChange={(e) => setEditSubscriptionNumber(e.target.value)}
+                    className="w-full p-3 border border-gray-300 text-right rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                    placeholder="رقم الإشتراك"
+                  />
+                </div>
+
+                {/* مقدم الطلب */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1 text-right">
+                    مقدم الطلب (Request Submitter)
+                  </label>
+                  <input
+                    type="text"
+                    value={editRequestSubmitter}
+                    onChange={(e) => setEditRequestSubmitter(e.target.value)}
+                    className="w-full p-3 border border-gray-300 text-right rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                    placeholder="اسم مقدم الطلب"
+                  />
+                </div>
+
+                {/* رقم السجل التجاري */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1 text-right">
+                    رقم السجل التجاري (Commercial Register Number)
+                  </label>
+                  <input
+                    type="text"
+                    value={editCommercialRegisterNumber}
+                    onChange={(e) => setEditCommercialRegisterNumber(e.target.value)}
+                    className="w-full p-3 border border-gray-300 text-right rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                    placeholder="رقم السجل التجاري"
+                  />
+                </div>
+
+                {/* تاريخ الإنشاء */}
+                <div className="flex flex-col">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1 text-right">
+                    تاريخ الإنشاء (Creation Date)
+                  </label>
+                  <DatePicker
+                    selected={editCreationDate}
+                    onChange={(date) => setEditCreationDate(date)}
+                    dateFormat="MMM/dd/yyyy"
+                    placeholderText="MM/DD/YYYY"
+                    className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3 pt-6 border-t border-gray-200 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold transition cursor-pointer"
+                >
+                  Cancel (إلغاء)
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdating}
+                  className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition cursor-pointer flex items-center justify-center gap-2"
+                >
+                  {isUpdating && <div className="w-4 h-4 border-t-2 border-white rounded-full animate-spin"></div>}
+                  Save Changes (حفظ)
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

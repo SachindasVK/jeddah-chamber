@@ -9,6 +9,7 @@ import {
   pdfList,
   Details,
   pdfDelete,
+  updateDocument,
 } from "../controllers/documentController.js";
 
 const router = express.Router();
@@ -23,6 +24,9 @@ router.post("/upload/:docId", verifyToken, uploads.single("pdf"), uploadPdf);
 router.get("/view/:id", pdfDetails);
 router.get("/all", verifyToken, pdfList);
 router.get("/details/:id", verifyToken, Details);
+
+// --- PUT ROUTES ---
+router.put("/:id", verifyToken, updateDocument);
 
 // --- DELETE ROUTES ---
 router.delete("/:id", verifyToken, pdfDelete);
