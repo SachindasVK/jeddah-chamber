@@ -954,21 +954,32 @@ const ViewDoc = () => {
             </button>
           </div>
           {/* MOBILE DOCUMENT DETAILS */}
+              {/* MOBILE DOCUMENT DETAILS */}
 {showInfo && (
-  <div className={`lg:hidden fixed inset-0 z-50 bg-[#f3f3f3] overflow-y-auto ${
-          theme === "dark"
-            ? "bg-[#1e293b] text-gray-200"
-            : "bg-white text-gray-900"
-        }` }>
+  <div
+    className={`lg:hidden fixed inset-0 z-50 overflow-y-auto ${
+      theme === "dark"
+        ? "bg-[#1e293b] text-gray-200"
+        : "bg-[#f3f3f3] text-gray-900"
+    }`}
+  >
     {/* HEADER */}
-    <div className="sticky top-0 bg-[#f3f3f3] z-20">
+    <div
+      className={`sticky top-0 z-20 ${
+        theme === "dark" ? "bg-[#1e293b]" : "bg-[#f3f3f3]"
+      }`}
+    >
       <div className="flex items-center justify-between px-5 pt-5 pb-4">
         {/* CLOSE BUTTON */}
         <button
           onClick={() => setShowInfo(false)}
           className="flex items-center justify-center"
         >
-          <span className="text-[40px] text-gray-300">
+          <span
+            className={`text-[40px] ${
+              theme === "dark" ? "text-gray-200" : "text-gray-400"
+            }`}
+          >
             <IoIosCloseCircleOutline />
           </span>
         </button>
@@ -976,13 +987,19 @@ const ViewDoc = () => {
         {/* TITLE */}
         <h2
           dir="rtl"
-          className="text-[30px] font-extrabold text-[#12385b]"
+          className={`text-[30px] font-extrabold ${
+            theme === "dark" ? "text-white" : "text-[#12385b]"
+          }`}
         >
           معلومات الوثيقة
         </h2>
       </div>
 
-      <div className="border-b border-gray-300" />
+      <div
+        className={`border-b ${
+          theme === "dark" ? "border-gray-700" : "border-gray-300"
+        }`}
+      />
     </div>
 
     {/* CONTENT */}
@@ -992,26 +1009,38 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[20px] font-bold text-gray-600 mb-4"
+            className={`text-[20px] font-bold mb-4 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
           >
             رقم الوثيقة
           </p>
 
-          <p className="text-[23px] font-medium text-gray-800">
+          <p
+            className={`text-[23px] font-medium ${
+              theme === "dark" ? "text-gray-100" : "text-gray-800"
+            }`}
+          >
             {doc?.docNumber || "—"}
           </p>
         </div>
 
-        {/* commercial Register Number */}
+        {/* COMMERCIAL REGISTER NUMBER */}
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[20px] font-bold text-gray-600 mb-4"
+            className={`text-[20px] font-bold mb-4 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
           >
             رقم السجل التجاري
           </p>
 
-          <p className="text-[23px] font-medium text-gray-800">
+          <p
+            className={`text-[23px] font-medium ${
+              theme === "dark" ? "text-gray-100" : "text-gray-800"
+            }`}
+          >
             {doc?.commercialRegisterNumber || "—"}
           </p>
         </div>
@@ -1020,12 +1049,18 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[20px] font-bold text-gray-600 mb-4"
+            className={`text-[20px] font-bold mb-4 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
           >
             الرقم الموحد
           </p>
 
-          <p className="text-[23px] font-medium text-gray-800">
+          <p
+            className={`text-[23px] font-medium ${
+              theme === "dark" ? "text-gray-100" : "text-gray-800"
+            }`}
+          >
             {doc?.unifiedNumber || "—"}
           </p>
         </div>
@@ -1034,12 +1069,18 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[20px] font-bold text-gray-600 mb-4"
+            className={`text-[20px] font-bold mb-4 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
           >
             تاريخ الإنشاء
           </p>
 
-          <p className="text-[23px] font-medium text-gray-800">
+          <p
+            className={`text-[23px] font-medium ${
+              theme === "dark" ? "text-gray-100" : "text-gray-800"
+            }`}
+          >
             {formatDate(doc?.creationDate)}
           </p>
         </div>
@@ -1048,12 +1089,18 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[20px] font-bold text-gray-600 mb-4"
+            className={`text-[20px] font-bold mb-4 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
           >
             حالة الوثيقة
           </p>
 
-          <p className="text-[23px] font-medium text-gray-800">
+          <p
+            className={`text-[23px] font-medium ${
+              theme === "dark" ? "text-gray-100" : "text-gray-800"
+            }`}
+          >
             سارية
           </p>
         </div>
@@ -1062,29 +1109,39 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[20px] font-bold text-gray-600 mb-4"
+            className={`text-[20px] font-bold mb-4 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
           >
             اسم المنشأة
           </p>
 
           <p
             dir="rtl"
-            className="text-[23px] font-medium text-gray-800 leading-[55px]"
+            className={`text-[23px] font-medium leading-[55px] ${
+              theme === "dark" ? "text-gray-100" : "text-gray-800"
+            }`}
           >
             {doc?.establishmentName || "—"}
           </p>
         </div>
 
-        {/* COMMERCIAL REG */}
+        {/* COMMERCIAL RECORD */}
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[20px] font-bold text-gray-600 mb-4"
-          > 
+            className={`text-[20px] font-bold mb-4 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
+          >
             السجل التجاري
           </p>
 
-          <p className="text-[23px] font-medium text-gray-800">
+          <p
+            className={`text-[23px] font-medium ${
+              theme === "dark" ? "text-gray-100" : "text-gray-800"
+            }`}
+          >
             {doc?.subscriptionNumber || "—"}
           </p>
         </div>
@@ -1093,14 +1150,18 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className="text-[20px] font-bold text-gray-600 mb-4"
+            className={`text-[20px] font-bold mb-4 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
           >
             مقدم الطلب
           </p>
 
           <p
             dir="rtl"
-            className="text-[23px] font-medium text-gray-800 leading-[55px]"
+            className={`text-[23px] font-medium leading-[55px] ${
+              theme === "dark" ? "text-gray-100" : "text-gray-800"
+            }`}
           >
             {doc?.requestSubmitter || "—"}
           </p>
