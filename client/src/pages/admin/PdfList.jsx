@@ -167,12 +167,12 @@ const PdfList = () => {
                 <tr>
                   <th className="p-4 text-gray-700 font-semibold">#</th>
                   <th className="p-4 text-gray-700 font-semibold">Title</th>
-                  <th className="p-4 text-gray-700 font-semibold">Doc #</th>
-                  <th className="p-4 text-gray-700 font-semibold">Unified #</th>
+                  <th className="p-4 text-gray-700 font-semibold">Doc</th>
+                  <th className="p-4 text-gray-700 font-semibold">Unified</th>
                   <th className="p-4 text-gray-700 font-semibold">Creation Date</th>
-                  <th className="p-4 text-gray-700 font-semibold">Commercial Register Number</th>
+                  <th className="p-4 text-gray-700 font-semibold">Register Number</th>
                   <th className="p-4 text-gray-700 font-semibold">Establishment</th>
-                  <th className="p-4 text-gray-700 font-semibold">Subscription #</th>
+                  <th className="p-4 text-gray-700 font-semibold">Subscription</th>
                   <th className="p-4 text-gray-700 font-semibold">Submitter</th>
                   <th className="p-4 text-gray-700 font-semibold">PDF</th>
                   <th className="p-4 text-gray-700 font-semibold text-center">Actions</th>
