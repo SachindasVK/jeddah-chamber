@@ -63,7 +63,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/view" element={<ViewDoc />} />
+          <Route path="/view/:id" element={<ViewDoc />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         {!location.pathname.startsWith("/view/") && (
