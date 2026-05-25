@@ -926,7 +926,7 @@ const ViewDoc = () => {
 </div>
           )}
           {/* MOBILE INFO BUTTON */}
-          <div className="lg:hidden flex justify-start px-3 mb-3">
+          <div className="lg:hidden flex justify-start py-10 px-3 mb-3">
             <button
               onClick={() => setShowInfo((prev) => !prev)}
               className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
@@ -940,65 +940,144 @@ const ViewDoc = () => {
           </div>
 
           {/* MOBILE DOCUMENT DETAILS */}
-          {showInfo && (
-            <div className="lg:hidden px-3 mb-4">
-              <div
-                className={`rounded-md p-3 border text-sm ${
-                  theme === "dark"
-                    ? "bg-gray-800 border-gray-700 text-gray-200"
-                    : "bg-white border-gray-300 text-gray-700"
-                }`}
-              >
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <p dir="rtl" className="text-xs text-gray-400">رقم الوثيقة</p>
+          {/* MOBILE DOCUMENT DETAILS */}
+{showInfo && (
+  <div className="lg:hidden fixed inset-0 z-50 bg-[#f3f3f3] overflow-y-auto">
+    {/* HEADER */}
+    <div className="sticky top-0 bg-[#f3f3f3] z-20">
+      <div className="flex items-center justify-between px-5 pt-5 pb-4">
+        {/* CLOSE BUTTON */}
+        <button
+          onClick={() => setShowInfo(false)}
+          className="w-[54px] h-[54px] rounded-full border-2 border-gray-300 flex items-center justify-center"
+        >
+          <span className="text-[40px] text-gray-300 leading-none">
+            ×
+          </span>
+        </button>
 
-                    <p className="font-semibold">{doc?.docNumber || "—"}</p>
-                  </div>
+        {/* TITLE */}
+        <h2
+          dir="rtl"
+          className="text-[34px] font-extrabold text-[#12385b]"
+        >
+          معلومات الوثيقة
+        </h2>
+      </div>
 
-                  <div>
-                    <p dir="rtl" className="text-xs text-gray-400">الرقم الموحد</p>
+      <div className="border-b border-gray-300" />
+    </div>
 
-                    <p className="font-semibold">{doc?.unifiedNumber || "—"}</p>
-                  </div>
+    {/* CONTENT */}
+    <div className="px-8 pt-10 pb-24">
+      <div className="flex flex-col gap-16">
+        {/* DOC NUMBER */}
+        <div className="text-right">
+          <p
+            dir="rtl"
+            className="text-[25px] font-bold text-gray-600 mb-4"
+          >
+            رقم الوثيقة
+          </p>
 
-                  <div>
-                    <p dir="rtl" className="text-xs text-gray-400">تاريخ الإصدار</p>
+          <p className="text-[30px] font-medium text-gray-800">
+            {doc?.docNumber || "—"}
+          </p>
+        </div>
 
-                    <p className="font-semibold">{formatDate(doc?.creationDate)}</p>
-                  </div>
+        {/* UNIFIED NUMBER */}
+        <div className="text-right">
+          <p
+            dir="rtl"
+            className="text-[25px] font-bold text-gray-600 mb-4"
+          >
+            الرقم الموحد
+          </p>
 
-                  <div>
-                    <p dir="rtl" className="text-xs text-gray-400">الحالة</p>
+          <p className="text-[30px] font-medium text-gray-800">
+            {doc?.unifiedNumber || "—"}
+          </p>
+        </div>
 
-                    <p className={`font-semibold ${statusColor}`}>
-                      {formatStatus(doc?.docStatus)}
-                    </p>
-                  </div>
+        {/* DATE */}
+        <div className="text-right">
+          <p
+            dir="rtl"
+            className="text-[25px] font-bold text-gray-600 mb-4"
+          >
+            تاريخ الإنشاء
+          </p>
 
-                  <div className="col-span-2">
-                    <p dir="rtl" className="text-xs text-gray-400">اسم المنشأة</p>
+          <p className="text-[30px] font-medium text-gray-800">
+            {formatDate(doc?.creationDate)}
+          </p>
+        </div>
 
-                    <p dir="auto" className="font-semibold">
-                      {doc?.establishmentName || "—"}
-                    </p>
-                  </div>
+        {/* STATUS */}
+        <div className="text-right">
+          <p
+            dir="rtl"
+            className="text-[25px] font-bold text-gray-600 mb-4"
+          >
+            حالة الوثيقة
+          </p>
 
-                  <div>
-                    <p dir="rtl" className="text-xs text-gray-400">السجل التجاري</p>
+          <p className="text-[30px] font-medium text-gray-800">
+            {formatStatus(doc?.docStatus)}
+          </p>
+        </div>
 
-                    <p className="font-semibold">{doc?.subscriptionNumber || "—"}</p>
-                  </div>
+        {/* ESTABLISHMENT */}
+        <div className="text-right">
+          <p
+            dir="rtl"
+            className="text-[25px] font-bold text-gray-600 mb-4"
+          >
+            اسم المنشأة
+          </p>
 
-                  <div>
-                    <p dir="rtl" className="text-xs text-gray-400">الرقم الإلكتروني</p>
+          <p
+            dir="rtl"
+            className="text-[30px] font-medium text-gray-800 leading-[55px]"
+          >
+            {doc?.establishmentName || "—"}
+          </p>
+        </div>
 
-                    <p className="font-semibold">{doc?.requestSubmitter || "—"}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )} 
+        {/* COMMERCIAL REG */}
+        <div className="text-right">
+          <p
+            dir="rtl"
+            className="text-[25px] font-bold text-gray-600 mb-4"
+          >
+            السجل التجاري
+          </p>
+
+          <p className="text-[30px] font-medium text-gray-800">
+            {doc?.subscriptionNumber || "—"}
+          </p>
+        </div>
+
+        {/* REQUEST SUBMITTER */}
+        <div className="text-right">
+          <p
+            dir="rtl"
+            className="text-[25px] font-bold text-gray-600 mb-4"
+          >
+            مقدم الطلب
+          </p>
+
+          <p
+            dir="rtl"
+            className="text-[30px] font-medium text-gray-800 leading-[55px]"
+          >
+            {doc?.requestSubmitter || "—"}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
         </div>
       </div>
     </div>
