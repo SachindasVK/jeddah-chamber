@@ -958,7 +958,7 @@ const ViewDoc = () => {
         {/* CLOSE BUTTON */}
         <button
           onClick={() => setShowInfo(false)}
-          className="w-[54px] h-[54px] rounded-full border-2 border-gray-300 flex items-center justify-center"
+          className="flex items-center justify-center"
         >
           <span className="text-[40px] text-gray-300">
             <IoIosCloseCircleOutline />
