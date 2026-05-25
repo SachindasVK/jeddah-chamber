@@ -144,6 +144,7 @@ export const pdfDetails = async (req, res) => {
       establishmentName: doc.establishmentName,
       subscriptionNumber: doc.subscriptionNumber,
       requestSubmitter: doc.requestSubmitter,
+      commercialRegisterNumber: doc.commercialRegisterNumber,
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
