@@ -239,7 +239,7 @@ const ViewDoc = () => {
             السجل التجاري
           </span>
 
-          <span className="text-[20px] tracking-wide">
+          <span className="text-[15px] tracking-wide">
             {doc?.subscriptionNumber || "—"}
           </span>
         </div>
@@ -250,7 +250,7 @@ const ViewDoc = () => {
             رقم الوثيقة
           </span>
 
-          <span className="text-[20px] tracking-wide">
+          <span className="text-[15px] tracking-wide">
             {doc?.docNumber || "—"}
           </span>
         </div>
@@ -264,7 +264,7 @@ const ViewDoc = () => {
 
           <span
             dir="auto"
-            className="text-[20px] text-center leading-8"
+            className="text-[15px] text-center leading-8"
           >
             {doc?.establishmentName || "—"}
           </span>
@@ -277,8 +277,8 @@ const ViewDoc = () => {
             الحالة
           </span>
 
-          <span className={`text-[20px] tracking-wide ${statusColor}`}>
-            {formatStatus(doc?.docStatus)}
+          <span className={`text-[15px] tracking-wide`}>
+            {formatStatus(doc?.docStatus === 'active' ? "سارية" : "غير سارية")}
           </span>
         </div>
 
@@ -290,7 +290,7 @@ const ViewDoc = () => {
             تاريخ الإصدار
           </span>
 
-          <span className="text-[20px] tracking-wide">
+          <span className="text-[15px] tracking-wide">
             {formatDate(doc?.creationDate)}
           </span>
         </div>
@@ -302,7 +302,7 @@ const ViewDoc = () => {
             الرقم الموحد
           </span>
 
-          <span className="text-[20px] tracking-wide">
+          <span className="text-[15px] tracking-wide">
             {doc?.unifiedNumber || "—"}
           </span>
         </div>
@@ -317,7 +317,7 @@ const ViewDoc = () => {
             الرقم الإلكتروني
           </span>
 
-          <span className="text-[20px] tracking-wide">
+          <span className="text-[15px] tracking-wide">
             {doc?.requestSubmitter || "—"}
           </span>
         </div>
