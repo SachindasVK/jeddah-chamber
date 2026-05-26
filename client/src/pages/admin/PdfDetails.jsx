@@ -107,7 +107,7 @@ const PdfDetails = () => {
                   Page {pageNumber} of {numPages || "--"}
                 </span>
                 <button
-                  disabled={pageNumber >= numPages}
+                  disabled={!numPages || pageNumber >= numPages}
                   onClick={() => setPageNumber((prev) => prev + 1)}
                   className="px-3 py-1 bg-gray-600 text-white rounded disabled:opacity-50 hover:bg-gray-700 transition"
                 >
