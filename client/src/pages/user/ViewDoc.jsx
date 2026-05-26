@@ -214,18 +214,6 @@ const ViewDoc = () => {
             </span>
           </div>
 
-          {/* ITEM */}
-          <div className="flex flex-col items-end text-right min-w-[120px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              رقم الوثيقة
-            </span>
-
-            <span className="text-[15px] tracking-wide">
-              {doc?.docNumber || "—"}
-            </span>
-          </div>
-
-
            {/* ITEM */}
           <div className="flex flex-col items-end text-right min-w-[240px]">
             <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
@@ -239,6 +227,7 @@ const ViewDoc = () => {
               {doc?.establishmentName || "—"}
             </span>
           </div>
+
 
 
             {/* ITEM */}
@@ -278,6 +267,16 @@ const ViewDoc = () => {
           </div>
 
 
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              رقم الوثيقة
+            </span>
+
+            <span className="text-[15px] tracking-wide">
+              {doc?.docNumber || "—"}
+            </span>
+          </div>
       
 
 
