@@ -185,7 +185,7 @@ const ViewDoc = () => {
       {/* DESKTOP DOCUMENT DETAILS */}
       {!loadingDetails && finalUrl && hasDetails && (
         <div
-          className={`hidden lg:flex flex-wrap items-end justify-start xl:justify-between gap-x-6 gap-y-6 px-6 py-6 xl:px-10 xl:py-8 text-right ${
+          className={`hidden lg:flex flex-wrap items-start justify-end xl:justify-between gap-x-6 gap-y-6 px-6 py-6 xl:px-10 xl:py-8 text-right ${
             theme === "dark"
               ? "bg-[#d9d9d9] text-gray-800"
               : "bg-[#d9d9d9] text-gray-800"
