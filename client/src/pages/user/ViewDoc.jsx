@@ -906,16 +906,21 @@ const ViewDoc = () => {
           {/* MOBILE INFO BUTTON */}
           {!loadingDetails && finalUrl && hasDetails && (
             <div className="lg:hidden flex justify-start py-25 px-3 mb-3">
-              <button
-                onClick={() => setShowInfo((prev) => !prev)}
-                className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
-                  theme === "dark"
-                    ? "bg-gray-800 border-gray-600 text-white"
-                    : "bg-white border-gray-300 text-gray-700"
-                } shadow-sm`}
-              >
-                <Info/>
-              </button>
+              <div className="info-btn-wrap">
+                <div className="info-pulse info-pulse-1" />
+                <div className="info-pulse info-pulse-2" />
+                <div className="info-pulse info-pulse-3" />
+                <button
+                  onClick={() => setShowInfo((prev) => !prev)}
+                  className={`relative z-10 w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
+                    theme === "dark"
+                      ? "bg-gray-800 border-gray-600 text-white"
+                      : "bg-white border-gray-300 text-gray-700"
+                  } shadow-sm`}
+                >
+                  <Info />
+                </button>
+              </div>
             </div>
           )}
 
