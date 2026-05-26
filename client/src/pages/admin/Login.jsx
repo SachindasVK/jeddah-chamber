@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { API_URL } from "../../services/api";
-import jccLogoblue from '../../assets/jccLogoblue.jpeg'
+import jccLogoblue from '../../assets/jccLogoblue.webp'
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });

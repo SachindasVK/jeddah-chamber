@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -85,11 +85,7 @@ const ViewDoc = () => {
     });
   };
 
-  // FORMAT STATUS
-  const formatStatus = (status) => {
-    if (!status) return "—";
-    return status.charAt(0).toUpperCase() + status.slice(1);
-  };
+
 
   // RESPONSIVE WIDTH
   useEffect(() => {
