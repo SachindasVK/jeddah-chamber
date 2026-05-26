@@ -904,7 +904,7 @@ const ViewDoc = () => {
 </div>
           )}
           {/* MOBILE INFO BUTTON */}
-          {!loadingDetails && finalUrl && hasDetails && (
+          {!loadingDetails && finalUrl && hasDetails && numPages && (
             <div className="lg:hidden flex justify-start py-25 px-3 mb-3">
               <div className="info-btn-wrap">
                 <div className="info-pulse info-pulse-1" />
