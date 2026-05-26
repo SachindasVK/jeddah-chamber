@@ -1091,7 +1091,7 @@ const ViewDoc = () => {
           </p>
 
           <p
-            className={`text-[23px] font-medium ${
+            className={`text-[23px] font-medium underline ${
               theme === "dark" ? "text-gray-100" : "text-gray-800"
             }`}
           >
