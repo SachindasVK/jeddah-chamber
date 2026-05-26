@@ -37,9 +37,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 const ViewDoc = () => {
   const { id } = useParams();
 
-  const containerRef = useRef(null);
-  const lastDistance = useRef(null);
-
   const [showSidebar, setShowSidebar] = useState(false);
 
   const [doc, setDoc] = useState(null);
@@ -62,6 +59,19 @@ const ViewDoc = () => {
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
 
   const finalUrl = doc?.pdfUrl || doc?.pdfPath;
+
+  const hasDetails = !!(
+    doc &&
+    (
+      (doc.subscriptionNumber && String(doc.subscriptionNumber).trim() !== "") ||
+      (doc.commercialRegisterNumber && String(doc.commercialRegisterNumber).trim() !== "") ||
+      (doc.docNumber && String(doc.docNumber).trim() !== "") ||
+      (doc.establishmentName && String(doc.establishmentName).trim() !== "") ||
+      (doc.creationDate && String(doc.creationDate).trim() !== "") ||
+      (doc.unifiedNumber && String(doc.unifiedNumber).trim() !== "") ||
+      (doc.requestSubmitter && String(doc.requestSubmitter).trim() !== "")
+    )
+  );
 
   // FORMAT DATE
   const formatDate = (dateStr) => {
@@ -106,49 +116,7 @@ const ViewDoc = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // PINCH ZOOM
-  useEffect(() => {
-    const el = containerRef.current;
 
-    if (!el) return;
-
-    const getDistance = (t1, t2) => {
-      return Math.hypot(t2.pageX - t1.pageX, t2.pageY - t1.pageY);
-    };
-
-    const onTouchMove = (e) => {
-      if (e.touches.length !== 2) return;
-
-      const distance = getDistance(e.touches[0], e.touches[1]);
-
-      if (!lastDistance.current) {
-        lastDistance.current = distance;
-        return;
-      }
-
-      const delta = distance - lastDistance.current;
-
-      if (Math.abs(delta) > 10) {
-        setZoom((prev) =>
-          delta > 0 ? Math.min(prev + 0.1, 3) : Math.max(prev - 0.1, 0.5),
-        );
-
-        lastDistance.current = distance;
-      }
-    };
-
-    const onTouchEnd = () => {
-      lastDistance.current = null;
-    };
-
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
-    el.addEventListener("touchend", onTouchEnd);
-
-    return () => {
-      el.removeEventListener("touchmove", onTouchMove);
-      el.removeEventListener("touchend", onTouchEnd);
-    };
-  }, []);
 
   // SAVE THEME
   useEffect(() => {
@@ -219,114 +187,116 @@ const ViewDoc = () => {
       }`}
     >
       {/* DESKTOP DOCUMENT DETAILS */}
-      <div
-        className={`hidden lg:flex items-start justify-between px-10 py-10 text-right ${
-          theme === "dark"
-            ? "bg-[#d9d9d9] text-gray-800"
-            : "bg-[#d9d9d9] text-gray-800"
-        }`}
-      >
+      {!loadingDetails && finalUrl && hasDetails && (
+        <div
+          className={`hidden lg:flex items-start justify-between px-10 py-10 text-right ${
+            theme === "dark"
+              ? "bg-[#d9d9d9] text-gray-800"
+              : "bg-[#d9d9d9] text-gray-800"
+          }`}
+        >
 
-         {/* ITEM */}
-        <div className="flex flex-col items-end text-right min-w-[120px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            السجل التجاري
-          </span>
+           {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              السجل التجاري
+            </span>
 
-          <span className="text-[15px] tracking-wide">
-            {doc?.subscriptionNumber || "—"}
-          </span>
-        </div>
+            <span className="text-[15px] tracking-wide">
+              {doc?.subscriptionNumber || "—"}
+            </span>
+          </div>
 
-        {/* ITEM */}
-        <div className="flex flex-col items-end text-right min-w-[120px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            رقم السجل التجاري
-          </span>
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              رقم السجل التجاري
+            </span>
 
-          <span className="text-[15px] tracking-wide">
-            {doc?.commercialRegisterNumber || "—"}
-          </span>
-        </div>
+            <span className="text-[15px] tracking-wide">
+              {doc?.commercialRegisterNumber || "—"}
+            </span>
+          </div>
 
-        {/* ITEM */}
-        <div className="flex flex-col items-end text-right min-w-[120px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            رقم الوثيقة
-          </span>
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              رقم الوثيقة
+            </span>
 
-          <span className="text-[15px] tracking-wide">
-            {doc?.docNumber || "—"}
-          </span>
-        </div>
+            <span className="text-[15px] tracking-wide">
+              {doc?.docNumber || "—"}
+            </span>
+          </div>
 
 
-         {/* ITEM */}
-        <div className="flex flex-col items-end text-right min-w-[240px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            اسم المنشأة
-          </span>
+           {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[240px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              اسم المنشأة
+            </span>
 
-          <span
-            dir="auto"
-            className="text-[15px] text-center leading-8"
-          >
-            {doc?.establishmentName || "—"}
-          </span>
-        </div>
+            <span
+              dir="auto"
+              className="text-[15px] text-center leading-8"
+            >
+              {doc?.establishmentName || "—"}
+            </span>
+          </div>
+
+
+            {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              الحالة
+            </span>
+
+            <span className={`text-[15px] tracking-wide`}>
+              "سارية"
+            </span>
+          </div>
+
 
 
           {/* ITEM */}
-        <div className="flex flex-col items-end text-right min-w-[120px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            الحالة
-          </span>
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              تاريخ الإصدار
+            </span>
 
-          <span className={`text-[15px] tracking-wide`}>
-            "سارية"
-          </span>
-        </div>
-
-
-
-        {/* ITEM */}
-        <div className="flex flex-col items-end text-right min-w-[120px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            تاريخ الإصدار
-          </span>
-
-          <span className="text-[15px] tracking-wide">
-            {formatDate(doc?.creationDate)}
-          </span>
-        </div>
+            <span className="text-[15px] tracking-wide">
+              {formatDate(doc?.creationDate)}
+            </span>
+          </div>
 
 
-        {/* ITEM */}
-        <div className="flex flex-col items-end text-right min-w-[120px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            الرقم الموحد
-          </span>
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              الرقم الموحد
+            </span>
 
-          <span className="text-[15px] tracking-wide">
-            {doc?.unifiedNumber || "—"}
-          </span>
-        </div>
+            <span className="text-[15px] tracking-wide">
+              {doc?.unifiedNumber || "—"}
+            </span>
+          </div>
 
 
       
 
 
-        {/* ITEM */}
-        <div className="flex flex-col items-end text-right min-w-[120px]">
-          <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-            الرقم الإلكتروني
-          </span>
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              الرقم الإلكتروني
+            </span>
 
-          <span className="text-[15px] tracking-wide">
-            {doc?.requestSubmitter || "—"}
-          </span>
+            <span className="text-[15px] tracking-wide">
+              {doc?.requestSubmitter || "—"}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
       {/* HEADER TOOLBAR */}
       <div
         className={`w-full sticky top-0 z-10 shadow-md border p-3 ${
@@ -628,9 +598,9 @@ const ViewDoc = () => {
               } border p-0.5 rounded-sm`}
             >
               <div
-                className={`border ${
+                className={`flex items-center border ${
                   theme === "dark" ? "border-gray-600" : "border-gray-300"
-                } px-1 flex items-center py-0.5 rounded-sm`}
+                } px-1 py-0.5 rounded-sm`}
               >
                 <button
                   onClick={() => setPageNumber((prev) => Math.max(prev - 1, 1))}
@@ -640,12 +610,12 @@ const ViewDoc = () => {
               </div>
 
               <div
-                className={`border ${
+                className={`border flex items-center ${
                   theme === "dark" ? "border-gray-600" : "border-gray-300"
                 } py-0 px-5 rounded-sm`}
               >
                 <div
-                  className={`px-4 text-sm font-bold ${
+                  className={`px-4 text-sm py-0 font-bold ${
                     theme === "dark" ? "text-gray-200" : "text-gray-600"
                   }`}
                 >
@@ -899,13 +869,11 @@ const ViewDoc = () => {
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* PDF VIEWER */}
         <div
-          ref={containerRef}
           className={`flex-1 overflow-auto py-4 relative ${
             theme === "dark" ? "bg-gray-900" : "bg-gray-100"
           }`}
           style={{
             height: "calc(100vh - 140px)",
-            touchAction: "pan-x pan-y",
           }}
         >
           {loadingDetails ? (
@@ -941,22 +909,24 @@ const ViewDoc = () => {
 </div>
           )}
           {/* MOBILE INFO BUTTON */}
-          <div className="lg:hidden flex justify-start py-20 px-3 mb-3">
-            <button
-              onClick={() => setShowInfo((prev) => !prev)}
-              className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
-                theme === "dark"
-                  ? "bg-gray-800 border-gray-600 text-white"
-                  : "bg-white border-gray-300 text-gray-700"
-              } shadow-sm`}
-            >
-              <Info/>
-            </button>
-          </div>
+          {!loadingDetails && finalUrl && hasDetails && (
+            <div className="lg:hidden flex justify-start py-20 px-3 mb-3">
+              <button
+                onClick={() => setShowInfo((prev) => !prev)}
+                className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
+                  theme === "dark"
+                    ? "bg-gray-800 border-gray-600 text-white"
+                    : "bg-white border-gray-300 text-gray-700"
+                } shadow-sm`}
+              >
+                <Info/>
+              </button>
+            </div>
+          )}
 
 
           {/* MOBILE DOCUMENT DETAILS */}
-{showInfo && (
+{showInfo && hasDetails && (
   <div
     className={`lg:hidden fixed inset-0 z-50 overflow-y-auto ${
       theme === "dark"
