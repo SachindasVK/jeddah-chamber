@@ -185,7 +185,8 @@ const ViewDoc = () => {
       {/* DESKTOP DOCUMENT DETAILS */}
       {!loadingDetails && finalUrl && hasDetails && (
         <div
-          className={`hidden lg:flex items-start justify-between px-10 py-10 text-right ${
+          dir="rtl"
+          className={`hidden lg:flex flex-wrap items-start justify-start xl:justify-between gap-x-6 gap-y-6 px-6 py-6 xl:px-10 xl:py-8 text-right ${
             theme === "dark"
               ? "bg-[#d9d9d9] text-gray-800"
               : "bg-[#d9d9d9] text-gray-800"
@@ -248,7 +249,7 @@ const ViewDoc = () => {
             </span>
 
             <span className={`text-[15px] tracking-wide`}>
-              "سارية"
+              سارية
             </span>
           </div>
 
@@ -906,7 +907,7 @@ const ViewDoc = () => {
           )}
           {/* MOBILE INFO BUTTON */}
           {!loadingDetails && finalUrl && hasDetails && (
-            <div className="lg:hidden flex justify-start py-20 px-3 mb-3">
+            <div className="lg:hidden flex justify-start py-25 px-3 mb-3">
               <button
                 onClick={() => setShowInfo((prev) => !prev)}
                 className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
