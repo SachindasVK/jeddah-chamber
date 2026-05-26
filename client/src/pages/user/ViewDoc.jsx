@@ -185,124 +185,112 @@ const ViewDoc = () => {
       {/* DESKTOP DOCUMENT DETAILS */}
       {!loadingDetails && finalUrl && hasDetails && (
         <div
-  className={`hidden lg:grid grid-cols-7 gap-y-8 gap-x-6 px-8 py-8 ${
-    theme === "dark"
-      ? "bg-[#d9d9d9] text-gray-800"
-      : "bg-[#d9d9d9] text-gray-800"
-  }`}
->
-  {/* ITEM */}
-  <div className="flex flex-col items-center text-center">
-    <span
-      dir="rtl"
-      className="text-[13px] text-gray-500 font-medium mb-2"
-    >
-      السجل التجاري
-    </span>
+          className={`hidden lg:flex flex-wrap items-start justify-end xl:justify-between gap-x-6 gap-y-6 px-6 py-6 xl:px-10 xl:py-8 text-right ${
+            theme === "dark"
+              ? "bg-[#d9d9d9] text-gray-800"
+              : "bg-[#d9d9d9] text-gray-800"
+          }`}
+        >
 
-    <span className="text-[15px] tracking-wide">
-      {doc?.subscriptionNumber || "—"}
-    </span>
-  </div>
+           {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              السجل التجاري
+            </span>
 
-  {/* ITEM */}
-  <div className="flex flex-col items-center text-center">
-    <span
-      dir="rtl"
-      className="text-[13px] text-gray-500 font-medium mb-2"
-    >
-      رقم السجل التجاري
-    </span>
+            <span className="text-[15px] tracking-wide">
+              {doc?.subscriptionNumber || "—"}
+            </span>
+          </div>
 
-    <span className="text-[15px] tracking-wide">
-      {doc?.commercialRegisterNumber || "—"}
-    </span>
-  </div>
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              رقم السجل التجاري
+            </span>
 
-  {/* ITEM */}
-  <div className="flex flex-col items-center text-center">
-    <span
-      dir="rtl"
-      className="text-[13px] text-gray-500 font-medium mb-2"
-    >
-      اسم المنشأة
-    </span>
+            <span className="text-[15px] tracking-wide">
+              {doc?.commercialRegisterNumber || "—"}
+            </span>
+          </div>
 
-    <span dir="auto" className="text-[15px] leading-7">
-      {doc?.establishmentName || "—"}
-    </span>
-  </div>
+           {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[240px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              اسم المنشأة
+            </span>
 
-  {/* ITEM */}
-  <div className="flex flex-col items-center text-center">
-    <span
-      dir="rtl"
-      className="text-[13px] text-gray-500 font-medium mb-2"
-    >
-      الحالة
-    </span>
+            <span
+              dir="auto"
+              className="text-[15px] text-center leading-8"
+            >
+              {doc?.establishmentName || "—"}
+            </span>
+          </div>
 
-    <span className="text-[15px] tracking-wide">
-      سارية
-    </span>
-  </div>
 
-  {/* ITEM */}
-  <div className="flex flex-col items-center text-center">
-    <span
-      dir="rtl"
-      className="text-[13px] text-gray-500 font-medium mb-2"
-    >
-      تاريخ الإصدار
-    </span>
 
-    <span className="text-[15px] tracking-wide">
-      {formatDate(doc?.creationDate)}
-    </span>
-  </div>
+            {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              الحالة
+            </span>
 
-  {/* ITEM */}
-  <div className="flex flex-col items-center text-center">
-    <span
-      dir="rtl"
-      className="text-[13px] text-gray-500 font-medium mb-2"
-    >
-      الرقم الموحد
-    </span>
+            <span className={`text-[15px] tracking-wide`}>
+              سارية
+            </span>
+          </div>
 
-    <span className="text-[15px] tracking-wide">
-      {doc?.unifiedNumber || "—"}
-    </span>
-  </div>
 
-  {/* ITEM */}
-  <div className="flex flex-col items-center text-center">
-    <span
-      dir="rtl"
-      className="text-[13px] text-gray-500 font-medium mb-2"
-    >
-      رقم الوثيقة
-    </span>
 
-    <span className="text-[15px] tracking-wide">
-      {doc?.docNumber || "—"}
-    </span>
-  </div>
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              تاريخ الإصدار
+            </span>
 
-  {/* LAST ROW */}
-  <div className="col-span-7 flex flex-col items-end text-right mt-2">
-    <span
-      dir="rtl"
-      className="text-[13px] text-gray-500 font-medium mb-2"
-    >
-      الرقم الإلكتروني
-    </span>
+            <span className="text-[15px] tracking-wide">
+              {formatDate(doc?.creationDate)}
+            </span>
+          </div>
 
-    <span className="text-[15px] tracking-wide">
-      {doc?.requestSubmitter || "—"}
-    </span>
-  </div>
-</div>
+
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              الرقم الموحد
+            </span>
+
+            <span className="text-[15px] tracking-wide">
+              {doc?.unifiedNumber || "—"}
+            </span>
+          </div>
+
+
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              رقم الوثيقة
+            </span>
+
+            <span className="text-[15px] tracking-wide">
+              {doc?.docNumber || "—"}
+            </span>
+          </div>
+      
+
+
+          {/* ITEM */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+              الرقم الإلكتروني
+            </span>
+
+            <span className="text-[15px] tracking-wide">
+              {doc?.requestSubmitter || "—"}
+            </span>
+          </div>
+        </div>
       )}
       {/* HEADER TOOLBAR */}
       <div
