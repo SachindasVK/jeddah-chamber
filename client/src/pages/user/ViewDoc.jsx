@@ -187,7 +187,7 @@ const ViewDoc = () => {
         <div
           className={`hidden lg:flex flex-wrap items-start justify-end xl:justify-between gap-x-6 gap-y-6 px-6 py-6 xl:px-10 xl:py-8 text-right ${
             theme === "dark"
-              ? "bg-gray-200 text-gray-800"
+              ? "bg-gray-900 text-gray-200"
               : "bg-gray-200 text-gray-800"
           }`}
         >
