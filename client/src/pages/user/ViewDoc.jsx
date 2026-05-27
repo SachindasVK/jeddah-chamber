@@ -15,6 +15,7 @@ import {
   FaArrowRotateLeft,
   FaArrowRotateRight,
   FaArrowsLeftRightToLine,
+  FaInfo
 } from "react-icons/fa6";
 
 import { IoMoonOutline } from "react-icons/io5";
@@ -918,7 +919,7 @@ const ViewDoc = () => {
                       : "bg-gray-500 border-gray-300 text-white"
                   } shadow-sm`}
                 >
-                  i
+                  <FaInfo />
                 </button>
               </div>
             </div>
