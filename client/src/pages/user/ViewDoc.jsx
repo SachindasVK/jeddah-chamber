@@ -905,7 +905,7 @@ const ViewDoc = () => {
           )}
           {/* MOBILE INFO BUTTON */}
           {!loadingDetails && finalUrl && hasDetails && numPages && (
-            <div className="lg:hidden flex justify-start pt-25 px-3 mb-3">
+            <div className="lg:hidden flex justify-start py-15 mt-30 px-3 mb-3">
               <div className="info-btn-wrap">
                 <div className="info-pulse info-pulse-1" />
                 <div className="info-pulse info-pulse-2" />
@@ -915,7 +915,7 @@ const ViewDoc = () => {
                   className={`relative z-10 w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
                     theme === "dark"
                       ? "bg-gray-800 border-gray-600 text-white"
-                      : "bg-white border-gray-300 text-gray-700"
+                      : "bg-gray-600 border-gray-300 text-gray-700"
                   } shadow-sm`}
                 >
                   <Info />
