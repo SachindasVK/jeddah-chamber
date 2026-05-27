@@ -912,13 +912,13 @@ const ViewDoc = () => {
                 <div className="info-pulse info-pulse-3" />
                 <button
                   onClick={() => setShowInfo((prev) => !prev)}
-                  className={`relative z-10 w-8 h-8 rounded-full border flex items-center justify-center font-bold ${
+                  className={`relative z-10 border flex items-center justify-center font-bold ${
                     theme === "dark"
                       ? "bg-gray-800 border-gray-600 text-white"
-                      : "bg-gray-600 border-gray-300 text-gray-700"
+                      : "bg-gray-600 border-gray-300 text-white"
                   } shadow-sm`}
                 >
-                  <Info />
+                  i
                 </button>
               </div>
             </div>
