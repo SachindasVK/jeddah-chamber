@@ -918,7 +918,7 @@ const ViewDoc = () => {
                       : "bg-gray-600 border-gray-300 text-white"
                   } shadow-sm`}
                 >
-                  i
+                  <Info />
                 </button>
               </div>
             </div>
