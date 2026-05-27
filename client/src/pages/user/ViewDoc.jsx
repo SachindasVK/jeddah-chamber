@@ -906,7 +906,7 @@ const ViewDoc = () => {
           )}
           {/* MOBILE INFO BUTTON */}
           {!loadingDetails && finalUrl && hasDetails && numPages && (
-            <div className="lg:hidden flex justify-start items-center py-15 mt-30 px-3 mb-3">
+            <div className="lg:hidden flex justify-start py-15 mt-30 px-3 mb-3">
               <div className="info-btn-wrap">
                 <div className="info-pulse info-pulse-1" />
                 <div className="info-pulse info-pulse-2" />
