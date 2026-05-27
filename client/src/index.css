@@ -21,7 +21,6 @@
   transform: scale(0.1);
   opacity: 0;
   animation: infoPulse 1.6s ease-out infinite;
-  will-change: transform;
   pointer-events: none;
 }
 
