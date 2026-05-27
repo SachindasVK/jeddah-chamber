@@ -192,10 +192,10 @@ const ViewDoc = () => {
           }`}
         >
 
-           {/* ITEM */}
+          {/* subscription Number */}
           <div className="flex flex-col items-end text-right min-w-[120px]">
             <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              السجل التجاري
+               رقم الإشتراك
             </span>
 
             <span className="text-[15px] tracking-wide">
@@ -203,50 +203,51 @@ const ViewDoc = () => {
             </span>
           </div>
 
-          {/* ITEM */}
-          <div className="flex flex-col items-end text-right min-w-[120px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              رقم السجل التجاري
-            </span>
-
-            <span className="text-[15px] tracking-wide">
-              {doc?.commercialRegisterNumber || "—"}
-            </span>
-          </div>
-
-           {/* ITEM */}
+           {/* commercial registration Number */}
           <div className="flex flex-col items-end text-right min-w-[240px]">
             <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              اسم المنشأة
+              رقم السجل التجاري
             </span>
 
             <span
               dir="auto"
               className="text-[15px] text-center leading-8"
             >
-              {doc?.establishmentName || "—"}
+              {doc?.commercialRegisterNumber || "—"}
             </span>
           </div>
 
 
 
-            {/* ITEM */}
+            {/* Company name */}
           <div className="flex flex-col items-end text-right min-w-[120px]">
             <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              الحالة
+              اسم المنشأة
             </span>
 
             <span className={`text-[15px] tracking-wide`}>
+              {doc?.establishmentName}
+            </span>
+          </div>
+
+
+
+          {/* Document status */}
+          <div className="flex flex-col items-end text-right min-w-[120px]">
+            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
+             حالة الوثيقة
+            </span>
+
+            <span className="text-[15px] tracking-wide">
               سارية
             </span>
           </div>
 
 
-
-          {/* ITEM */}
+          {/* Creation Date */}
           <div className="flex flex-col items-end text-right min-w-[120px]">
             <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              تاريخ الإصدار
+              تاريخ الإنشاء
             </span>
 
             <span className="text-[15px] tracking-wide">
@@ -254,23 +255,22 @@ const ViewDoc = () => {
             </span>
           </div>
 
-
-          {/* ITEM */}
+          {/* unified Number */}
           <div className="flex flex-col items-end text-right min-w-[120px]">
             <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              الرقم الموحد
+             الرقم الموحد
             </span>
 
             <span className="text-[15px] tracking-wide">
-              {doc?.unifiedNumber || "—"}
+              {doc?.unifiedNumber}
             </span>
           </div>
 
 
-          {/* ITEM */}
+          {/* Doc Number */}
           <div className="flex flex-col items-end text-right min-w-[120px]">
             <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              رقم الوثيقة
+             رقم الوثيقة
             </span>
 
             <span className="text-[15px] tracking-wide">
@@ -280,10 +280,10 @@ const ViewDoc = () => {
       
 
 
-          {/* ITEM */}
+          {/* request submitter */}
           <div className="flex flex-col items-end text-right min-w-[120px]">
             <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              الرقم الإلكتروني
+              مقدم الطلب
             </span>
 
             <span className="text-[15px] tracking-wide">
