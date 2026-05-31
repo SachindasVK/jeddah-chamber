@@ -190,7 +190,7 @@ const ViewDoc = () => {
           className={`hidden lg:flex flex-col gap-6 px-10 py-6 border-b ${
             theme === "dark"
               ? "bg-[#1e293b] border-gray-800 text-gray-100"
-              : "bg-white border-gray-200 text-black"
+              : "bg-yellow-50 border-gray-200 text-black"
           }`}
         >
           {/* Row 1: The 7 details columns */}
