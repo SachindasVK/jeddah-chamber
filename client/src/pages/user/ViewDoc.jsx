@@ -959,7 +959,7 @@ const ViewDoc = () => {
         {/* TITLE */}
         <h2
           dir="rtl"
-          className={`text-[20px] font-semibold ${
+          className={`text-[25px] font-semibold ${
             theme === "dark" ? "text-white" : "text-[#12385b]"
           }`}
         >
@@ -981,7 +981,7 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className={`text-[15px mb-4 ${
+            className={`text-[15px] font-semibold mb-4 ${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
             }`}
           >
@@ -1001,7 +1001,7 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className={`text-[15px] mb-4 ${
+            className={`text-[15px] font-semibold mb-4 ${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
             }`}
           >
@@ -1009,7 +1009,7 @@ const ViewDoc = () => {
           </p>
 
           <p
-            className={`text-[15px] ${
+            className={`text-[15px] font-medium ${
               theme === "dark" ? "text-gray-100" : "text-gray-800"
             }`}
           >
@@ -1021,7 +1021,7 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className={`text-[15px] mb-4 ${
+            className={`text-[15px] font-semibold mb-4 ${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
             }`}
           >
@@ -1029,7 +1029,7 @@ const ViewDoc = () => {
           </p>
 
           <p
-            className={`text-[15px] ${
+            className={`text-[15px] font-medium ${
               theme === "dark" ? "text-gray-100" : "text-gray-800"
             }`}
           >
@@ -1041,7 +1041,7 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className={`text-[15px] mb-4 ${
+            className={`text-[15px] mb-4 font-semibold ${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
             }`}
           >
@@ -1049,7 +1049,7 @@ const ViewDoc = () => {
           </p>
 
           <p
-            className={`text-[15px] ${
+            className={`text-[15px] font-medium ${
               theme === "dark" ? "text-gray-100" : "text-gray-800"
             }`}
           >
@@ -1063,7 +1063,7 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className={`text-[15px] mb-4 ${
+            className={`text-[15px] font-semibold mb-4 ${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
             }`}
           >
@@ -1072,7 +1072,7 @@ const ViewDoc = () => {
 
           <p
             dir="rtl"
-            className={`text-[15px] leading-[55px] ${
+            className={`text-[15px] font-medium ${
               theme === "dark" ? "text-gray-100" : "text-gray-800"
             }`}
           >
@@ -1084,7 +1084,7 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className={`text-[15px] mb-4 ${
+            className={`text-[15px] font-semibold mb-4 ${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
             }`}
           >
@@ -1092,7 +1092,7 @@ const ViewDoc = () => {
           </p>
 
           <p
-            className={`text-[15px] underline ${
+            className={`text-[15px] font-medium underline ${
               theme === "dark" ? "text-gray-100" : "text-gray-800"
             }`}
           >
@@ -1106,7 +1106,7 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className={`text-[15px] mb-4 ${
+            className={`text-[15px] font-semibold mb-4 ${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
             }`}
           >
@@ -1114,7 +1114,7 @@ const ViewDoc = () => {
           </p>
 
           <p
-            className={`text-[15px] ${
+            className={`text-[15px] font-medium ${
               theme === "dark" ? "text-gray-100" : "text-gray-800"
             }`}
           >
@@ -1126,7 +1126,7 @@ const ViewDoc = () => {
         <div className="text-right">
           <p
             dir="rtl"
-            className={`text-[15px] mb-4 ${
+            className={`text-[15px] font-semibold mb-4 ${
               theme === "dark" ? "text-gray-400" : "text-gray-600"
             }`}
           >
@@ -1135,7 +1135,7 @@ const ViewDoc = () => {
 
           <p
             dir="rtl"
-            className={`text-[15px] leading-[55px] ${
+            className={`text-[15px] font-medium ${
               theme === "dark" ? "text-gray-100" : "text-gray-800"
             }`}
           >
