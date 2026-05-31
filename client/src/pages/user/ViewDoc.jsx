@@ -1068,7 +1068,7 @@ const ViewDoc = () => {
     </div>
 
     {/* SCROLLABLE CONTENT */}
-    <div className="overflow-y-auto px-8 pt-8 pb-10" style={{ maxHeight: "calc(82vh - 100px)" }}>
+    <div className="overflow-y-auto px-8 pt-8 pb-10" style={{ maxHeight: "calc(50vh - 100px)" }}>
       <div className="flex flex-col gap-8">
         {/* DOC NUMBER */}
         <div className="text-right">
