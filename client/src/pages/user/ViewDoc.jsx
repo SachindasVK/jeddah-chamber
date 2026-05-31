@@ -186,111 +186,99 @@ const ViewDoc = () => {
       {/* DESKTOP DOCUMENT DETAILS */}
       {!loadingDetails && finalUrl && hasDetails && (
         <div
-          className={`hidden lg:flex flex-wrap items-start justify-end xl:justify-between gap-x-6 gap-y-6 px-6 py-6 xl:px-10 xl:py-8 text-right ${
+          dir="rtl"
+          className={`hidden lg:flex flex-col gap-6 px-10 py-6 border-b ${
             theme === "dark"
-              ? "bg-gray-950 text-gray-100"
-              : "bg-gray-200 text-gray-800"
+              ? "bg-[#1e293b] border-gray-800 text-gray-100"
+              : "bg-[#f8fafc] border-gray-200 text-gray-800"
           }`}
         >
+          {/* Row 1: The 7 details columns */}
+          <div className="flex flex-row justify-between items-start w-full gap-4">
+            
+            {/* رقم الوثيقة */}
+            <div className="flex flex-col items-center text-center">
+              <span className="text-[12px] text-gray-500 dark:text-gray-400 font-semibold mb-2">
+                رقم الوثيقة
+              </span>
+              <span className="text-[15px] font-bold text-gray-800 dark:text-gray-200">
+                {doc?.docNumber || "—"}
+              </span>
+            </div>
 
-          {/* subscription Number */}
-          <div className="flex flex-col items-end text-right min-w-[120px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-               رقم الإشتراك
-            </span>
+            {/* الرقم الموحد */}
+            <div className="flex flex-col items-center text-center">
+              <span className="text-[12px] text-gray-500 dark:text-gray-400 font-semibold mb-2">
+                الرقم الموحد
+              </span>
+              <span className="text-[15px] font-bold text-gray-800 dark:text-gray-200">
+                {doc?.unifiedNumber || "—"}
+              </span>
+            </div>
 
-            <span className="text-[15px] tracking-wide">
-              {doc?.subscriptionNumber || "—"}
-            </span>
+            {/* تاريخ الإنشاء */}
+            <div className="flex flex-col items-center text-center">
+              <span className="text-[12px] text-gray-500 dark:text-gray-400 font-semibold mb-2">
+                تاريخ الإنشاء
+              </span>
+              <span className="text-[15px] font-bold text-gray-800 dark:text-gray-200">
+                {formatDate(doc?.creationDate)}
+              </span>
+            </div>
+
+            {/* حالة الوثيقة */}
+            <div className="flex flex-col items-center text-center">
+              <span className="text-[12px] text-gray-500 dark:text-gray-400 font-semibold mb-2">
+                حالة الوثيقة
+              </span>
+              <span className="text-[15px] font-bold text-gray-800 dark:text-gray-200">
+                سارية
+              </span>
+            </div>
+
+            {/* اسم المنشأة */}
+            <div className="flex flex-col items-center text-center max-w-[240px]">
+              <span className="text-[12px] text-gray-500 dark:text-gray-400 font-semibold mb-2">
+                اسم المنشأة
+              </span>
+              <span className="text-[15px] font-bold text-gray-800 dark:text-gray-200 leading-relaxed">
+                {doc?.establishmentName || "—"}
+              </span>
+            </div>
+
+            {/* رقم السجل التجاري */}
+            <div className="flex flex-col items-center text-center">
+              <span className="text-[12px] text-[#6b7280] dark:text-gray-400 font-semibold mb-2">
+                رقم السجل التجاري
+              </span>
+              <span className="text-[15px] font-bold text-gray-800 dark:text-gray-200">
+                {doc?.commercialRegisterNumber || "—"}
+              </span>
+            </div>
+
+            {/* رقم الإشتراك */}
+            <div className="flex flex-col items-center text-center">
+              <span className="text-[12px] text-gray-500 dark:text-gray-400 font-semibold mb-2">
+                رقم الإشتراك
+              </span>
+              <span className="text-[15px] font-bold text-gray-800 dark:text-gray-200">
+                {doc?.subscriptionNumber || "—"}
+              </span>
+            </div>
+
           </div>
 
-           {/* commercial registration Number */}
-          <div className="flex flex-col items-end text-right min-w-[240px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              رقم السجل التجاري
-            </span>
-
-            <span
-              dir="auto"
-              className="text-[15px] text-center leading-8"
-            >
-              {doc?.commercialRegisterNumber || "—"}
-            </span>
-          </div>
-
-
-
-            {/* Company name */}
-          <div className="flex flex-col items-end text-right min-w-[120px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              اسم المنشأة
-            </span>
-
-            <span className={`text-[15px] tracking-wide`}>
-              {doc?.establishmentName}
-            </span>
-          </div>
-
-
-
-          {/* Document status */}
-          <div className="flex flex-col items-end text-right min-w-[120px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-             حالة الوثيقة
-            </span>
-
-            <span className="text-[15px] tracking-wide">
-              سارية
-            </span>
-          </div>
-
-
-          {/* Creation Date */}
-          <div className="flex flex-col items-end text-right min-w-[120px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              تاريخ الإنشاء
-            </span>
-
-            <span className="text-[15px] tracking-wide">
-              {formatDate(doc?.creationDate)}
-            </span>
-          </div>
-
-          {/* unified Number */}
-          <div className="flex flex-col items-end text-right min-w-[120px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-             الرقم الموحد
-            </span>
-
-            <span className="text-[15px] tracking-wide">
-              {doc?.unifiedNumber}
-            </span>
-          </div>
-
-
-          {/* Doc Number */}
-          <div className="flex flex-col items-end text-right min-w-[120px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-             رقم الوثيقة
-            </span>
-
-            <span className="text-[15px] tracking-wide">
-              {doc?.docNumber || "—"}
-            </span>
-          </div>
-      
-
-
-          {/* request submitter */}
-          <div className="flex flex-col items-end text-right min-w-[120px]">
-            <span dir="rtl" className="text-[13px] text-gray-500 font-medium mb-2">
-              مقدم الطلب
-            </span>
-
-            <span className="text-[15px] tracking-wide">
-              {doc?.requestSubmitter || "—"}
-            </span>
-          </div>
+          {/* Row 2: Submitter */}
+          {doc?.requestSubmitter && (
+            <div className="flex flex-col items-start text-right mt-2 self-start">
+              <span className="text-[12px] text-gray-500 dark:text-gray-400 font-semibold mb-2">
+                مقدم الطلب
+              </span>
+              <span className="text-[15px] font-bold text-gray-800 dark:text-gray-200">
+                {doc?.requestSubmitter}
+              </span>
+            </div>
+          )}
         </div>
       )}
       {/* HEADER TOOLBAR */}
