@@ -1,10 +1,3 @@
-@import "tailwindcss";
-
-* {
-  font-family: "Tajawal", sans-serif;
-}
-
-/* INFO BUTTON WAVE ANIMATION */
 .info-btn-wrap {
   position: relative;
   display: inline-flex;
@@ -14,24 +7,22 @@
 
 .info-pulse {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   border-radius: 50%;
-  background: black;
-  transform: scale(0.1);
-  opacity: 0;
-  animation: infoPulse 1.6s ease-out infinite;
+  border: 2px solid black; /* outer ring */
+  background: transparent;
   pointer-events: none;
+  animation: infoPulse 1s ease-out infinite;
 }
 
-.info-pulse-1 { animation-delay: 1.0s; }
-.info-pulse-2 { animation-delay: 2.0s; }
-.info-pulse-3 { animation-delay: 3.0s; }
-
 @keyframes infoPulse {
-  0%   { transform: scale(0.1); opacity: 50; }
-  20%  { opacity: 50; }
-  50%  { transform: scale(1); opacity: 20; }
-  80%  { transform: scale(1.6); opacity: 10; }
-  100% { transform: scale(2); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
 }
