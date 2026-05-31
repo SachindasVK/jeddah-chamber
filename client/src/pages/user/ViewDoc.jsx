@@ -203,7 +203,7 @@ const ViewDoc = () => {
               }`}>
                 رقم الوثيقة
               </span>
-              <span className={`text-[15px] font-bold ${
+              <span className={`text-[15px] font-medium ${
                 theme === "dark" ? "text-gray-200" : "text-black"
               }`}>
                 {doc?.docNumber || "—"}
@@ -217,7 +217,7 @@ const ViewDoc = () => {
               }`}>
                 الرقم الموحد
               </span>
-              <span className={`text-[15px] font-bold ${
+              <span className={`text-[15px] font-medium ${
                 theme === "dark" ? "text-gray-200" : "text-black"
               }`}>
                 {doc?.unifiedNumber || "—"}
@@ -231,7 +231,7 @@ const ViewDoc = () => {
               }`}>
                 تاريخ الإنشاء
               </span>
-              <span className={`text-[15px] font-bold ${
+              <span className={`text-[15px] font-medium ${
                 theme === "dark" ? "text-gray-200" : "text-black"
               }`}>
                 {formatDate(doc?.creationDate)}
@@ -245,7 +245,7 @@ const ViewDoc = () => {
               }`}>
                 حالة الوثيقة
               </span>
-              <span className={`text-[15px] font-bold ${
+              <span className={`text-[15px] font-medium ${
                 theme === "dark" ? "text-gray-200" : "text-black"
               }`}>
                 سارية
@@ -259,7 +259,7 @@ const ViewDoc = () => {
               }`}>
                 اسم المنشأة
               </span>
-              <span className={`text-[15px] font-bold leading-relaxed ${
+              <span className={`text-[15px] font-medium leading-relaxed ${
                 theme === "dark" ? "text-gray-200" : "text-black"
               }`}>
                 {doc?.establishmentName || "—"}
@@ -273,7 +273,7 @@ const ViewDoc = () => {
               }`}>
                 رقم السجل التجاري
               </span>
-              <span className={`text-[15px] font-bold ${
+              <span className={`text-[15px] font-medium ${
                 theme === "dark" ? "text-gray-200" : "text-black"
               }`}>
                 {doc?.commercialRegisterNumber || "—"}
@@ -287,7 +287,7 @@ const ViewDoc = () => {
               }`}>
                 رقم الإشتراك
               </span>
-              <span className={`text-[15px] font-bold ${
+              <span className={`text-[15px] font-medium ${
                 theme === "dark" ? "text-gray-200" : "text-black"
               }`}>
                 {doc?.subscriptionNumber || "—"}
@@ -304,7 +304,7 @@ const ViewDoc = () => {
               }`}>
                 مقدم الطلب
               </span>
-              <span className={`text-[15px] font-bold ${
+              <span className={`text-[15px] font-medium ${
                 theme === "dark" ? "text-gray-200" : "text-black"
               }`}>
                 {doc?.requestSubmitter}
