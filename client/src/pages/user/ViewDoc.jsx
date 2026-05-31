@@ -954,7 +954,7 @@ const ViewDoc = () => {
           )}
           {/* MOBILE INFO BUTTON */}
           {!loadingDetails && finalUrl && hasDetails && numPages && (
-            <div className="lg:hidden flex justify-start pt-50 px-3 pl-5 mb-5">
+            <div className="lg:hidden flex justify-start pt-60 px-3 pl-5 mb-5">
               <div className="info-btn-wrap">
                 <div className="info-pulse info-pulse-1" />
                 <div className="info-pulse info-pulse-2" />
