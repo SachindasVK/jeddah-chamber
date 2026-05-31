@@ -20,12 +20,11 @@
   background: black;
   transform: scale(0.1);
   opacity: 0;
-  animation: infoPulse 2.6s ease-out infinite;
+  animation: infoPulse 5.6s ease-out infinite;
   pointer-events: none;
 }
 
-.info-pulse-1 { animation-delay: 0s; }
-.info-pulse-2 { animation-delay: 0.5s; }
+
 .info-pulse-3 { animation-delay: 1.0s; }
 
 @keyframes infoPulse {
