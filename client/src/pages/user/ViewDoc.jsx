@@ -198,70 +198,98 @@ const ViewDoc = () => {
             
             {/* رقم الوثيقة */}
             <div className="flex flex-col items-center text-center">
-              <span className="text-[12px] text-black dark:text-gray-400 font-semibold mb-2">
+              <span className={`text-[12px] font-semibold mb-2 ${
+                theme === "dark" ? "text-gray-400" : "text-black"
+              }`}>
                 رقم الوثيقة
               </span>
-              <span className="text-[15px] font-bold text-black dark:text-gray-200">
+              <span className={`text-[15px] font-bold ${
+                theme === "dark" ? "text-gray-200" : "text-black"
+              }`}>
                 {doc?.docNumber || "—"}
               </span>
             </div>
 
             {/* الرقم الموحد */}
             <div className="flex flex-col items-center text-center">
-              <span className="text-[12px] text-black dark:text-gray-400 font-semibold mb-2">
+              <span className={`text-[12px] font-semibold mb-2 ${
+                theme === "dark" ? "text-gray-400" : "text-black"
+              }`}>
                 الرقم الموحد
               </span>
-              <span className="text-[15px] font-bold text-black dark:text-gray-200">
+              <span className={`text-[15px] font-bold ${
+                theme === "dark" ? "text-gray-200" : "text-black"
+              }`}>
                 {doc?.unifiedNumber || "—"}
               </span>
             </div>
 
             {/* تاريخ الإنشاء */}
             <div className="flex flex-col items-center text-center">
-              <span className="text-[12px] text-black dark:text-gray-400 font-semibold mb-2">
+              <span className={`text-[12px] font-semibold mb-2 ${
+                theme === "dark" ? "text-gray-400" : "text-black"
+              }`}>
                 تاريخ الإنشاء
               </span>
-              <span className="text-[15px] font-bold text-black dark:text-gray-200">
+              <span className={`text-[15px] font-bold ${
+                theme === "dark" ? "text-gray-200" : "text-black"
+              }`}>
                 {formatDate(doc?.creationDate)}
               </span>
             </div>
 
             {/* حالة الوثيقة */}
             <div className="flex flex-col items-center text-center">
-              <span className="text-[12px] text-black dark:text-gray-400 font-semibold mb-2">
+              <span className={`text-[12px] font-semibold mb-2 ${
+                theme === "dark" ? "text-gray-400" : "text-black"
+              }`}>
                 حالة الوثيقة
               </span>
-              <span className="text-[15px] font-bold text-black dark:text-gray-200">
+              <span className={`text-[15px] font-bold ${
+                theme === "dark" ? "text-gray-200" : "text-black"
+              }`}>
                 سارية
               </span>
             </div>
 
             {/* اسم المنشأة */}
             <div className="flex flex-col items-center text-center max-w-[240px]">
-              <span className="text-[12px] text-black dark:text-gray-400 font-semibold mb-2">
+              <span className={`text-[12px] font-semibold mb-2 ${
+                theme === "dark" ? "text-gray-400" : "text-black"
+              }`}>
                 اسم المنشأة
               </span>
-              <span className="text-[15px] font-bold text-black dark:text-gray-200 leading-relaxed">
+              <span className={`text-[15px] font-bold leading-relaxed ${
+                theme === "dark" ? "text-gray-200" : "text-black"
+              }`}>
                 {doc?.establishmentName || "—"}
               </span>
             </div>
 
             {/* رقم السجل التجاري */}
             <div className="flex flex-col items-center text-center">
-              <span className="text-[12px] text-black dark:text-gray-400 font-semibold mb-2">
+              <span className={`text-[12px] font-semibold mb-2 ${
+                theme === "dark" ? "text-gray-400" : "text-black"
+              }`}>
                 رقم السجل التجاري
               </span>
-              <span className="text-[15px] font-bold text-black dark:text-gray-200">
+              <span className={`text-[15px] font-bold ${
+                theme === "dark" ? "text-gray-200" : "text-black"
+              }`}>
                 {doc?.commercialRegisterNumber || "—"}
               </span>
             </div>
 
             {/* رقم الإشتراك */}
             <div className="flex flex-col items-center text-center">
-              <span className="text-[12px] text-black dark:text-gray-400 font-semibold mb-2">
+              <span className={`text-[12px] font-semibold mb-2 ${
+                theme === "dark" ? "text-gray-400" : "text-black"
+              }`}>
                 رقم الإشتراك
               </span>
-              <span className="text-[15px] font-bold text-black dark:text-gray-200">
+              <span className={`text-[15px] font-bold ${
+                theme === "dark" ? "text-gray-200" : "text-black"
+              }`}>
                 {doc?.subscriptionNumber || "—"}
               </span>
             </div>
@@ -271,10 +299,14 @@ const ViewDoc = () => {
           {/* Row 2: Submitter */}
           {doc?.requestSubmitter && (
             <div className="flex flex-col items-start text-right mt-2 self-start">
-              <span className="text-[12px] text-black dark:text-gray-400 font-semibold mb-2">
+              <span className={`text-[12px] font-semibold mb-2 ${
+                theme === "dark" ? "text-gray-400" : "text-black"
+              }`}>
                 مقدم الطلب
               </span>
-              <span className="text-[15px] font-bold text-black dark:text-gray-200">
+              <span className={`text-[15px] font-bold ${
+                theme === "dark" ? "text-gray-200" : "text-black"
+              }`}>
                 {doc?.requestSubmitter}
               </span>
             </div>
