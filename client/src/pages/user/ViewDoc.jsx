@@ -997,7 +997,7 @@ const ViewDoc = () => {
         ? "bg-[#1e293b] text-gray-200"
         : "bg-white text-gray-900"
     }`}
-    style={{ maxHeight: "82vh" }}
+    style={{ maxHeight: "70vh" }}
   >
     {/* DRAG HANDLE */}
     <div className="flex justify-center pt-3 pb-1">
