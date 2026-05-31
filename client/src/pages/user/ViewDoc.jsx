@@ -819,9 +819,9 @@ const ViewDoc = () => {
         </div>
       </div>
 
-      {/* PDF THUMBNAIL SIDEBAR */}
+      {/* PDF THUMBNAIL SIDEBAR — MOBILE (bottom slide-up) */}
       <div
-        className={`fixed bottom-0 left-0 w-full z-20 transition-all duration-300 ${
+        className={`lg:hidden fixed bottom-0 left-0 w-full z-20 transition-all duration-300 ${
           showSidebar
             ? "translate-y-0 opacity-100 visible"
             : "translate-y-full opacity-0 invisible pointer-events-none"
@@ -851,6 +851,54 @@ const ViewDoc = () => {
                   <Page
                     pageNumber={index + 1}
                     width={100}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                  />
+                </div>
+              ))}
+            </Document>
+          )}
+        </div>
+      </div>
+
+      {/* PDF THUMBNAIL SIDEBAR — DESKTOP (left slide-in) */}
+      <div
+        className={`hidden lg:block fixed top-0 left-0 h-full z-20 transition-all duration-300 ${
+          showSidebar
+            ? "translate-x-0 opacity-100 visible"
+            : "-translate-x-full opacity-0 invisible pointer-events-none"
+        }`}
+        style={{ width: "140px" }}
+      >
+        {/* backdrop (click outside to close) */}
+        <div
+          className="fixed inset-0"
+          onClick={() => setShowSidebar(false)}
+        />
+
+        <div
+          className={`relative h-full flex flex-col items-center overflow-y-auto gap-3 shadow-2xl py-4 px-2 ${
+            theme === "dark" ? "bg-[#1e293b]" : "bg-blue-700"
+          }`}
+        >
+          {finalUrl && (
+            <Document file={finalUrl} onLoadSuccess={onDocumentLoadSuccess}>
+              {Array.from(new Array(numPages || 0), (_, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setPageNumber(index + 1);
+                    setShowSidebar(false);
+                  }}
+                  className={`cursor-pointer border-2 rounded-md overflow-hidden flex-shrink-0 ${
+                    pageNumber === index + 1
+                      ? "border-white"
+                      : "border-transparent"
+                  }`}
+                >
+                  <Page
+                    pageNumber={index + 1}
+                    width={110}
                     renderTextLayer={false}
                     renderAnnotationLayer={false}
                   />
