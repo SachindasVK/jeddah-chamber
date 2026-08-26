@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -57,9 +57,46 @@ const ViewDoc = () => {
 
   const [showInfo, setShowInfo] = useState(false);
 
+  const pinchStartRef = useRef(null);
+
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
 
   const finalUrl = doc?.pdfUrl || doc?.pdfPath;
+
+  const clampZoom = (value) => Math.min(Math.max(value, 0.3), 4);
+
+  const getTouchDistance = (touches) => {
+    const horizontalDistance = touches[0].clientX - touches[1].clientX;
+    const verticalDistance = touches[0].clientY - touches[1].clientY;
+
+    return Math.hypot(horizontalDistance, verticalDistance);
+  };
+
+  const handleTouchStart = (event) => {
+    if (event.touches.length === 2) {
+      pinchStartRef.current = {
+        distance: getTouchDistance(event.touches),
+        zoom,
+      };
+    }
+  };
+
+  const handleTouchMove = (event) => {
+    if (event.touches.length !== 2 || !pinchStartRef.current) return;
+
+    event.preventDefault();
+
+    const distance = getTouchDistance(event.touches);
+    const scale = distance / pinchStartRef.current.distance;
+
+    setZoom(clampZoom(pinchStartRef.current.zoom * scale));
+  };
+
+  const handleTouchEnd = (event) => {
+    if (event.touches.length < 2) {
+      pinchStartRef.current = null;
+    }
+  };
 
   const hasDetails = !!(
     doc &&
@@ -936,8 +973,13 @@ const ViewDoc = () => {
           className={`flex-1 overflow-auto py-4 relative ${
             theme === "dark" ? "bg-gray-900" : "bg-gray-100"
           }`}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
           style={{
             height: "calc(100vh - 140px)",
+            touchAction: "pan-x pan-y",
           }}
         >
           {loadingDetails ? (
