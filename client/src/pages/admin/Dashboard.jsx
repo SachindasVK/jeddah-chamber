@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [qrLoading, setQrLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [detailsSaved, setDetailsSaved] = useState(false);
+  const [totalDocuments, setTotalDocuments] = useState(0);
 
   // Arabic Form States
   const [docNumber, setDocNumber] = useState("");
@@ -33,7 +34,22 @@ const Dashboard = () => {
   useEffect(() => {
     if (!adminToken) {
       navigate("/admin/login");
+      return;
     }
+
+    const fetchDocumentCount = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/document/all?page=1&limit=1`,
+          { headers: { Authorization: `Bearer ${adminToken}` } },
+        );
+        setTotalDocuments(res.data.totalDocuments ?? 0);
+      } catch (err) {
+        console.error("Failed to load document count:", err);
+      }
+    };
+
+    fetchDocumentCount();
   }, [adminToken, navigate]);
 
   if (!adminToken) {
@@ -72,6 +88,7 @@ const Dashboard = () => {
 
       if (res.data.document && res.data.document._id) {
         setDocId(res.data.document._id);
+        setTotalDocuments((count) => count + 1);
         toast.success("QR Generated Successfully");
       }
     } catch (err) {
@@ -151,6 +168,12 @@ const Dashboard = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Admin Panel
           </h1>
+          <div className="rounded-lg bg-white px-5 py-3 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Total PDF Documents
+            </p>
+            <p className="text-2xl font-bold text-blue-600">{totalDocuments}</p>
+          </div>
         </header>
 
       {/* Arabic Document Form */}
