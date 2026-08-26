@@ -58,6 +58,8 @@ const ViewDoc = () => {
   const [showInfo, setShowInfo] = useState(false);
 
   const pinchStartRef = useRef(null);
+  const pinchScaleRef = useRef(1);
+  const pdfPageRef = useRef(null);
 
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
 
@@ -78,6 +80,7 @@ const ViewDoc = () => {
         distance: getTouchDistance(event.touches),
         zoom,
       };
+      pinchScaleRef.current = 1;
     }
   };
 
@@ -88,13 +91,31 @@ const ViewDoc = () => {
 
     const distance = getTouchDistance(event.touches);
     const scale = distance / pinchStartRef.current.distance;
+    pinchScaleRef.current = scale;
 
-    setZoom(clampZoom(pinchStartRef.current.zoom * scale));
+    if (pdfPageRef.current) {
+      pdfPageRef.current.style.transform = `scale(${scale})`;
+      pdfPageRef.current.style.transformOrigin = "center top";
+    }
   };
 
   const handleTouchEnd = (event) => {
     if (event.touches.length < 2) {
+      if (pinchStartRef.current) {
+        setZoom(clampZoom(
+          pinchStartRef.current.zoom * pinchScaleRef.current,
+        ));
+      }
+
       pinchStartRef.current = null;
+      pinchScaleRef.current = 1;
+
+      requestAnimationFrame(() => {
+        if (pdfPageRef.current) {
+          pdfPageRef.current.style.transform = "";
+          pdfPageRef.current.style.transformOrigin = "";
+        }
+      });
     }
   };
 
@@ -986,7 +1007,8 @@ const ViewDoc = () => {
             <Loading />
           ) : finalUrl ? (
             <div
-              className={`w-max mx-auto transition-all duration-300 h-fit ${
+              ref={pdfPageRef}
+              className={`w-max mx-auto h-fit ${
                 theme === "dark"
                   ? "shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                   : "shadow-lg"
