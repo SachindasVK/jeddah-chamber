@@ -15,6 +15,7 @@ const PdfList = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalDocuments, setTotalDocuments] = useState(0);
   const [search, setSearch] = useState("");
   const adminToken = localStorage.getItem("adminToken");
 
@@ -48,6 +49,7 @@ const PdfList = () => {
       );
       // Backend should return { documents, totalPages, currentPage }
       setDocuments(res.data.documents);
+      setTotalDocuments(res.data.totalDocuments);
       setTotalPages(res.data.totalPages);
     } catch (err) {
       console.error("Failed to load documents:", err);
@@ -163,9 +165,12 @@ const PdfList = () => {
       <div className="flex-1 p-4 sm:p-8 bg-gray-800">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-white">Manage Documents</h1>
-          <span className="text-gray-400 text-sm">
-            Total Pages: {totalPages}
-          </span>
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-gray-300">
+              Total PDF Documents: <strong className="text-white">{totalDocuments}</strong>
+            </span>
+            <span className="text-gray-400">Pages: {totalPages}</span>
+          </div>
         </div>
 
         <div className="relative mb-6 max-w-xl">

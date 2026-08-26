@@ -180,6 +180,7 @@ export const pdfList = async (req, res) => {
 
     res.status(200).json({
       documents: docs,
+      totalDocuments: totalDocs,
       totalPages: Math.max(1, Math.ceil(totalDocs / limit)),
       currentPage: page,
     });
