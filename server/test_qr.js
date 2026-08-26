@@ -1,10 +1,12 @@
+import "dotenv/config";
 import QRCode from "qrcode";
 import { v4 as uuidv4 } from "uuid";
+
 
 async function test() {
   try {
     const uniqueId = uuidv4();
-    const qrUrl = `https://jeddah-chamber.onrender.com/view/${uniqueId}`;
+    const qrUrl = `${process.env.CLIENT_URL}/view/${uniqueId}`;
     const qrOptions = {
       errorCorrectionLevel: "Q",
       version: 15,
