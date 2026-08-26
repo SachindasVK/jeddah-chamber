@@ -5,6 +5,7 @@ import Sidebar from "../../components/Sidebar";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
+import { Search, X } from "lucide-react";
 import "react-datepicker/dist/react-datepicker.css";
 
 const API = import.meta.env.VITE_API_URL;
@@ -14,6 +15,7 @@ const PdfList = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState("");
   const adminToken = localStorage.getItem("adminToken");
 
   // Edit Modal States
@@ -33,10 +35,13 @@ const PdfList = () => {
   const navigate = useNavigate()
 
   // Fetch Documents with Pagination
-  const fetchDocs = React.useCallback(async (currentPage) => {
+  const fetchDocs = React.useCallback(async (currentPage, searchTerm = search) => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API}/api/document/all?page=${currentPage}&limit=15`,
+      const params = new URLSearchParams({ page: currentPage, limit: 15 });
+      if (searchTerm.trim()) params.set("search", searchTerm.trim());
+
+      const res = await axios.get(`${API}/api/document/all?${params.toString()}`,
         {
           headers: { Authorization: `Bearer ${adminToken}` },
         },
@@ -50,14 +55,17 @@ const PdfList = () => {
     } finally {
       setLoading(false);
     }
-  }, [adminToken]);
+  }, [adminToken, search]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchDocs(page);
-    }, 0);
+    const timer = setTimeout(() => fetchDocs(page), 300);
     return () => clearTimeout(timer);
-  }, [page, fetchDocs]);
+  }, [page, search, fetchDocs]);
+
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    setPage(1);
+  };
 
   // Delete Logic
 
@@ -158,6 +166,32 @@ const PdfList = () => {
           <span className="text-gray-400 text-sm">
             Total Pages: {totalPages}
           </span>
+        </div>
+
+        <div className="relative mb-6 max-w-xl">
+          <Search
+            size={20}
+            aria-hidden="true"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
+          <input
+            type="search"
+            value={search}
+            onChange={handleSearchChange}
+            placeholder="Search documents, numbers, establishments..."
+            aria-label="Search documents"
+            className="w-full rounded-lg border border-gray-300 bg-white py-3 pl-10 pr-10 text-gray-800 outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              aria-label="Clear document search"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">

@@ -155,17 +155,32 @@ export const pdfList = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search?.trim() || "";
     const skip = (page - 1) * limit;
+    const query = search
+      ? {
+          $or: [
+            { title: { $regex: search, $options: "i" } },
+            { docNumber: { $regex: search, $options: "i" } },
+            { unifiedNumber: { $regex: search, $options: "i" } },
+            { docStatus: { $regex: search, $options: "i" } },
+            { establishmentName: { $regex: search, $options: "i" } },
+            { subscriptionNumber: { $regex: search, $options: "i" } },
+            { requestSubmitter: { $regex: search, $options: "i" } },
+            { commercialRegisterNumber: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
 
-    const totalDocs = await Document.countDocuments();
-    const docs = await Document.find()
+    const totalDocs = await Document.countDocuments(query);
+    const docs = await Document.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
     res.status(200).json({
       documents: docs,
-      totalPages: Math.ceil(totalDocs / limit),
+      totalPages: Math.max(1, Math.ceil(totalDocs / limit)),
       currentPage: page,
     });
   } catch (err) {
