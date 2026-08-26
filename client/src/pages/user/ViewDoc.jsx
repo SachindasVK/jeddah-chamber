@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -60,6 +60,8 @@ const ViewDoc = () => {
   const pinchStartRef = useRef(null);
   const pinchScaleRef = useRef(1);
   const pdfPageRef = useRef(null);
+  const pdfViewerRef = useRef(null);
+  const pendingPinchRef = useRef(null);
 
   const iconColor = theme === "dark" ? "#e2e8f0" : "#4b5563";
 
@@ -76,9 +78,25 @@ const ViewDoc = () => {
 
   const handleTouchStart = (event) => {
     if (event.touches.length === 2) {
+      const viewer = pdfViewerRef.current;
+      const page = pdfPageRef.current;
+
+      if (!viewer || !page) return;
+
+      const viewerRect = viewer.getBoundingClientRect();
+      const pageRect = page.getBoundingClientRect();
+
       pinchStartRef.current = {
         distance: getTouchDistance(event.touches),
         zoom,
+        viewerRect,
+        pageRect,
+        scrollLeft: viewer.scrollLeft,
+        scrollTop: viewer.scrollTop,
+        focalPoint: {
+          x: (event.touches[0].clientX + event.touches[1].clientX) / 2,
+          y: (event.touches[0].clientY + event.touches[1].clientY) / 2,
+        },
       };
       pinchScaleRef.current = 1;
     }
@@ -90,34 +108,81 @@ const ViewDoc = () => {
     event.preventDefault();
 
     const distance = getTouchDistance(event.touches);
-    const scale = distance / pinchStartRef.current.distance;
+    const rawScale = distance / pinchStartRef.current.distance;
+    const scale = clampZoom(pinchStartRef.current.zoom * rawScale) /
+      pinchStartRef.current.zoom;
     pinchScaleRef.current = scale;
 
     if (pdfPageRef.current) {
       pdfPageRef.current.style.transform = `scale(${scale})`;
-      pdfPageRef.current.style.transformOrigin = "center top";
+      const { pageRect, focalPoint } = pinchStartRef.current;
+      pdfPageRef.current.style.transformOrigin = `${
+        focalPoint.x - pageRect.left
+      }px ${focalPoint.y - pageRect.top}px`;
+      pdfPageRef.current.style.willChange = "transform";
     }
   };
 
   const handleTouchEnd = (event) => {
     if (event.touches.length < 2) {
       if (pinchStartRef.current) {
-        setZoom(clampZoom(
-          pinchStartRef.current.zoom * pinchScaleRef.current,
-        ));
+        const pinchStart = pinchStartRef.current;
+        const finalZoom = clampZoom(pinchStart.zoom * pinchScaleRef.current);
+
+        pendingPinchRef.current = {
+          ...pinchStart,
+          finalZoom,
+        };
+
+        if (finalZoom === zoom) {
+          pendingPinchRef.current = null;
+          pdfPageRef.current.style.transform = "";
+          pdfPageRef.current.style.transformOrigin = "";
+          pdfPageRef.current.style.willChange = "";
+        } else {
+          setZoom(finalZoom);
+        }
       }
 
       pinchStartRef.current = null;
       pinchScaleRef.current = 1;
-
-      requestAnimationFrame(() => {
-        if (pdfPageRef.current) {
-          pdfPageRef.current.style.transform = "";
-          pdfPageRef.current.style.transformOrigin = "";
-        }
-      });
     }
   };
+
+  useLayoutEffect(() => {
+    const pinch = pendingPinchRef.current;
+    const viewer = pdfViewerRef.current;
+    const page = pdfPageRef.current;
+
+    if (!pinch || !viewer || !page) return;
+
+    page.style.transform = "";
+    page.style.transformOrigin = "";
+    page.style.willChange = "";
+
+    const newViewerRect = viewer.getBoundingClientRect();
+    const newPageRect = page.getBoundingClientRect();
+    const zoomRatio = pinch.finalZoom / pinch.zoom;
+    const localFocalX = pinch.focalPoint.x - pinch.pageRect.left;
+    const localFocalY = pinch.focalPoint.y - pinch.pageRect.top;
+    const newPageOriginX =
+      newPageRect.left - newViewerRect.left + viewer.scrollLeft;
+    const newPageOriginY =
+      newPageRect.top - newViewerRect.top + viewer.scrollTop;
+
+    viewer.scrollLeft = Math.max(
+      0,
+      newPageOriginX + localFocalX * zoomRatio -
+        (pinch.focalPoint.x - newViewerRect.left),
+    );
+    viewer.scrollTop = Math.max(
+      0,
+      newPageOriginY + localFocalY * zoomRatio -
+        (pinch.focalPoint.y - newViewerRect.top),
+    );
+
+    pendingPinchRef.current = null;
+  }, [zoom]);
 
   const hasDetails = !!(
     doc &&
@@ -991,6 +1056,7 @@ const ViewDoc = () => {
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* PDF VIEWER */}
         <div
+          ref={pdfViewerRef}
           className={`flex-1 overflow-auto py-4 relative ${
             theme === "dark" ? "bg-gray-900" : "bg-gray-100"
           }`}
