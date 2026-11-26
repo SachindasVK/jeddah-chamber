@@ -1,7 +1,6 @@
-import express from "express";
-import dotenv from "dotenv";
 
-dotenv.config({ path: new URL("../.env", import.meta.url).pathname });
+import express from "express";
+import 'dotenv/config'
 import connectDB from "./config/db.js";
 import cors from "cors";
 import adminRoutes from "./routes/adminAuthRoutes.js";
@@ -9,44 +8,52 @@ import documentRoutes from "./routes/documentRoutes.js";
 import compression from "compression";
 import helmet from "helmet";
 
+
 const app = express();
 
-connectDB();
-app.use(
-  helmet({
-    crossOriginResourcePolicy: false,
-  }),
-);
-app.use(compression());
-const clientOrigin = process.env.CLIENT_URL || "http://localhost:5173";
+// CORS configuration
 const allowedOrigins = [
+  "http://localhost:5173",
   "https://esjcci.org.in",
   "https://www.esjcci.org.in",
-  clientOrigin,
-];
+  process.env.CLIENT_URL,
+].filter(Boolean);
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log("Blocked origin:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
-  }),
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
 );
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
+
+app.use(compression());
 app.use(express.json());
 
 app.use("/uploads", express.static("uploads"));
+
 app.use("/api/admin", adminRoutes);
 app.use("/api/document", documentRoutes);
+
+// Connect MongoDB
+connectDB();
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
-
-
